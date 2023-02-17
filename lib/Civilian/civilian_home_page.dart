@@ -546,7 +546,7 @@ class CivHomePage extends StatelessWidget {
                                 width: 180,
                                 decoration: BoxDecoration(
                                     color:
-                                        const Color.fromARGB(220, 70, 18, 32),
+                                        const Color.fromARGB(255, 247, 193, 17),
                                     border: Border.all(
                                       width: 1.5,
                                       color: Colors.white,
