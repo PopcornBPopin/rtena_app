@@ -56,37 +56,54 @@ class SelectedPage extends StatelessWidget {
                           ],
                         ),
 
-                        const SizedBox(height: 150),
+                        const SizedBox(height: 40),
                         //Emergency Selected
                         const Text(
-                          'Emergency Selected',
+                          'Emergency Selected!',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 30,
                           ),
                         ),
-                        const SizedBox(height: 20),
-
-                        //Description
-                        const Text(
-                          'Waiting for confimration of the responders new you. Please hang tight...',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w300,
-                            fontSize: 20,
-                          ),
-                        ),
-                        const SizedBox(height: 200),
+                        const SizedBox(height: 40),
                       ],
                     ),
                   ),
 
                   //STARTS HERE
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Column(
-                      children: [],
+                    width: double.infinity,
+                    height: 590,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        bottomRight: Radius.circular(40),
+                      ),
+                      color: Colors.white,
+                    ),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 30),
+                            child: Text(
+                              'Waiting for confirmation of the responders near you. Please hang tight.',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 100),
+                          Image.asset(
+                            'assets/emergency_selected.png',
+                            scale: 2,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
