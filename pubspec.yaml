@@ -79,6 +79,7 @@ flutter:
     - assets/assault_icon.png
     - assets/robbery_icon.png
     - assets/murder_icon.png
+    - assets/emergency_selected.png
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
