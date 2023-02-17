@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rtena_app/Civilian/selected_page.dart';
 import 'package:rtena_app/start_page.dart';
 
 class CivHomePage extends StatelessWidget {
@@ -518,6 +519,7 @@ class CivHomePage extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
 
+                        //Button for Alert
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
@@ -537,7 +539,7 @@ class CivHomePage extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
 
-                        //Button for Alert
+                        //Button for Alert - Proceed to selected page
                         Center(
                           child: Column(
                             children: [
@@ -551,24 +553,34 @@ class CivHomePage extends StatelessWidget {
                                       color: Colors.white,
                                     ),
                                     borderRadius: BorderRadius.circular(20)),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: Center(
-                                    child: Column(
-                                      children: [
-                                        Image.asset(
-                                          'assets/responder_icon.png',
-                                          scale: 1.5,
-                                        ),
-                                        const SizedBox(height: 2),
-                                        const Text(
-                                          'Alert',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const SelectedPage()),
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Center(
+                                      child: Column(
+                                        children: [
+                                          Image.asset(
+                                            'assets/responder_icon.png',
+                                            scale: 1.5,
                                           ),
-                                        ),
-                                      ],
+                                          const SizedBox(height: 2),
+                                          const Text(
+                                            'Alert',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
