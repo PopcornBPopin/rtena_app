@@ -134,7 +134,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                252, 58, 72, 1),
+                                                102, 0, 0, 1),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -179,7 +179,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                232, 54, 68, 1),
+                                                153, 0, 51, 1),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -234,7 +234,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                212, 49, 63, 1),
+                                                95, 2, 31, 1),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -279,7 +279,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                191, 45, 59, 1),
+                                                140, 0, 26, 1),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -334,7 +334,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                171, 40, 54, 1),
+                                                255, 144, 0, 1),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -379,7 +379,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                151, 36, 50, 1),
+                                                55, 6, 23, 1),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -434,7 +434,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                110, 27, 41, 1),
+                                                157, 2, 8, 1),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -479,7 +479,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                90, 22, 36, 1),
+                                                220, 47, 2, 1),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -545,8 +545,7 @@ class CivHomePage extends StatelessWidget {
                                 height: 80,
                                 width: 180,
                                 decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromARGB(255, 247, 193, 17),
+                                    color: const Color.fromRGBO(232, 93, 4, 1),
                                     border: Border.all(
                                       width: 1.5,
                                       color: Colors.white,
