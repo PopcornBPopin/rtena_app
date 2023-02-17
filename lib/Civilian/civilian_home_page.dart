@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rtena_app/Civilian/selected_page.dart';
+import 'package:rtena_app/Civilian/civilian_selected_page.dart';
 import 'package:rtena_app/start_page.dart';
 
 class CivHomePage extends StatelessWidget {
@@ -135,7 +135,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                102, 0, 0, 1),
+                                                102, 0, 0, 90),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -180,7 +180,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                153, 0, 51, 1),
+                                                153, 0, 51, 40),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -235,7 +235,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                95, 2, 31, 1),
+                                                95, 2, 31, 40),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -280,7 +280,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                140, 0, 26, 1),
+                                                140, 0, 26, 40),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -380,7 +380,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                55, 6, 23, 1),
+                                                55, 6, 23, 40),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -435,7 +435,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                157, 2, 8, 1),
+                                                157, 2, 8, 40),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -480,7 +480,7 @@ class CivHomePage extends StatelessWidget {
                                         width: 180,
                                         decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                220, 47, 2, 1),
+                                                220, 47, 2, 40),
                                             border: Border.all(
                                               width: 1.5,
                                               color: Colors.white,
@@ -547,7 +547,7 @@ class CivHomePage extends StatelessWidget {
                                 height: 80,
                                 width: 180,
                                 decoration: BoxDecoration(
-                                    color: const Color.fromRGBO(232, 93, 4, 1),
+                                    color: const Color.fromRGBO(232, 93, 4, 40),
                                     border: Border.all(
                                       width: 1.5,
                                       color: Colors.white,
@@ -559,7 +559,7 @@ class CivHomePage extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              const SelectedPage()),
+                                              const CivSelectedPage()),
                                     );
                                   },
                                   child: Padding(
