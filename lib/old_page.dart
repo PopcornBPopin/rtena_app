@@ -23,14 +23,14 @@ class OldLoginPage extends StatelessWidget {
 
                   Container(
                     decoration: const BoxDecoration(
-                      color: const Color.fromRGBO(78, 39, 52, 76),
+                      color: Color.fromRGBO(78, 39, 52, 76),
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30)),
                     ),
                     child: Column(
                       children: [
-                        SizedBox(height: 100),
+                        const SizedBox(height: 100),
 
                         //Username Textfield
                         Padding(
@@ -52,7 +52,7 @@ class OldLoginPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
 
                         //Password textfield
                         Padding(
@@ -79,12 +79,10 @@ class OldLoginPage extends StatelessWidget {
                         const SizedBox(height: 10),
 
                         //Forgot Password?
-                        Container(
-                          child: const Center(
-                            child: Text(
-                              'Forgot Password?',
-                              style: TextStyle(color: Colors.white),
-                            ),
+                        const Center(
+                          child: Text(
+                            'Forgot Password?',
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
 
@@ -96,7 +94,7 @@ class OldLoginPage extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.all(15),
                             decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 41, 15, 24),
+                                color: const Color.fromARGB(255, 41, 15, 24),
                                 borderRadius: BorderRadius.circular(15)),
                             child: const Center(
                               child: Text(
@@ -131,7 +129,7 @@ class OldLoginPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 120),
+                        const SizedBox(height: 120),
                       ],
                     ),
                   ),

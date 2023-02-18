@@ -105,19 +105,7 @@ class CivAckPage extends StatelessWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 30),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: Text(
-                            'Emergency Details',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 40),
 
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -134,15 +122,15 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                     Text(
-                                      'Fire',
+                                      'Alert',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                   ],
@@ -157,7 +145,7 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                     Text(
@@ -165,7 +153,7 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                   ],
@@ -180,7 +168,7 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                     Text(
@@ -188,7 +176,7 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                   ],
@@ -203,7 +191,7 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                     Text(
@@ -211,7 +199,7 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                   ],
@@ -226,7 +214,7 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                     Text(
@@ -234,7 +222,7 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                   ],
@@ -249,7 +237,7 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                     Text(
@@ -257,7 +245,7 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                   ],
@@ -272,7 +260,7 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                     Text(
@@ -280,7 +268,7 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 16,
+                                        fontSize: 17,
                                       ),
                                     ),
                                   ],
