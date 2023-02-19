@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rtena_app/start_page.dart';
 
 class CivAckPage extends StatelessWidget {
@@ -6,10 +7,10 @@ class CivAckPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(192, 39, 45, 1),
+      backgroundColor: Color.fromRGBO(192, 39, 45, 1),
       body: SafeArea(
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -19,7 +20,7 @@ class CivAckPage extends StatelessWidget {
               ],
             ),
           ),
-          height: MediaQuery.of(context).size.height,
+          height: double.infinity,
           width: double.infinity,
           child: Column(
             children: [
@@ -27,9 +28,9 @@ class CivAckPage extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 35),
+                  SizedBox(height: 35.h),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -44,7 +45,7 @@ class CivAckPage extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
-                                            const StartPage()),
+                                            StartPage()),
                                   );
                                 },
                                 child: Image.asset(
@@ -56,9 +57,9 @@ class CivAckPage extends StatelessWidget {
                           ],
                         ),
 
-                        const SizedBox(height: 45),
+                        SizedBox(height: 45.h),
                         //Emergency Selected
-                        const Text(
+                        Text(
                           'Alert Acknowledged!',
                           style: TextStyle(
                             color: Colors.white,
@@ -66,10 +67,10 @@ class CivAckPage extends StatelessWidget {
                             fontSize: 30,
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10.h),
 
                         //Description
-                        const Text(
+                        Text(
                           'Responders are now going your way. Godspeed!',
                           style: TextStyle(
                             color: Colors.white,
@@ -77,16 +78,15 @@ class CivAckPage extends StatelessWidget {
                             fontSize: 18,
                           ),
                         ),
-                        const SizedBox(height: 45),
+                        SizedBox(height: 45.h),
                       ],
                     ),
                   ),
 
                   //STARTS HERE
                   Container(
-                    width: double.infinity,
-                    height: 550,
-                    decoration: const BoxDecoration(
+                    height: 575.h,
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),
                         bottomRight: Radius.circular(40),
@@ -96,7 +96,7 @@ class CivAckPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 40),
+                        SizedBox(height: 40.h),
                         //Vector Image
                         Center(
                           child: Image.asset(
@@ -105,24 +105,24 @@ class CivAckPage extends StatelessWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 40),
+                        SizedBox(height: 40.h),
 
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          padding: EdgeInsets.symmetric(horizontal: 30.w),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 //Emergency
                                 Row(
-                                  children: const [
+                                  children: [
                                     Text(
                                       'Emergency: ',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                     Text(
@@ -130,22 +130,22 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
 
                                 //Location
                                 Row(
-                                  children: const [
+                                  children: [
                                     Text(
                                       'Location: ',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                     Text(
@@ -153,22 +153,22 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
 
                                 //Responder
                                 Row(
-                                  children: const [
+                                  children: [
                                     Text(
                                       'Responder: ',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                     Text(
@@ -176,22 +176,22 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
 
                                 //Contact Number
                                 Row(
-                                  children: const [
+                                  children: [
                                     Text(
                                       'Contact Number: ',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                     Text(
@@ -199,22 +199,22 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
 
                                 //Occupation
                                 Row(
-                                  children: const [
+                                  children: [
                                     Text(
                                       'Occupation: ',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                     Text(
@@ -222,22 +222,22 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
 
                                 //Age
                                 Row(
-                                  children: const [
+                                  children: [
                                     Text(
                                       'Age: ',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                     Text(
@@ -245,22 +245,22 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
 
                                 //Sex
                                 Row(
-                                  children: const [
+                                  children: [
                                     Text(
                                       'Sex: ',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                     Text(
@@ -268,12 +268,12 @@ class CivAckPage extends StatelessWidget {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 17,
+                                        fontSize: 17.sp,
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
                               ],
                             ),
                           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rtena_app/SignUp/sign_page_3.dart';
 import 'package:rtena_app/start_page.dart';
 
@@ -30,9 +31,9 @@ class Sign2Page extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 35),
+                    SizedBox(height: 35.h),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -57,40 +58,39 @@ class Sign2Page extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 25),
+                    SizedBox(height: 25.h),
 
                     //Register
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Text(
                         'Register',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 30,
+                          fontSize: 30.sp,
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10.h),
 
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Text(
                         'Ready to become a member?',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w300,
-                          fontSize: 15,
+                          fontSize: 15.sp,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: 30.h),
 
                     //FORM STARTS HERE
                     Container(
-                      width: double.infinity,
-                      height: 610,
+                      height: 625.h,
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(40),
@@ -101,7 +101,7 @@ class Sign2Page extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 40),
+                          SizedBox(height: 40.h),
                           //Vector Image
                           Center(
                             child: Image.asset(
@@ -110,26 +110,26 @@ class Sign2Page extends StatelessWidget {
                             ),
                           ),
 
-                          const SizedBox(height: 30),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
+                          SizedBox(height: 30.h),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 30.w),
                             child: Text(
                               'Account Verification',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
-                                fontSize: 17,
+                                fontSize: 17.sp,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20.h),
                           Center(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
-                                  height: 100,
-                                  width: 350,
+                                  height: 100.h,
+                                  width: 350.w,
                                   decoration: BoxDecoration(
                                       gradient: const LinearGradient(
                                         begin: Alignment.topLeft,
@@ -140,12 +140,12 @@ class Sign2Page extends StatelessWidget {
                                         ],
                                       ),
                                       border: Border.all(
-                                        width: 1.5,
+                                        width: 1.5.w,
                                         color: Colors.white,
                                       ),
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Padding(
-                                    padding: const EdgeInsets.only(top: 10),
+                                    padding: EdgeInsets.only(top: 10.h),
                                     child: Center(
                                       child: Column(
                                         children: [
@@ -168,42 +168,42 @@ class Sign2Page extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 35),
+                          SizedBox(height: 30.h),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            padding: EdgeInsets.symmetric(horizontal: 30.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   'Enter your Contact number below. A 6-digit pin will be sent to your number. It will also be used for future verification',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 15,
+                                    fontSize: 15.sp,
                                   ),
                                 ),
-                                const SizedBox(height: 15),
+                                SizedBox(height: 15.h),
 
                                 //Phone number Text FIeld
                                 Container(
-                                  height: 50,
+                                  height: 50.h,
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      width: 2,
+                                      width: 2.w,
                                       color: Colors.grey.shade400,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                      vertical: 5,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 7.h,
                                     ),
                                     child: TextField(
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 15,
+                                        fontSize: 15.sp,
                                       ),
                                       decoration: InputDecoration(
                                         prefixIcon: Image.asset(
@@ -218,7 +218,7 @@ class Sign2Page extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 15.h),
 
                                 Center(
                                   child: GestureDetector(
@@ -231,8 +231,8 @@ class Sign2Page extends StatelessWidget {
                                       );
                                     },
                                     child: Container(
-                                      width: 700,
-                                      height: 45,
+                                      height: 45.h,
+                                      width: 700.w,
                                       decoration: BoxDecoration(
                                           gradient: const LinearGradient(
                                             begin: Alignment.topLeft,
@@ -256,6 +256,7 @@ class Sign2Page extends StatelessWidget {
                                     ),
                                   ),
                                 ),
+                                SizedBox(height: 10.h),
                               ],
                             ),
                           )

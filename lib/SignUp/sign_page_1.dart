@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/login_page.dart';
 import 'package:rtena_app/SignUp/sign_page_2.dart';
@@ -31,10 +32,10 @@ class Sign1Page extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 35),
+                    SizedBox(height: 35.h),
 
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -59,39 +60,39 @@ class Sign1Page extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 25),
+                    SizedBox(height: 25.h),
 
                     //Register
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Text(
                         'Register',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 30,
+                          fontSize: 30.sp,
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10.h),
 
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Text(
                         'Ready to become a member?',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w300,
-                          fontSize: 15,
+                          fontSize: 15.sp,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: 30.h),
 
                     //FORM STARTS HERE
                     Container(
-                      height: 610,
+                      height: 625.h,
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(40),
@@ -102,38 +103,37 @@ class Sign1Page extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20.h),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const SizedBox(height: 30),
+                              SizedBox(height: 30.h),
                               //Button for Civilian
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
+                                padding: EdgeInsets.symmetric(horizontal: 5.w),
                                 child: Column(
                                   children: [
                                     Container(
-                                      height: 90,
-                                      width: 180,
+                                      height: 90.h,
+                                      width: 180.w,
                                       decoration: BoxDecoration(
                                           color: const Color.fromRGBO(
                                               252, 58, 72, 32),
                                           border: Border.all(
-                                            width: 1.5,
+                                            width: 1.5.w,
                                             color: Colors.white,
                                           ),
                                           borderRadius:
                                               BorderRadius.circular(20)),
                                       child: Padding(
-                                        padding: const EdgeInsets.only(top: 15),
+                                        padding: EdgeInsets.only(top: 15.h),
                                         child: Center(
                                           child: Column(children: [
                                             Image.asset(
                                               'assets/civilian_icon.png',
                                               scale: 1.5,
                                             ),
-                                            const SizedBox(height: 2),
+                                            SizedBox(height: 2.h),
                                             const Text(
                                               'Civilian',
                                               style: TextStyle(
@@ -151,31 +151,30 @@ class Sign1Page extends StatelessWidget {
 
                               //Button for Respondents
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
+                                padding: EdgeInsets.symmetric(horizontal: 5.w),
                                 child: Column(
                                   children: [
                                     Container(
-                                      height: 90,
-                                      width: 180,
+                                      height: 90.h,
+                                      width: 180.w,
                                       decoration: BoxDecoration(
                                           color: const Color.fromARGB(
                                               220, 70, 18, 32),
                                           border: Border.all(
-                                            width: 1.5,
+                                            width: 1.5.w,
                                             color: Colors.white,
                                           ),
                                           borderRadius:
                                               BorderRadius.circular(20)),
                                       child: Padding(
-                                        padding: const EdgeInsets.only(top: 15),
+                                        padding: EdgeInsets.only(top: 15.h),
                                         child: Center(
                                           child: Column(children: [
                                             Image.asset(
                                               'assets/responder_icon.png',
                                               scale: 1.5,
                                             ),
-                                            const SizedBox(height: 2),
+                                            SizedBox(height: 2.h),
                                             const Text(
                                               'Responder',
                                               style: TextStyle(
@@ -192,43 +191,43 @@ class Sign1Page extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 15),
+                          SizedBox(height: 20.h),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            padding: EdgeInsets.symmetric(horizontal: 30.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 //Kindly fill this crp
-                                const Text(
+                                Text(
                                   'Kindly fill up the from:',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 15,
+                                    fontSize: 15.sp,
                                   ),
                                 ),
 
                                 //Username Text FIeld
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
                                 Container(
-                                  height: 50,
+                                  height: 50.h,
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      width: 2,
+                                      width: 2.w,
                                       color: Colors.grey.shade400,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                      vertical: 5,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 7.h,
                                     ),
                                     child: TextField(
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 15,
+                                        fontSize: 15.sp,
                                       ),
                                       decoration: InputDecoration(
                                         prefixIcon: Image.asset(
@@ -243,29 +242,29 @@ class Sign1Page extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
 
                                 //Password text field
                                 Container(
-                                  height: 50,
+                                  height: 50.h,
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      width: 2,
+                                      width: 2.w,
                                       color: Colors.grey.shade400,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                      vertical: 5,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 7.h,
                                     ),
                                     child: TextField(
                                       obscureText: true,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 15,
+                                        fontSize: 15.sp,
                                       ),
                                       decoration: InputDecoration(
                                         prefixIcon: Image.asset(
@@ -280,29 +279,29 @@ class Sign1Page extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
 
                                 //Confirm Password text field
                                 Container(
-                                  height: 50,
+                                  height: 50.h,
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      width: 2,
+                                      width: 2.w,
                                       color: Colors.grey.shade400,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                      vertical: 5,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 7.h,
                                     ),
                                     child: TextField(
                                       obscureText: true,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 15,
+                                        fontSize: 15.sp,
                                       ),
                                       decoration: InputDecoration(
                                         prefixIcon: Image.asset(
@@ -317,18 +316,18 @@ class Sign1Page extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 15),
+                                SizedBox(height: 20.h),
 
                                 //Basic Information
-                                const Text(
+                                Text(
                                   'Fill in your basic information:',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 15,
+                                    fontSize: 15.sp,
                                   ),
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
 
                                 //Fullname Text field
                                 Row(
@@ -337,26 +336,26 @@ class Sign1Page extends StatelessWidget {
                                   children: [
                                     //Surname
                                     Container(
-                                      height: 50,
-                                      width: 145,
+                                      height: 50.h,
+                                      width: 145.w,
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          width: 2,
+                                          width: 2.w,
                                           color: Colors.grey.shade400,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
-                                      child: const Padding(
+                                      child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 5,
+                                          horizontal: 10.w,
+                                          vertical: 7.h,
                                         ),
                                         //Insert icon here
                                         child: TextField(
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w400,
-                                            fontSize: 15,
+                                            fontSize: 15.sp,
                                           ),
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
@@ -370,26 +369,26 @@ class Sign1Page extends StatelessWidget {
                                     ),
                                     //First Name
                                     Container(
-                                      height: 50,
-                                      width: 145,
+                                      height: 50.h,
+                                      width: 145.w,
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          width: 2,
+                                          width: 2.w,
                                           color: Colors.grey.shade400,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
-                                      child: const Padding(
+                                      child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 5,
+                                          horizontal: 10.w,
+                                          vertical: 7.h,
                                         ),
                                         //Insert icon here
                                         child: TextField(
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w400,
-                                            fontSize: 15,
+                                            fontSize: 15.sp,
                                           ),
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
@@ -402,25 +401,25 @@ class Sign1Page extends StatelessWidget {
                                       ),
                                     ),
                                     Container(
-                                      height: 50,
-                                      width: 50,
+                                      height: 50.h,
+                                      width: 50.w,
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          width: 2,
+                                          width: 2.w,
                                           color: Colors.grey.shade400,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
-                                      child: const Padding(
+                                      child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 5,
+                                          horizontal: 10.w,
+                                          vertical: 7.h,
                                         ),
                                         //Insert icon here
                                         child: TextField(
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: 15,
+                                            fontSize: 15.sp,
                                           ),
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
@@ -436,26 +435,26 @@ class Sign1Page extends StatelessWidget {
                                 ),
 
                                 //Occupation
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
                                 Container(
-                                  height: 50,
+                                  height: 50.h,
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      width: 2,
+                                      width: 2.w,
                                       color: Colors.grey.shade400,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                      vertical: 5,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 7.h,
                                     ),
                                     child: TextField(
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 15,
+                                        fontSize: 15.sp,
                                       ),
                                       decoration: InputDecoration(
                                         prefixIcon: Image.asset(
@@ -470,7 +469,7 @@ class Sign1Page extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
 
                                 //Age - Sex - Bloodtype textfields
                                 Row(
@@ -479,26 +478,26 @@ class Sign1Page extends StatelessWidget {
                                   children: [
                                     //Age
                                     Container(
-                                      height: 50,
-                                      width: 113,
+                                      height: 50.h,
+                                      width: 113.w,
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          width: 2,
+                                          width: 2.w,
                                           color: Colors.grey.shade400,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
-                                      child: const Padding(
+                                      child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 5,
+                                          horizontal: 10.w,
+                                          vertical: 7.h,
                                         ),
                                         //Insert icon here
                                         child: TextField(
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w400,
-                                            fontSize: 15,
+                                            fontSize: 15.sp,
                                           ),
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
@@ -512,26 +511,26 @@ class Sign1Page extends StatelessWidget {
                                     ),
                                     //Sex
                                     Container(
-                                      height: 50,
-                                      width: 113,
+                                      height: 50.h,
+                                      width: 113.w,
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          width: 2,
+                                          width: 2.w,
                                           color: Colors.grey.shade400,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
-                                      child: const Padding(
+                                      child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 5,
+                                          horizontal: 10.w,
+                                          vertical: 7.h,
                                         ),
                                         //Insert icon here
                                         child: TextField(
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w400,
-                                            fontSize: 15,
+                                            fontSize: 15.sp,
                                           ),
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
@@ -545,25 +544,25 @@ class Sign1Page extends StatelessWidget {
                                     ),
                                     //Bloodtype
                                     Container(
-                                      height: 50,
-                                      width: 115,
+                                      height: 50.h,
+                                      width: 115.w,
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          width: 2,
+                                          width: 2.w,
                                           color: Colors.grey.shade400,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
-                                      child: const Padding(
+                                      child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 5,
+                                          horizontal: 10.w,
+                                          vertical: 7.h,
                                         ),
                                         //Insert icon here
                                         child: TextField(
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: 15,
+                                            fontSize: 15.sp,
                                           ),
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
@@ -577,7 +576,7 @@ class Sign1Page extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 15.h),
 
                                 Center(
                                   child: GestureDetector(
@@ -590,8 +589,8 @@ class Sign1Page extends StatelessWidget {
                                       );
                                     },
                                     child: Container(
-                                      width: 700,
-                                      height: 45,
+                                      height: 45.h,
+                                      width: 700.w,
                                       decoration: BoxDecoration(
                                           gradient: const LinearGradient(
                                             begin: Alignment.topLeft,
@@ -618,11 +617,13 @@ class Sign1Page extends StatelessWidget {
                               ],
                             ),
                           ),
+                          SizedBox(height: 15.h),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 15),
+
                     //LOGIN HERE CRP
+                    SizedBox(height: 15.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rtena_app/login_page.dart';
 import 'package:rtena_app/SignUp/sign_page_1.dart';
 
@@ -14,10 +15,10 @@ class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(192, 39, 45, 1),
+      backgroundColor: Color.fromRGBO(192, 39, 45, 1),
       body: SafeArea(
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -27,13 +28,13 @@ class StartPage extends StatelessWidget {
               ],
             ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          height: MediaQuery.of(context).size.height,
+          padding: EdgeInsets.symmetric(horizontal: 30),
+          height: double.infinity,
           width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 35),
+              SizedBox(height: 35.h),
 
               //Logo
               SizedBox(
@@ -42,7 +43,7 @@ class StartPage extends StatelessWidget {
                   scale: 1.2,
                 ),
               ),
-              const SizedBox(height: 110),
+              SizedBox(height: 110.h),
 
               //R Logo
 
@@ -52,10 +53,10 @@ class StartPage extends StatelessWidget {
                   scale: 2.5,
                 ),
               ),
-              const SizedBox(height: 110),
+              SizedBox(height: 110.h),
 
               //Title
-              const Text(
+              Text(
                 'Real-Time Emergency Notifier',
                 style: TextStyle(
                   color: Colors.white,
@@ -63,10 +64,10 @@ class StartPage extends StatelessWidget {
                   fontSize: 30,
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10.h),
 
               //Description
-              const Text(
+              Text(
                 'Stay safe, always connected: be prepared with our emergency notifier app',
                 style: TextStyle(
                   color: Colors.white,
@@ -74,7 +75,7 @@ class StartPage extends StatelessWidget {
                   fontSize: 15,
                 ),
               ),
-              const SizedBox(height: 35),
+              SizedBox(height: 35.h),
 
               //Login Button
               Center(
@@ -83,16 +84,16 @@ class StartPage extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => const LoginPage()),
+                          builder: (BuildContext context) => LoginPage()),
                     );
                   },
                   child: Container(
-                    width: 700,
-                    height: 45,
+                    width: 700.w,
+                    height: 45.h,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(15)),
-                    child: const Center(
+                    child: Center(
                         child: Text(
                       'Login',
                       style: TextStyle(
@@ -103,7 +104,7 @@ class StartPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10.h),
 
               //Sign Up Button
               Center(
@@ -112,19 +113,19 @@ class StartPage extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => const Sign1Page()),
+                          builder: (BuildContext context) => Sign1Page()),
                     );
                   },
                   child: Container(
-                    width: 700,
-                    height: 45,
+                    width: 700.w,
+                    height: 45.h,
                     decoration: BoxDecoration(
                         border: Border.all(
-                          width: 1,
+                          width: 1.w,
                           color: Colors.white,
                         ),
                         borderRadius: BorderRadius.circular(15)),
-                    child: const Center(
+                    child: Center(
                       child: Text(
                         'Sign Up',
                         style: TextStyle(

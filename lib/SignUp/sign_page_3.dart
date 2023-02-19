@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/SignUp/sign_page_4.dart';
 
@@ -7,10 +8,10 @@ class Sign3Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(192, 39, 45, 1),
+      backgroundColor: Color.fromRGBO(192, 39, 45, 1),
       body: SafeArea(
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.center,
@@ -30,9 +31,9 @@ class Sign3Page extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 35),
+                    SizedBox(height: 35.h),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -44,7 +45,7 @@ class Sign3Page extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          const StartPage()),
+                                          StartPage()),
                                 );
                               },
                               child: Image.asset(
@@ -57,41 +58,40 @@ class Sign3Page extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 25),
+                    SizedBox(height: 25.h),
 
                     //Register
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Text(
                         'Register',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 30,
+                          fontSize: 30.sp,
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10.h),
 
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Text(
                         'Ready to become a member?',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w300,
-                          fontSize: 15,
+                          fontSize: 15.sp,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: 30.h),
 
                     //FORM STARTS HERE
                     Container(
-                      width: double.infinity,
-                      height: 610,
-                      decoration: const BoxDecoration(
+                      height: 625.h,
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(40),
                           bottomRight: Radius.circular(40),
@@ -101,7 +101,7 @@ class Sign3Page extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 40),
+                          SizedBox(height: 40.h),
                           //Vector Image
                           Center(
                             child: Image.asset(
@@ -109,55 +109,55 @@ class Sign3Page extends StatelessWidget {
                               scale: 3,
                             ),
                           ),
-                          const SizedBox(height: 30),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
+                          SizedBox(height: 35.h),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 30.w),
                             child: Text(
                               'Account Verification',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
-                                fontSize: 17,
+                                fontSize: 17.sp,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20.h),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            padding: EdgeInsets.symmetric(horizontal: 30.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   'We have successfuly sent your phone number a 6 digit pin. Enter the 6-digit pin you have received below.',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 15,
+                                    fontSize: 15.sp,
                                   ),
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 15.h),
 
                                 //Six digit Pin
                                 Container(
-                                  height: 50,
+                                  height: 50.h,
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      width: 2,
+                                      width: 2.w,
                                       color: Colors.grey.shade400,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                      vertical: 5,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 7.h,
                                     ),
                                     child: TextField(
                                       obscureText: true,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 15,
+                                        fontSize: 15.sp,
                                       ),
                                       decoration: InputDecoration(
                                         prefixIcon: Image.asset(
@@ -166,13 +166,13 @@ class Sign3Page extends StatelessWidget {
                                         ),
                                         border: InputBorder.none,
                                         hintText: '6-Digit Pin',
-                                        hintStyle: const TextStyle(
-                                            color: Colors.black),
+                                        hintStyle:
+                                            TextStyle(color: Colors.black),
                                       ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 150),
+                                SizedBox(height: 155.h),
 
                                 Center(
                                   child: GestureDetector(
@@ -181,14 +181,14 @@ class Sign3Page extends StatelessWidget {
                                         context,
                                         MaterialPageRoute(
                                             builder: (BuildContext context) =>
-                                                const Sign4Page()),
+                                                Sign4Page()),
                                       );
                                     },
                                     child: Container(
-                                      width: 700,
-                                      height: 45,
+                                      width: 700.w,
+                                      height: 45.h,
                                       decoration: BoxDecoration(
-                                          gradient: const LinearGradient(
+                                          gradient: LinearGradient(
                                             begin: Alignment.topLeft,
                                             end: Alignment.bottomRight,
                                             colors: [
@@ -198,7 +198,7 @@ class Sign3Page extends StatelessWidget {
                                           ),
                                           borderRadius:
                                               BorderRadius.circular(15)),
-                                      child: const Center(
+                                      child: Center(
                                         child: Text(
                                           'Proceed',
                                           style: TextStyle(
@@ -210,6 +210,7 @@ class Sign3Page extends StatelessWidget {
                                     ),
                                   ),
                                 ),
+                                SizedBox(height: 10.h),
                               ],
                             ),
                           ),

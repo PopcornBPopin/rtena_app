@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/SignUp/sign_page_1.dart';
 import 'package:rtena_app/Civilian/civilian_home_page.dart';
@@ -21,7 +22,7 @@ class LoginPage extends StatelessWidget {
               ],
             ),
           ),
-          height: MediaQuery.of(context).size.height,
+          height: double.infinity,
           width: double.infinity,
           child: SingleChildScrollView(
             reverse: false,
@@ -31,9 +32,9 @@ class LoginPage extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 35),
+                    SizedBox(height: 35.h),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -48,7 +49,7 @@ class LoginPage extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              const StartPage()),
+                                              StartPage()),
                                     );
                                   },
                                   child: Image.asset(
@@ -60,9 +61,9 @@ class LoginPage extends StatelessWidget {
                             ],
                           ),
 
-                          const SizedBox(height: 150),
+                          SizedBox(height: 150.h),
                           //Welcome Back!
-                          const Text(
+                          Text(
                             'Welcome Back!',
                             style: TextStyle(
                               color: Colors.white,
@@ -70,10 +71,10 @@ class LoginPage extends StatelessWidget {
                               fontSize: 30,
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
 
                           //Welcome Back!
-                          const Text(
+                          Text(
                             'Login to your existing account of RTena',
                             style: TextStyle(
                               color: Colors.white,
@@ -81,34 +82,34 @@ class LoginPage extends StatelessWidget {
                               fontSize: 15,
                             ),
                           ),
-                          const SizedBox(height: 200),
+                          SizedBox(height: 200.h),
                         ],
                       ),
                     ),
 
                     //STARTS HERE
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(
                         children: [
                           //Username Text FIeld
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                           Container(
-                            height: 50,
+                            height: 50.h,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                width: 1,
+                                width: 1.w,
                                 color: Colors.white,
                               ),
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 5,
-                                vertical: 5,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 7.h,
                               ),
                               child: TextField(
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w400,
                                   fontSize: 15,
@@ -120,32 +121,31 @@ class LoginPage extends StatelessWidget {
                                   ),
                                   border: InputBorder.none,
                                   hintText: 'Username',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.white),
+                                  hintStyle: TextStyle(color: Colors.white),
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
 
                           //Password text field
                           Container(
-                            height: 50,
+                            height: 50.h,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                width: 1,
+                                width: 1.w,
                                 color: Colors.white,
                               ),
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 5,
-                                vertical: 5,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 7.h,
                               ),
                               child: TextField(
                                 obscureText: true,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w400,
                                   fontSize: 15,
@@ -157,18 +157,17 @@ class LoginPage extends StatelessWidget {
                                   ),
                                   border: InputBorder.none,
                                   hintText: 'Password',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.white),
+                                  hintStyle: TextStyle(color: Colors.white),
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
 
                           //Forgot Password?
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
-                            children: const [
+                            children: [
                               //Forgot Password?
                               Text(
                                 'Forgot Password?',
@@ -180,7 +179,7 @@ class LoginPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 30),
+                          SizedBox(height: 30.h),
 
                           //Login Button
                           Center(
@@ -190,16 +189,16 @@ class LoginPage extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          const CivHomePage()),
+                                          CivHomePage()),
                                 );
                               },
                               child: Container(
-                                width: 700,
-                                height: 45,
+                                width: 700.w,
+                                height: 45.h,
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(15)),
-                                child: const Center(
+                                child: Center(
                                   child: Text(
                                     'Submit',
                                     style: TextStyle(
@@ -211,13 +210,13 @@ class LoginPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
 
                           //Already have an account? Login Now
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              const Text(
+                              Text(
                                 'Not a member? ',
                                 style: TextStyle(
                                   color: Colors.white,
@@ -230,12 +229,12 @@ class LoginPage extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
-                                            const Sign1Page()),
+                                            Sign1Page()),
                                     // builder: (BuildContext context) =>
-                                    //     const OldLoginPage()),
+                                    //       OldLoginPage()),
                                   );
                                 },
-                                child: const Text(
+                                child: Text(
                                   'Register Now',
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 255, 255, 255),

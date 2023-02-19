@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rtena_app/Civilian/civilian_acknowledge_page.dart';
 
 class CivSelectedPage extends StatelessWidget {
@@ -9,7 +10,7 @@ class CivSelectedPage extends StatelessWidget {
       backgroundColor: const Color.fromRGBO(192, 39, 45, 1),
       body: SafeArea(
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -19,7 +20,7 @@ class CivSelectedPage extends StatelessWidget {
               ],
             ),
           ),
-          height: MediaQuery.of(context).size.height,
+          height: double.infinity,
           width: double.infinity,
           child: Column(
             children: [
@@ -27,9 +28,9 @@ class CivSelectedPage extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 35),
+                  SizedBox(height: 35.h),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -44,7 +45,7 @@ class CivSelectedPage extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
-                                            const CivAckPage()),
+                                            CivAckPage()),
                                   );
                                 },
                                 child: Image.asset(
@@ -56,48 +57,47 @@ class CivSelectedPage extends StatelessWidget {
                           ],
                         ),
 
-                        const SizedBox(height: 45),
+                        SizedBox(height: 45.h),
                         //Emergency Selected
-                        const Text(
+                        Text(
                           'Emergency Selected',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 30,
+                            fontSize: 30.sp,
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10.h),
 
                         //Description
-                        const Text(
+                        Text(
                           'Waiting for confimration of the responders near you. Please hang tight.',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w300,
-                            fontSize: 18,
+                            fontSize: 18.sp,
                           ),
                         ),
-                        const SizedBox(height: 45),
+                        SizedBox(height: 45.h),
                       ],
                     ),
                   ),
 
                   //STARTS HERE
                   Container(
-                    width: double.infinity,
-                    height: 550,
-                    decoration: const BoxDecoration(
+                    height: 575.h,
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),
                         bottomRight: Radius.circular(40),
                       ),
                       color: Colors.white,
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: Center(
                       child: Column(
                         children: [
-                          const SizedBox(height: 120),
+                          SizedBox(height: 135.h),
                           Image.asset(
                             'assets/emergency_selected.png',
                             scale: 2,

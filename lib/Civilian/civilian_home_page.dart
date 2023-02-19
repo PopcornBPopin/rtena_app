@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rtena_app/Civilian/civilian_selected_page.dart';
 import 'package:rtena_app/start_page.dart';
 
@@ -7,10 +8,10 @@ class CivHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(192, 39, 45, 1),
+      backgroundColor: Color.fromRGBO(192, 39, 45, 1),
       body: SafeArea(
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.center,
@@ -29,10 +30,10 @@ class CivHomePage extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 35),
+                  SizedBox(height: 35.h),
                   //LOGO
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -44,7 +45,7 @@ class CivHomePage extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                        const StartPage()),
+                                        StartPage()),
                               );
                             },
                             child: Image.asset(
@@ -57,40 +58,39 @@ class CivHomePage extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 25),
+                  SizedBox(height: 25.h),
 
                   //Welcome Back
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: Text(
                       'Welcome Back!',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 30,
+                        fontSize: 30.sp,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
 
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: Text(
                       'What kind of emergency are you involved in?',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w300,
-                        fontSize: 15,
+                        fontSize: 15.sp,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(height: 30.h),
 
                   //FORM STARTS HERE
                   Container(
-                    width: double.infinity,
-                    height: 610,
-                    decoration: const BoxDecoration(
+                    height: 625.h,
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),
                         bottomRight: Radius.circular(40),
@@ -100,19 +100,19 @@ class CivHomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 25),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
+                        SizedBox(height: 25.h),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30.w),
                           child: Text(
                             'Select the button of emergency you want to report.',
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w500,
-                              fontSize: 17,
+                              fontSize: 17.sp,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10.h),
 
                         //Grid of Selection
                         Column(
@@ -121,30 +121,27 @@ class CivHomePage extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const SizedBox(
-                                  height: 30,
-                                ),
+                                SizedBox(height: 30.h),
                                 //Button for Fire
                                 Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 80,
-                                        width: 180,
+                                        height: 90.h,
+                                        width: 180.w,
                                         decoration: BoxDecoration(
-                                            color: const Color.fromRGBO(
-                                                102, 0, 0, 90),
+                                            color:
+                                                Color.fromRGBO(102, 0, 0, 90),
                                             border: Border.all(
-                                              width: 1.5,
+                                              width: 1.5.w,
                                               color: Colors.white,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(20)),
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 10),
+                                          padding: EdgeInsets.only(top: 10.h),
                                           child: Center(
                                             child: Column(
                                               children: [
@@ -152,8 +149,8 @@ class CivHomePage extends StatelessWidget {
                                                   'assets/fire_icon.png',
                                                   scale: 22,
                                                 ),
-                                                const SizedBox(height: 2),
-                                                const Text(
+                                                SizedBox(height: 2.h),
+                                                Text(
                                                   'Fire',
                                                   style: TextStyle(
                                                     color: Colors.white,
@@ -172,24 +169,23 @@ class CivHomePage extends StatelessWidget {
                                 //Button for Health
                                 Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 80,
-                                        width: 180,
+                                        height: 90.h,
+                                        width: 180.w,
                                         decoration: BoxDecoration(
-                                            color: const Color.fromRGBO(
-                                                153, 0, 51, 40),
+                                            color:
+                                                Color.fromRGBO(153, 0, 51, 40),
                                             border: Border.all(
-                                              width: 1.5,
+                                              width: 1.5.w,
                                               color: Colors.white,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(20)),
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 10),
+                                          padding: EdgeInsets.only(top: 10.h),
                                           child: Center(
                                             child: Column(
                                               children: [
@@ -197,8 +193,8 @@ class CivHomePage extends StatelessWidget {
                                                   'assets/health_icon.png',
                                                   scale: 1.5,
                                                 ),
-                                                const SizedBox(height: 2),
-                                                const Text(
+                                                SizedBox(height: 2.h),
+                                                Text(
                                                   'Health',
                                                   style: TextStyle(
                                                     color: Colors.white,
@@ -215,36 +211,35 @@ class CivHomePage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 10),
+                            SizedBox(height: 10.h),
 
                             //Murder and Assault
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const SizedBox(
-                                  height: 30,
+                                SizedBox(
+                                  height: 30.h,
                                 ),
                                 //Button for Murder
                                 Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 80,
-                                        width: 180,
+                                        height: 90.h,
+                                        width: 180.w,
                                         decoration: BoxDecoration(
-                                            color: const Color.fromRGBO(
-                                                95, 2, 31, 40),
+                                            color:
+                                                Color.fromRGBO(95, 2, 31, 40),
                                             border: Border.all(
-                                              width: 1.5,
+                                              width: 1.5.w,
                                               color: Colors.white,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(20)),
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 10),
+                                          padding: EdgeInsets.only(top: 10.h),
                                           child: Center(
                                             child: Column(
                                               children: [
@@ -252,8 +247,8 @@ class CivHomePage extends StatelessWidget {
                                                   'assets/murder_icon.png',
                                                   scale: 1.5,
                                                 ),
-                                                const SizedBox(height: 2),
-                                                const Text(
+                                                SizedBox(height: 2.h),
+                                                Text(
                                                   'Murder',
                                                   style: TextStyle(
                                                     color: Colors.white,
@@ -272,24 +267,23 @@ class CivHomePage extends StatelessWidget {
                                 //Button for Assault
                                 Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 80,
-                                        width: 180,
+                                        height: 90.h,
+                                        width: 180.w,
                                         decoration: BoxDecoration(
-                                            color: const Color.fromRGBO(
-                                                140, 0, 26, 40),
+                                            color:
+                                                Color.fromRGBO(140, 0, 26, 40),
                                             border: Border.all(
-                                              width: 1.5,
+                                              width: 1.5.w,
                                               color: Colors.white,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(20)),
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 10),
+                                          padding: EdgeInsets.only(top: 10.h),
                                           child: Center(
                                             child: Column(
                                               children: [
@@ -297,8 +291,8 @@ class CivHomePage extends StatelessWidget {
                                                   'assets/assault_icon.png',
                                                   scale: 1.5,
                                                 ),
-                                                const SizedBox(height: 2),
-                                                const Text(
+                                                SizedBox(height: 2.h),
+                                                Text(
                                                   'Assault',
                                                   style: TextStyle(
                                                     color: Colors.white,
@@ -315,36 +309,35 @@ class CivHomePage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 10),
+                            SizedBox(height: 10.h),
 
                             //Flood and Earthquake
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const SizedBox(
-                                  height: 30,
+                                SizedBox(
+                                  height: 30.h,
                                 ),
                                 //Button for Flood
                                 Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 80,
-                                        width: 180,
+                                        height: 90.h,
+                                        width: 180.w,
                                         decoration: BoxDecoration(
-                                            color: const Color.fromRGBO(
-                                                255, 144, 0, 1),
+                                            color:
+                                                Color.fromRGBO(255, 144, 0, 1),
                                             border: Border.all(
-                                              width: 1.5,
+                                              width: 1.5.w,
                                               color: Colors.white,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(20)),
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 10),
+                                          padding: EdgeInsets.only(top: 10).h,
                                           child: Center(
                                             child: Column(
                                               children: [
@@ -352,8 +345,8 @@ class CivHomePage extends StatelessWidget {
                                                   'assets/flood_icon.png',
                                                   scale: 23,
                                                 ),
-                                                const SizedBox(height: 2),
-                                                const Text(
+                                                SizedBox(height: 2.h),
+                                                Text(
                                                   'Flood',
                                                   style: TextStyle(
                                                     color: Colors.white,
@@ -372,24 +365,23 @@ class CivHomePage extends StatelessWidget {
                                 //Button for Earthquake
                                 Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 80,
-                                        width: 180,
+                                        height: 90.h,
+                                        width: 180.w,
                                         decoration: BoxDecoration(
-                                            color: const Color.fromRGBO(
-                                                55, 6, 23, 40),
+                                            color:
+                                                Color.fromRGBO(55, 6, 23, 40),
                                             border: Border.all(
-                                              width: 1.5,
+                                              width: 1.5.w,
                                               color: Colors.white,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(20)),
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 10),
+                                          padding: EdgeInsets.only(top: 10.h),
                                           child: Center(
                                             child: Column(
                                               children: [
@@ -397,8 +389,8 @@ class CivHomePage extends StatelessWidget {
                                                   'assets/earthquake_icon.png',
                                                   scale: 25,
                                                 ),
-                                                const SizedBox(height: 2),
-                                                const Text(
+                                                SizedBox(height: 2.h),
+                                                Text(
                                                   'Earthquake',
                                                   style: TextStyle(
                                                     color: Colors.white,
@@ -415,36 +407,33 @@ class CivHomePage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 10),
+                            SizedBox(height: 10.h),
 
                             //Kidnapping and Robbery
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const SizedBox(
-                                  height: 30,
-                                ),
+                                SizedBox(height: 30.h),
                                 //Button for Kidnapping
                                 Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 80,
-                                        width: 180,
+                                        height: 90.h,
+                                        width: 180.w,
                                         decoration: BoxDecoration(
-                                            color: const Color.fromRGBO(
-                                                157, 2, 8, 40),
+                                            color:
+                                                Color.fromRGBO(157, 2, 8, 40),
                                             border: Border.all(
-                                              width: 1.5,
+                                              width: 1.5.w,
                                               color: Colors.white,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(20)),
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 10),
+                                          padding: EdgeInsets.only(top: 10.h),
                                           child: Center(
                                             child: Column(
                                               children: [
@@ -452,8 +441,8 @@ class CivHomePage extends StatelessWidget {
                                                   'assets/kidnap_icon.png',
                                                   scale: 16,
                                                 ),
-                                                const SizedBox(height: 2),
-                                                const Text(
+                                                SizedBox(height: 2.h),
+                                                Text(
                                                   'Kidnapping',
                                                   style: TextStyle(
                                                     color: Colors.white,
@@ -472,24 +461,23 @@ class CivHomePage extends StatelessWidget {
                                 //Button for Robbery
                                 Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 80,
-                                        width: 180,
+                                        height: 90.h,
+                                        width: 180.w,
                                         decoration: BoxDecoration(
-                                            color: const Color.fromRGBO(
-                                                220, 47, 2, 40),
+                                            color:
+                                                Color.fromRGBO(220, 47, 2, 40),
                                             border: Border.all(
-                                              width: 1.5,
+                                              width: 1.5.w,
                                               color: Colors.white,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(20)),
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 10),
+                                          padding: EdgeInsets.only(top: 10.h),
                                           child: Center(
                                             child: Column(
                                               children: [
@@ -497,8 +485,8 @@ class CivHomePage extends StatelessWidget {
                                                   'assets/robbery_icon.png',
                                                   scale: 1.5,
                                                 ),
-                                                const SizedBox(height: 2),
-                                                const Text(
+                                                SizedBox(height: 2.h),
+                                                Text(
                                                   'Robbery',
                                                   style: TextStyle(
                                                     color: Colors.white,
@@ -517,39 +505,39 @@ class CivHomePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
 
                         //Button for Alert
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30),
+                              padding: EdgeInsets.symmetric(horizontal: 30.w),
                               child: Text(
                                 "Don't know the emergency? Just press the 'Alert' button",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 17,
+                                  fontSize: 17.sp,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10.h),
 
                         //Button for Alert - Proceed to selected page
                         Center(
                           child: Column(
                             children: [
                               Container(
-                                height: 80,
-                                width: 180,
+                                height: 90.h,
+                                width: 180.w,
                                 decoration: BoxDecoration(
-                                    color: const Color.fromRGBO(232, 93, 4, 40),
+                                    color: Color.fromRGBO(232, 93, 4, 40),
                                     border: Border.all(
-                                      width: 1.5,
+                                      width: 1.5.w,
                                       color: Colors.white,
                                     ),
                                     borderRadius: BorderRadius.circular(20)),
@@ -559,11 +547,11 @@ class CivHomePage extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              const CivSelectedPage()),
+                                              CivSelectedPage()),
                                     );
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.only(top: 10),
+                                    padding: EdgeInsets.only(top: 10.h),
                                     child: Center(
                                       child: Column(
                                         children: [
@@ -571,8 +559,8 @@ class CivHomePage extends StatelessWidget {
                                             'assets/responder_icon.png',
                                             scale: 1.5,
                                           ),
-                                          const SizedBox(height: 2),
-                                          const Text(
+                                          SizedBox(height: 2.h),
+                                          Text(
                                             'Alert',
                                             style: TextStyle(
                                               color: Colors.white,
