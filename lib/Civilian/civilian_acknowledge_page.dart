@@ -85,7 +85,7 @@ class CivAckPage extends StatelessWidget {
 
                   //STARTS HERE
                   Container(
-                    height: 575.h,
+                    height: 562.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),
