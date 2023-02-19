@@ -114,7 +114,7 @@ class StartPage extends StatelessWidget {
                     Get.to(
                       () => const Sign1Page(),
                       transition: Transition.circularReveal,
-                      duration: Duration(milliseconds: 700),
+                      duration: Duration(milliseconds: 1000),
                     );
                   },
                   child: Container(

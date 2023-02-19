@@ -64,7 +64,7 @@ class CivAckPage extends StatelessWidget {
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 30,
+                            fontSize: 30.sp,
                           ),
                         ),
                         SizedBox(height: 10.h),
