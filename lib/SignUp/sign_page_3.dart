@@ -172,7 +172,7 @@ class Sign3Page extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 155.h),
+                                SizedBox(height: 157.5.h),
 
                                 Center(
                                   child: GestureDetector(

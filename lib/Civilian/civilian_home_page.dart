@@ -89,7 +89,7 @@ class CivHomePage extends StatelessWidget {
 
                   //FORM STARTS HERE
                   Container(
-                    height: 625.h,
+                    height: 624.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),
