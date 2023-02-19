@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:rtena_app/start_page.dart';
 
 class Sign4Page extends StatelessWidget {
@@ -41,11 +42,10 @@ class Sign4Page extends StatelessWidget {
                           SizedBox(
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          StartPage()),
+                                Get.to(
+                                  () => const StartPage(),
+                                  transition: Transition.fadeIn,
+                                  duration: Duration(milliseconds: 300),
                                 );
                               },
                               child: Image.asset(
@@ -144,11 +144,10 @@ class Sign4Page extends StatelessWidget {
                             child: Center(
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            Sign4Page()),
+                                  Get.to(
+                                    () => const Sign4Page(),
+                                    transition: Transition.fadeIn,
+                                    duration: Duration(milliseconds: 300),
                                   );
                                 },
                                 child: Container(

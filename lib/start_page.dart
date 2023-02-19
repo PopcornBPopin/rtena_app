@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:rtena_app/login_page.dart';
 import 'package:rtena_app/SignUp/sign_page_1.dart';
 
@@ -81,10 +82,10 @@ class StartPage extends StatelessWidget {
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => LoginPage()),
+                    Get.to(
+                      () => const LoginPage(),
+                      transition: Transition.fadeIn,
+                      duration: Duration(milliseconds: 300),
                     );
                   },
                   child: Container(
@@ -110,10 +111,10 @@ class StartPage extends StatelessWidget {
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => Sign1Page()),
+                    Get.to(
+                      () => const Sign1Page(),
+                      transition: Transition.circularReveal,
+                      duration: Duration(milliseconds: 700),
                     );
                   },
                   child: Container(

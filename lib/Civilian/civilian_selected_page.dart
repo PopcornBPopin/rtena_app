@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:rtena_app/Civilian/civilian_acknowledge_page.dart';
 
 class CivSelectedPage extends StatelessWidget {
@@ -41,11 +42,10 @@ class CivSelectedPage extends StatelessWidget {
                             SizedBox(
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            CivAckPage()),
+                                  Get.to(
+                                    () => const CivAckPage(),
+                                    transition: Transition.fadeIn,
+                                    duration: Duration(milliseconds: 300),
                                   );
                                 },
                                 child: Image.asset(

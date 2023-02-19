@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:rtena_app/start_page.dart';
 
 class CivAckPage extends StatelessWidget {
@@ -41,11 +42,10 @@ class CivAckPage extends StatelessWidget {
                             SizedBox(
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            StartPage()),
+                                  Get.to(
+                                    () => const StartPage(),
+                                    transition: Transition.fadeIn,
+                                    duration: Duration(milliseconds: 300),
                                   );
                                 },
                                 child: Image.asset(

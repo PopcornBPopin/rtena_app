@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/SignUp/sign_page_1.dart';
 import 'package:rtena_app/Civilian/civilian_home_page.dart';
@@ -45,11 +46,10 @@ class LoginPage extends StatelessWidget {
                               SizedBox(
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              StartPage()),
+                                    Get.to(
+                                      () => const StartPage(),
+                                      transition: Transition.fadeIn,
+                                      duration: Duration(milliseconds: 300),
                                     );
                                   },
                                   child: Image.asset(
@@ -181,15 +181,14 @@ class LoginPage extends StatelessWidget {
                           ),
                           SizedBox(height: 30.h),
 
-                          //Login Button
+                          //Submit Button
                           Center(
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          CivHomePage()),
+                                Get.to(
+                                  () => const CivHomePage(),
+                                  transition: Transition.circularReveal,
+                                  duration: Duration(milliseconds: 700),
                                 );
                               },
                               child: Container(
@@ -225,13 +224,10 @@ class LoginPage extends StatelessWidget {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            Sign1Page()),
-                                    // builder: (BuildContext context) =>
-                                    //       OldLoginPage()),
+                                  Get.to(
+                                    () => const Sign1Page(),
+                                    transition: Transition.circularReveal,
+                                    duration: Duration(milliseconds: 700),
                                   );
                                 },
                                 child: Text(

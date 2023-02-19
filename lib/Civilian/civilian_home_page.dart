@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:rtena_app/Civilian/civilian_selected_page.dart';
 import 'package:rtena_app/start_page.dart';
 
@@ -41,11 +42,10 @@ class CivHomePage extends StatelessWidget {
                         SizedBox(
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        StartPage()),
+                              Get.to(
+                                () => const StartPage(),
+                                transition: Transition.fadeIn,
+                                duration: Duration(milliseconds: 300),
                               );
                             },
                             child: Image.asset(
@@ -129,7 +129,7 @@ class CivHomePage extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 90.h,
+                                        height: 85.h,
                                         width: 180.w,
                                         decoration: BoxDecoration(
                                             color:
@@ -173,7 +173,7 @@ class CivHomePage extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 90.h,
+                                        height: 85.h,
                                         width: 180.w,
                                         decoration: BoxDecoration(
                                             color:
@@ -227,7 +227,7 @@ class CivHomePage extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 90.h,
+                                        height: 85.h,
                                         width: 180.w,
                                         decoration: BoxDecoration(
                                             color:
@@ -271,7 +271,7 @@ class CivHomePage extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 90.h,
+                                        height: 85.h,
                                         width: 180.w,
                                         decoration: BoxDecoration(
                                             color:
@@ -325,7 +325,7 @@ class CivHomePage extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 90.h,
+                                        height: 85.h,
                                         width: 180.w,
                                         decoration: BoxDecoration(
                                             color:
@@ -369,7 +369,7 @@ class CivHomePage extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 90.h,
+                                        height: 85.h,
                                         width: 180.w,
                                         decoration: BoxDecoration(
                                             color:
@@ -421,7 +421,7 @@ class CivHomePage extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 90.h,
+                                        height: 85.h,
                                         width: 180.w,
                                         decoration: BoxDecoration(
                                             color:
@@ -465,7 +465,7 @@ class CivHomePage extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       Container(
-                                        height: 90.h,
+                                        height: 85.h,
                                         width: 180.w,
                                         decoration: BoxDecoration(
                                             color:
@@ -532,7 +532,7 @@ class CivHomePage extends StatelessWidget {
                           child: Column(
                             children: [
                               Container(
-                                height: 90.h,
+                                height: 85.h,
                                 width: 180.w,
                                 decoration: BoxDecoration(
                                     color: Color.fromRGBO(232, 93, 4, 40),
@@ -543,11 +543,10 @@ class CivHomePage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20)),
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              CivSelectedPage()),
+                                    Get.to(
+                                      () => const CivSelectedPage(),
+                                      transition: Transition.fadeIn,
+                                      duration: Duration(milliseconds: 300),
                                     );
                                   },
                                   child: Padding(

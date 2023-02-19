@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/login_page.dart';
 import 'package:rtena_app/SignUp/sign_page_2.dart';
@@ -43,11 +44,10 @@ class Sign1Page extends StatelessWidget {
                           SizedBox(
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const StartPage()),
+                                Get.to(
+                                  () => const StartPage(),
+                                  transition: Transition.fadeIn,
+                                  duration: Duration(milliseconds: 300),
                                 );
                               },
                               child: Image.asset(
@@ -581,11 +581,10 @@ class Sign1Page extends StatelessWidget {
                                 Center(
                                   child: GestureDetector(
                                     onTap: () {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                const Sign2Page()),
+                                      Get.to(
+                                        () => const Sign2Page(),
+                                        transition: Transition.fadeIn,
+                                        duration: Duration(milliseconds: 300),
                                       );
                                     },
                                     child: Container(
@@ -636,11 +635,10 @@ class Sign1Page extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const LoginPage()),
+                            Get.to(
+                              () => const LoginPage(),
+                              transition: Transition.fadeIn,
+                              duration: Duration(milliseconds: 300),
                             );
                           },
                           child: const Text(
