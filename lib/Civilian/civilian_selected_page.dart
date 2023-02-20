@@ -85,7 +85,7 @@ class CivSelectedPage extends StatelessWidget {
 
                   //STARTS HERE
                   Container(
-                    height: 565.h,
+                    height: 566.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),

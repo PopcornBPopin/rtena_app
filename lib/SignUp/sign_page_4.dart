@@ -138,14 +138,14 @@ class Sign4Page extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(height: 240.h),
+                          SizedBox(height: 236.h),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 30.w),
                             child: Center(
                               child: GestureDetector(
                                 onTap: () {
                                   Get.to(
-                                    () => const Sign4Page(),
+                                    () => const StartPage(),
                                     transition: Transition.fadeIn,
                                     duration: Duration(milliseconds: 300),
                                   );

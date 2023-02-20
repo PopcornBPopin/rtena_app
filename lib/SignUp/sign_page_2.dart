@@ -218,7 +218,7 @@ class Sign2Page extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 15.h),
+                                SizedBox(height: 14.h),
 
                                 Center(
                                   child: GestureDetector(
