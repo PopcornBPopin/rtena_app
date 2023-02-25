@@ -7,6 +7,9 @@ import 'package:rtena_app/Civilian/civilian_home_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
+
+  // Text Controllers
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

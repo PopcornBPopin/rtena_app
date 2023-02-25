@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "852767744401",
+    "project_id": "r-tena",
+    "storage_bucket": "r-tena.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852767744401:android:a4111184fcc085f5f17a30",
+        "android_client_info": {
+          "package_name": "com.example.rtena_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852767744401-5r1p8smhq8mdv3efmj6kmj8jkb2gllni.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlOXPBz99tX6hlQkfBnx63wnXtn9wZwuY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852767744401-5r1p8smhq8mdv3efmj6kmj8jkb2gllni.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
