@@ -17,8 +17,43 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  //Error snackbar missing email and password textfields
+  final emptyErrorSnackBar = SnackBar(
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.error_outline,
+          size: 25,
+          color: Colors.white,
+        ),
+        Expanded(
+          child: Center(
+            child: Text(
+              'Please enter Username and Password',
+              style: TextStyle(
+                fontSize: 18.sp,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+    backgroundColor: Colors.red,
+    duration: Duration(seconds: 4),
+    shape: StadiumBorder(),
+    behavior: SnackBarBehavior.floating,
+    elevation: 0,
+  );
+
   // Sign in Method
   Future signIn() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(emptyErrorSnackBar);
+    }
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
@@ -146,7 +181,6 @@ class _LoginPageState extends State<LoginPage> {
                                   fontSize: 15,
                                 ),
                                 decoration: InputDecoration(
-                                  isDense: true,
                                   prefixIcon: Image.asset(
                                     'assets/user_icon.png',
                                     scale: 4,
@@ -184,7 +218,6 @@ class _LoginPageState extends State<LoginPage> {
                                   fontSize: 15,
                                 ),
                                 decoration: InputDecoration(
-                                  isDense: true,
                                   prefixIcon: Image.asset(
                                     'assets/password_icon.png',
                                     scale: 4,
@@ -234,7 +267,7 @@ class _LoginPageState extends State<LoginPage> {
                                     borderRadius: BorderRadius.circular(15)),
                                 child: Center(
                                   child: Text(
-                                    'Submit',
+                                    'Login',
                                     style: TextStyle(
                                       color: Color.fromRGBO(70, 18, 32, 1),
                                       fontWeight: FontWeight.bold,
