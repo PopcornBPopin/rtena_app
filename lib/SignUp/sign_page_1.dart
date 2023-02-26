@@ -15,6 +15,45 @@ class _Sign1PageState extends State<Sign1Page> {
   bool _civIsPressed = false;
   bool _resIsPressed = false;
 
+  String? _selectedGender;
+  String? _selectedBloodtype;
+
+  // Text Controllers
+  // final _usernameController = TextEditingController();
+  // final _passwordController = TextEditingController();
+  // final _confPasswordController = TextEditingController();
+  // final _surnameController = TextEditingController();
+  // final _firstNameController = TextEditingController();
+  // final _midInitController = TextEditingController();
+  // final _occupationController = TextEditingController();
+  // final _ageController = TextEditingController();
+
+  // Sign in Method
+  // Future signIn() async {
+  //   await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //     email: _emailController.text.trim(),
+  //     password: _passwordController.text.trim(),
+  //   );
+  //   Get.to(
+  //     () => const CheckerPage(),
+  //     transition: Transition.circularReveal,
+  //     duration: Duration(milliseconds: 1000),
+  //   );
+  // }
+
+  // @override
+  // void dispose() {
+  //   _usernameController.dispose();
+  //   _passwordController.dispose();
+  //   _confPasswordController.dispose();
+  //   _surnameController.dispose();
+  //   _firstNameController.dispose();
+  //   _midInitController.dispose();
+  //   _occupationController.dispose();
+  //   _ageController.dispose();
+  //   super.dispose();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -247,6 +286,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                         fontSize: 15.sp,
                                       ),
                                       decoration: InputDecoration(
+                                        isDense: true,
                                         prefixIcon: Image.asset(
                                           'assets/user_icon.png',
                                           scale: 4,
@@ -284,6 +324,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                         fontSize: 15.sp,
                                       ),
                                       decoration: InputDecoration(
+                                        isDense: true,
                                         prefixIcon: Image.asset(
                                           'assets/password_icon.png',
                                           scale: 4,
@@ -321,6 +362,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                         fontSize: 15.sp,
                                       ),
                                       decoration: InputDecoration(
+                                        isDense: true,
                                         prefixIcon: Image.asset(
                                           'assets/password_icon.png',
                                           scale: 4,
@@ -375,6 +417,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                             fontSize: 15.sp,
                                           ),
                                           decoration: InputDecoration(
+                                            isDense: true,
                                             border: InputBorder.none,
                                             hintText: 'Surname',
                                             hintStyle: TextStyle(
@@ -408,6 +451,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                             fontSize: 15.sp,
                                           ),
                                           decoration: InputDecoration(
+                                            isDense: true,
                                             border: InputBorder.none,
                                             hintText: 'First Name',
                                             hintStyle: TextStyle(
@@ -439,6 +483,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                             fontSize: 15.sp,
                                           ),
                                           decoration: InputDecoration(
+                                            isDense: true,
                                             border: InputBorder.none,
                                             hintText: 'M.I',
                                             hintStyle: TextStyle(
@@ -474,6 +519,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                         fontSize: 15.sp,
                                       ),
                                       decoration: InputDecoration(
+                                        isDense: true,
                                         prefixIcon: Image.asset(
                                           'assets/occupation_icon.png',
                                           scale: 4,
@@ -496,7 +542,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                     //Age
                                     Container(
                                       height: 50.h,
-                                      width: 113.w,
+                                      width: 100.w,
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           width: 2.w,
@@ -511,12 +557,14 @@ class _Sign1PageState extends State<Sign1Page> {
                                         ),
                                         //Insert icon here
                                         child: TextField(
+                                          keyboardType: TextInputType.number,
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w400,
                                             fontSize: 15.sp,
                                           ),
                                           decoration: InputDecoration(
+                                            isDense: true,
                                             border: InputBorder.none,
                                             hintText: 'Age',
                                             hintStyle: TextStyle(
@@ -529,7 +577,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                     //Sex
                                     Container(
                                       height: 50.h,
-                                      width: 113.w,
+                                      width: 120.w,
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           width: 2.w,
@@ -543,26 +591,66 @@ class _Sign1PageState extends State<Sign1Page> {
                                           vertical: 7.h,
                                         ),
                                         //Insert icon here
-                                        child: TextField(
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 15.sp,
-                                          ),
+                                        child: DropdownButtonFormField<String>(
+                                          value: _selectedGender,
                                           decoration: InputDecoration(
+                                            isDense: true,
                                             border: InputBorder.none,
-                                            hintText: 'Sex',
+                                            hintText: 'Gender',
                                             hintStyle: TextStyle(
                                               color: Colors.black,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 15.sp,
                                             ),
                                           ),
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              _selectedGender = value;
+                                            });
+                                          },
+                                          items: [
+                                            DropdownMenuItem(
+                                              value: 'Male',
+                                              child: Text(
+                                                'Male',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'Female',
+                                              child: Text(
+                                                'Female',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'N/A',
+                                              child: Text(
+                                                'N/A',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
+
                                     //Bloodtype
                                     Container(
                                       height: 50.h,
-                                      width: 115.w,
+                                      width: 120.w,
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           width: 2.w,
@@ -576,18 +664,113 @@ class _Sign1PageState extends State<Sign1Page> {
                                           vertical: 7.h,
                                         ),
                                         //Insert icon here
-                                        child: TextField(
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15.sp,
-                                          ),
+                                        child: DropdownButtonFormField<String>(
+                                          value: _selectedBloodtype,
                                           decoration: InputDecoration(
+                                            isDense: true,
                                             border: InputBorder.none,
                                             hintText: 'Bloodtype',
                                             hintStyle: TextStyle(
                                               color: Colors.black,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 15.sp,
                                             ),
                                           ),
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              _selectedBloodtype = value;
+                                            });
+                                          },
+                                          items: [
+                                            DropdownMenuItem(
+                                              value: 'O-',
+                                              child: Text(
+                                                'O-',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'O+',
+                                              child: Text(
+                                                'O+',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'A-',
+                                              child: Text(
+                                                'A-',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'A+',
+                                              child: Text(
+                                                'A+',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'B-',
+                                              child: Text(
+                                                'B-',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'B+',
+                                              child: Text(
+                                                'B+',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'AB-',
+                                              child: Text(
+                                                'AB-',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'AB+',
+                                              child: Text(
+                                                'AB+',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),

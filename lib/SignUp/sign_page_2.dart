@@ -127,6 +127,7 @@ class Sign2Page extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                //Open CAMERA
                                 Container(
                                   height: 100.h,
                                   width: 350.w,
@@ -164,7 +165,7 @@ class Sign2Page extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -200,12 +201,14 @@ class Sign2Page extends StatelessWidget {
                                       vertical: 7.h,
                                     ),
                                     child: TextField(
+                                      keyboardType: TextInputType.phone,
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
                                         fontSize: 15.sp,
                                       ),
                                       decoration: InputDecoration(
+                                        isDense: true,
                                         prefixIcon: Image.asset(
                                           'assets/phone_icon.png',
                                           scale: 4,

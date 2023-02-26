@@ -146,6 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                                   fontSize: 15,
                                 ),
                                 decoration: InputDecoration(
+                                  isDense: true,
                                   prefixIcon: Image.asset(
                                     'assets/user_icon.png',
                                     scale: 4,
@@ -183,6 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                                   fontSize: 15,
                                 ),
                                 decoration: InputDecoration(
+                                  isDense: true,
                                   prefixIcon: Image.asset(
                                     'assets/password_icon.png',
                                     scale: 4,
