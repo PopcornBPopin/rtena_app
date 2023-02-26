@@ -5,8 +5,16 @@ import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/login_page.dart';
 import 'package:rtena_app/SignUp/sign_page_2.dart';
 
-class Sign1Page extends StatelessWidget {
+class Sign1Page extends StatefulWidget {
   const Sign1Page({Key? key}) : super(key: key);
+  @override
+  State<Sign1Page> createState() => _Sign1PageState();
+}
+
+class _Sign1PageState extends State<Sign1Page> {
+  bool _civIsPressed = false;
+  bool _resIsPressed = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,84 +117,93 @@ class Sign1Page extends StatelessWidget {
                             children: [
                               SizedBox(height: 30.h),
                               //Button for Civilian
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      height: 90.h,
-                                      width: 180.w,
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromRGBO(
-                                              252, 58, 72, 32),
-                                          border: Border.all(
-                                            width: 1.5.w,
-                                            color: Colors.white,
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _civIsPressed
+                                      ? Color.fromRGBO(252, 58, 72, 32)
+                                      : Colors.grey[700],
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 5.w),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _civIsPressed = true;
+                                    _resIsPressed = false;
+                                  });
+                                },
+                                child: SizedBox(
+                                  height: 85.h,
+                                  width: 165.w,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 15.h),
+                                    child: Center(
+                                      child: Column(
+                                        children: [
+                                          Image.asset(
+                                            'assets/civilian_icon.png',
+                                            scale: 1.5,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 15.h),
-                                        child: Center(
-                                          child: Column(children: [
-                                            Image.asset(
-                                              'assets/civilian_icon.png',
-                                              scale: 1.5,
+                                          SizedBox(height: 2.h),
+                                          const Text(
+                                            'Civilian',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                            SizedBox(height: 2.h),
-                                            const Text(
-                                              'Civilian',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ]),
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    )
-                                  ],
+                                    ),
+                                  ),
                                 ),
                               ),
 
+                              SizedBox(width: 10.w),
                               //Button for Respondents
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      height: 90.h,
-                                      width: 180.w,
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              220, 70, 18, 32),
-                                          border: Border.all(
-                                            width: 1.5.w,
-                                            color: Colors.white,
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _resIsPressed
+                                      ? Color.fromARGB(220, 70, 18, 32)
+                                      : Colors.grey[700],
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 5.w),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _resIsPressed = true;
+                                    _civIsPressed = false;
+                                  });
+                                },
+                                child: SizedBox(
+                                  height: 85.h,
+                                  width: 165.w,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 15.h),
+                                    child: Center(
+                                      child: Column(
+                                        children: [
+                                          Image.asset(
+                                            'assets/responder_icon.png',
+                                            scale: 1.5,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 15.h),
-                                        child: Center(
-                                          child: Column(children: [
-                                            Image.asset(
-                                              'assets/responder_icon.png',
-                                              scale: 1.5,
+                                          SizedBox(height: 2.h),
+                                          const Text(
+                                            'Responder',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                            SizedBox(height: 2.h),
-                                            const Text(
-                                              'Responder',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ]),
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    )
-                                  ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
