@@ -1,14 +1,41 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:rtena_app/checker_page.dart';
 import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/SignUp/sign_page_1.dart';
-import 'package:rtena_app/Civilian/civilian_home_page.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
 
+class _LoginPageState extends State<LoginPage> {
   // Text Controllers
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  // Sign in Method
+  Future signIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+    Get.to(
+      () => const CheckerPage(),
+      transition: Transition.circularReveal,
+      duration: Duration(milliseconds: 1000),
+    );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +139,7 @@ class LoginPage extends StatelessWidget {
                                 vertical: 7.h,
                               ),
                               child: TextField(
+                                controller: _emailController,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w400,
@@ -147,6 +175,7 @@ class LoginPage extends StatelessWidget {
                                 vertical: 7.h,
                               ),
                               child: TextField(
+                                controller: _passwordController,
                                 obscureText: true,
                                 style: TextStyle(
                                   color: Colors.white,
@@ -187,13 +216,14 @@ class LoginPage extends StatelessWidget {
                           //Submit Button
                           Center(
                             child: GestureDetector(
-                              onTap: () {
-                                Get.to(
-                                  () => const CivHomePage(),
-                                  transition: Transition.circularReveal,
-                                  duration: Duration(milliseconds: 1000),
-                                );
-                              },
+                              // onTap: () {
+                              //   Get.to(
+                              //     () => const CivHomePage(),
+                              //     transition: Transition.circularReveal,
+                              //     duration: Duration(milliseconds: 1000),
+                              //   );
+                              // },
+                              onTap: signIn,
                               child: Container(
                                 width: 700.w,
                                 height: 45.h,

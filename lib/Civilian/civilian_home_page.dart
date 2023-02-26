@@ -1,11 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:rtena_app/Civilian/civilian_selected_page.dart';
 import 'package:rtena_app/start_page.dart';
 
-class CivHomePage extends StatelessWidget {
+class CivHomePage extends StatefulWidget {
   const CivHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<CivHomePage> createState() => _CivHomePageState();
+}
+
+class _CivHomePageState extends State<CivHomePage> {
+  final user = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +73,7 @@ class CivHomePage extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: Text(
-                      'Welcome Back!',
+                      'Welcome Back! ' + user.email!,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

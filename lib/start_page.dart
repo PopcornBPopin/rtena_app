@@ -6,13 +6,13 @@ import 'package:rtena_app/SignUp/sign_page_1.dart';
 
 // import 'package:rtena_app/old_page.dart';
 
-// class StartPage extends StatefulWidget {
-//   @override
-//   State<StartPage> createState() => _StartPageState();
-// }
-
-class StartPage extends StatelessWidget {
+class StartPage extends StatefulWidget {
   const StartPage({Key? key}) : super(key: key);
+  @override
+  State<StartPage> createState() => _StartPageState();
+}
+
+class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +88,8 @@ class StartPage extends StatelessWidget {
                       duration: Duration(milliseconds: 300),
                     );
                   },
-                  child: Container(
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 150),
                     width: 700.w,
                     height: 45.h,
                     decoration: BoxDecoration(
