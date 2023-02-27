@@ -42,7 +42,7 @@ dependencies:
   firebase_core: ^2.7.0
   firebase_auth: ^4.2.9
   firebase_database: ^10.0.14
-  camera: ^0.10.3+1
+  # camera: ^0.10.3+1
   
 
 dev_dependencies:

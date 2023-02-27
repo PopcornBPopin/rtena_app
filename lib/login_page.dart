@@ -30,9 +30,9 @@ class _LoginPageState extends State<LoginPage> {
         Expanded(
           child: Center(
             child: Text(
-              'Please enter Username and Password',
+              'Please enter your Username and Password',
               style: TextStyle(
-                fontSize: 18.sp,
+                fontSize: 17.sp,
                 color: Colors.white,
               ),
             ),
@@ -54,6 +54,7 @@ class _LoginPageState extends State<LoginPage> {
         ..hideCurrentSnackBar()
         ..showSnackBar(emptyErrorSnackBar);
     }
+
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
