@@ -15,7 +15,7 @@ class _Sign1PageState extends State<Sign1Page> {
   bool _civIsPressed = false;
   bool _resIsPressed = false;
 
-  String? _selectedGender;
+  String? _selectedSex;
   String? _selectedBloodtype;
 
   // Text Controllers
@@ -205,7 +205,7 @@ class _Sign1PageState extends State<Sign1Page> {
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: _resIsPressed
-                                      ? Color.fromARGB(220, 70, 18, 32)
+                                      ? Color.fromRGBO(252, 58, 72, 32)
                                       : Colors.grey[700],
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 5.w),
@@ -247,22 +247,12 @@ class _Sign1PageState extends State<Sign1Page> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 20.h),
+                          SizedBox(height: 15.h),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 30.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                //Kindly fill this crp
-                                Text(
-                                  'Kindly fill up the from:',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15.sp,
-                                  ),
-                                ),
-
                                 //Username Text FIeld
                                 SizedBox(height: 10.h),
                                 Container(
@@ -292,7 +282,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                           scale: 4,
                                         ),
                                         border: InputBorder.none,
-                                        hintText: 'Username',
+                                        hintText: 'Email Address',
                                         hintStyle: const TextStyle(
                                             color: Colors.black),
                                       ),
@@ -375,18 +365,46 @@ class _Sign1PageState extends State<Sign1Page> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 20.h),
+                                SizedBox(height: 10.h),
 
-                                //Basic Information
-                                Text(
-                                  'Fill in your basic information:',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15.sp,
+                                //Phone number Text FIeld
+                                Container(
+                                  height: 50.h,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 2.w,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                      vertical: 7.h,
+                                    ),
+                                    child: TextField(
+                                      keyboardType: TextInputType.phone,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15.sp,
+                                      ),
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        prefixIcon: Image.asset(
+                                          'assets/phone_icon.png',
+                                          scale: 4,
+                                        ),
+                                        border: InputBorder.none,
+                                        hintText: 'Contact Number',
+                                        hintStyle: const TextStyle(
+                                            color: Colors.black),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                SizedBox(height: 10.h),
+
+                                SizedBox(height: 15.h),
 
                                 //Fullname Text field
                                 Row(
@@ -592,11 +610,11 @@ class _Sign1PageState extends State<Sign1Page> {
                                         ),
                                         //Insert icon here
                                         child: DropdownButtonFormField<String>(
-                                          value: _selectedGender,
+                                          value: _selectedSex,
                                           decoration: InputDecoration(
                                             isDense: true,
                                             border: InputBorder.none,
-                                            hintText: 'Gender',
+                                            hintText: 'Sex',
                                             hintStyle: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.w400,
@@ -605,7 +623,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                           ),
                                           onChanged: (String? value) {
                                             setState(() {
-                                              _selectedGender = value;
+                                              _selectedSex = value;
                                             });
                                           },
                                           items: [
@@ -624,17 +642,6 @@ class _Sign1PageState extends State<Sign1Page> {
                                               value: 'Female',
                                               child: Text(
                                                 'Female',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 15.sp,
-                                                ),
-                                              ),
-                                            ),
-                                            DropdownMenuItem(
-                                              value: 'N/A',
-                                              child: Text(
-                                                'N/A',
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w400,
