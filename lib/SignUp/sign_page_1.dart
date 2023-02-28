@@ -135,6 +135,7 @@ class _Sign1PageState extends State<Sign1Page> {
       _roleNotSelected = false;
     });
     if (passwordConfirmed() && !formIncomplete()) {
+      //Sends data to Firebase Auth
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
