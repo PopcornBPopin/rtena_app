@@ -188,8 +188,8 @@ class _Sign1PageState extends State<Sign1Page> {
         _firstNameController.text.isEmpty ||
         _midInitController.text.isEmpty ||
         _occupationController.text.isEmpty ||
-        _selectedSex == "" ||
-        _selectedBloodtype == "") {
+        _selectedSex == null ||
+        _selectedBloodtype == null) {
       return true;
     } else {
       return false;
@@ -418,7 +418,7 @@ class _Sign1PageState extends State<Sign1Page> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                //Username Text FIeld
+                                //Email Text FIeld
                                 SizedBox(height: 10.h),
                                 Container(
                                   height: 50.h,

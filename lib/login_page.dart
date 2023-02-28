@@ -17,6 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  bool _fieldIsEmpty = false;
+
   //Error snackbar missing email and password textfields
   final emptyErrorSnackBar = SnackBar(
     content: Row(
@@ -30,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
         Expanded(
           child: Center(
             child: Text(
-              'Please enter your Username and Password',
+              'Please enter your Email and Password',
               style: TextStyle(
                 fontSize: 17.sp,
                 color: Colors.white,
@@ -49,7 +51,13 @@ class _LoginPageState extends State<LoginPage> {
 
   // Sign in Method
   Future signIn() async {
+    setState(() {
+      _fieldIsEmpty = false;
+    });
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      setState(() {
+        _fieldIsEmpty = true;
+      });
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(emptyErrorSnackBar);
@@ -157,14 +165,16 @@ class _LoginPageState extends State<LoginPage> {
                       padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(
                         children: [
-                          //Username Text FIeld
+                          //Email Text FIeld
                           SizedBox(height: 10.h),
                           Container(
                             height: 50.h,
                             decoration: BoxDecoration(
                               border: Border.all(
                                 width: 1.w,
-                                color: Colors.white,
+                                color: _fieldIsEmpty
+                                    ? Color.fromARGB(255, 243, 120, 111)
+                                    : Colors.white,
                               ),
                               borderRadius: BorderRadius.circular(15),
                             ),
@@ -186,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                                     scale: 4,
                                   ),
                                   border: InputBorder.none,
-                                  hintText: 'Username',
+                                  hintText: 'Email Address',
                                   hintStyle: TextStyle(color: Colors.white),
                                 ),
                               ),
@@ -200,7 +210,9 @@ class _LoginPageState extends State<LoginPage> {
                             decoration: BoxDecoration(
                               border: Border.all(
                                 width: 1.w,
-                                color: Colors.white,
+                                color: _fieldIsEmpty
+                                    ? Color.fromARGB(255, 243, 120, 111)
+                                    : Colors.white,
                               ),
                               borderRadius: BorderRadius.circular(15),
                             ),
