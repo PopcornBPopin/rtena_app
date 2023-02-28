@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -24,9 +26,11 @@ class _Sign1PageState extends State<Sign1Page> {
   String? _selectedBloodtype;
 
   // Text Controllers
+  final _roleController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confPasswordController = TextEditingController();
+  final _contactNumberController = TextEditingController();
   final _surnameController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _midInitController = TextEditingController();
@@ -128,6 +132,29 @@ class _Sign1PageState extends State<Sign1Page> {
     elevation: 1,
   );
 
+  Future addUserDetails(
+      String roleOfUser,
+      String contactNumber,
+      String surname,
+      String firstName,
+      String mInit,
+      String occupation,
+      int age,
+      String sex,
+      String bloodtype) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'Role': roleOfUser,
+      'Contact Number': contactNumber,
+      'Surname': surname,
+      'First Name': firstName,
+      'M.I': mInit,
+      'Occupation': occupation,
+      'Age': age,
+      'Sex': sex,
+      'Bloodtype': bloodtype
+    });
+  }
+
   Future SignUp() async {
     setState(() {
       _passMismatch = false;
@@ -135,10 +162,22 @@ class _Sign1PageState extends State<Sign1Page> {
       _roleNotSelected = false;
     });
     if (passwordConfirmed() && !formIncomplete()) {
-      //Sends data to Firebase Auth
+      //Create user for auth purposes
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
+      );
+      //Add user details
+      addUserDetails(
+        _roleController.text.trim(),
+        _contactNumberController.text.trim(),
+        _surnameController.text.trim(),
+        _firstNameController.text.trim(),
+        _midInitController.text.trim(),
+        _occupationController.text.trim(),
+        int.parse(_ageController.text.trim()),
+        _sexController.text.trim(),
+        _bloodtypeController.text.trim(),
       );
       Get.to(
         () => const Sign2Page(),
@@ -199,6 +238,7 @@ class _Sign1PageState extends State<Sign1Page> {
 
   @override
   void dispose() {
+    _roleController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confPasswordController.dispose();
@@ -207,6 +247,8 @@ class _Sign1PageState extends State<Sign1Page> {
     _midInitController.dispose();
     _occupationController.dispose();
     _ageController.dispose();
+    _sexController.dispose();
+    _bloodtypeController.dispose();
     super.dispose();
   }
 
@@ -332,6 +374,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                   setState(() {
                                     _civIsPressed = true;
                                     _resIsPressed = false;
+                                    _roleController.text = 'Civilian';
                                   });
                                 },
                                 child: SizedBox(
@@ -383,6 +426,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                   setState(() {
                                     _resIsPressed = true;
                                     _civIsPressed = false;
+                                    _roleController.text = 'Responder';
                                   });
                                 },
                                 child: SizedBox(
@@ -560,6 +604,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                       vertical: 7.h,
                                     ),
                                     child: TextField(
+                                      controller: _contactNumberController,
                                       keyboardType: TextInputType.phone,
                                       style: TextStyle(
                                         color: Colors.black,
@@ -608,6 +653,8 @@ class _Sign1PageState extends State<Sign1Page> {
                                         ),
                                         //Insert icon here
                                         child: TextField(
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           controller: _surnameController,
                                           style: TextStyle(
                                             color: Colors.black,
@@ -645,6 +692,8 @@ class _Sign1PageState extends State<Sign1Page> {
                                         ),
                                         //Insert icon here
                                         child: TextField(
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           controller: _firstNameController,
                                           style: TextStyle(
                                             color: Colors.black,
@@ -681,6 +730,8 @@ class _Sign1PageState extends State<Sign1Page> {
                                         ),
                                         //Insert icon here
                                         child: TextField(
+                                          textCapitalization:
+                                              TextCapitalization.words,
                                           controller: _midInitController,
                                           style: TextStyle(
                                             color: Colors.black,
@@ -719,6 +770,8 @@ class _Sign1PageState extends State<Sign1Page> {
                                       vertical: 7.h,
                                     ),
                                     child: TextField(
+                                      textCapitalization:
+                                          TextCapitalization.words,
                                       controller: _occupationController,
                                       style: TextStyle(
                                         color: Colors.black,
@@ -784,6 +837,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                         ),
                                       ),
                                     ),
+
                                     //Sex
                                     Container(
                                       height: 50.h,
@@ -818,6 +872,8 @@ class _Sign1PageState extends State<Sign1Page> {
                                           onChanged: (String? value) {
                                             setState(() {
                                               _selectedSex = value;
+                                              _sexController.text =
+                                                  _selectedSex!;
                                             });
                                           },
                                           items: [
@@ -882,6 +938,8 @@ class _Sign1PageState extends State<Sign1Page> {
                                           onChanged: (String? value) {
                                             setState(() {
                                               _selectedBloodtype = value;
+                                              _bloodtypeController.text =
+                                                  _selectedBloodtype!;
                                             });
                                           },
                                           items: [
