@@ -54,7 +54,6 @@ class _LoginPageState extends State<LoginPage> {
         ..hideCurrentSnackBar()
         ..showSnackBar(emptyErrorSnackBar);
     }
-
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
@@ -252,13 +251,6 @@ class _LoginPageState extends State<LoginPage> {
                           //Submit Button
                           Center(
                             child: GestureDetector(
-                              // onTap: () {
-                              //   Get.to(
-                              //     () => const CivHomePage(),
-                              //     transition: Transition.circularReveal,
-                              //     duration: Duration(milliseconds: 1000),
-                              //   );
-                              // },
                               onTap: signIn,
                               child: Container(
                                 width: 700.w,

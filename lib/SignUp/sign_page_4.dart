@@ -138,7 +138,7 @@ class Sign4Page extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(height: 236.h),
+                          SizedBox(height: 246.h),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 30.w),
                             child: Center(

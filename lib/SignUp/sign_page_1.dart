@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -15,44 +16,198 @@ class _Sign1PageState extends State<Sign1Page> {
   bool _civIsPressed = false;
   bool _resIsPressed = false;
 
+  bool _passMismatch = false;
+  bool _fieldIsEmpty = false;
+  bool _roleNotSelected = false;
+
   String? _selectedSex;
   String? _selectedBloodtype;
 
   // Text Controllers
-  // final _usernameController = TextEditingController();
-  // final _passwordController = TextEditingController();
-  // final _confPasswordController = TextEditingController();
-  // final _surnameController = TextEditingController();
-  // final _firstNameController = TextEditingController();
-  // final _midInitController = TextEditingController();
-  // final _occupationController = TextEditingController();
-  // final _ageController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confPasswordController = TextEditingController();
+  final _surnameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _midInitController = TextEditingController();
+  final _occupationController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _sexController = TextEditingController();
+  final _bloodtypeController = TextEditingController();
 
-  // Sign in Method
-  // Future signIn() async {
-  //   await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //     email: _emailController.text.trim(),
-  //     password: _passwordController.text.trim(),
-  //   );
-  //   Get.to(
-  //     () => const CheckerPage(),
-  //     transition: Transition.circularReveal,
-  //     duration: Duration(milliseconds: 1000),
-  //   );
-  // }
+  //Password not at least 6 characters
+  final passMinSnackBar = SnackBar(
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.error_outline,
+          size: 25,
+          color: Colors.white,
+        ),
+        Expanded(
+          child: Center(
+            child: Text(
+              'Password must be at least by 6 characters.',
+              style: TextStyle(
+                fontSize: 18.sp,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+    backgroundColor: Colors.red,
+    duration: Duration(seconds: 5),
+    shape: StadiumBorder(),
+    behavior: SnackBarBehavior.floating,
+    elevation: 1,
+  );
 
-  // @override
-  // void dispose() {
-  //   _usernameController.dispose();
-  //   _passwordController.dispose();
-  //   _confPasswordController.dispose();
-  //   _surnameController.dispose();
-  //   _firstNameController.dispose();
-  //   _midInitController.dispose();
-  //   _occupationController.dispose();
-  //   _ageController.dispose();
-  //   super.dispose();
-  // }
+  //Error snackbar missing email and password textfields
+  final emptyFieldSnackBar = SnackBar(
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.error_outline,
+          size: 25,
+          color: Colors.white,
+        ),
+        Expanded(
+          child: Center(
+            child: Text(
+              'Please fill up the form before submitting.',
+              style: TextStyle(
+                fontSize: 18.sp,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+    backgroundColor: Colors.red,
+    duration: Duration(seconds: 5),
+    shape: StadiumBorder(),
+    behavior: SnackBarBehavior.floating,
+    elevation: 1,
+  );
+
+  //Error snackbar missing email and password textfields
+  final passMismatchSnackBar = SnackBar(
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Icon(
+            Icons.error_outline,
+            size: 25,
+            color: Colors.white,
+          ),
+        ),
+        Expanded(
+          child: Center(
+            child: Text(
+              'Password mismatch! Password and Confirm password do not match.',
+              style: TextStyle(
+                fontSize: 18.sp,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+    backgroundColor: Colors.red,
+    duration: Duration(seconds: 5),
+    shape: StadiumBorder(),
+    behavior: SnackBarBehavior.floating,
+    elevation: 1,
+  );
+
+  Future SignUp() async {
+    setState(() {
+      _passMismatch = false;
+      _fieldIsEmpty = false;
+      _roleNotSelected = false;
+    });
+    if (passwordConfirmed() && !formIncomplete()) {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      Get.to(
+        () => const Sign2Page(),
+        transition: Transition.fadeIn,
+        duration: Duration(milliseconds: 300),
+      );
+    }
+    if (!passwordConfirmed()) {
+      //Mismatch in pass changes the border of the textfield to red
+      setState(() {
+        _passMismatch = true;
+      });
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(passMismatchSnackBar);
+      if (_passwordController.text.length < 6) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(passMinSnackBar);
+      }
+    }
+    if (formIncomplete()) {
+      setState(() {
+        _fieldIsEmpty = true;
+      });
+      ScaffoldMessenger.of(context)..showSnackBar(emptyFieldSnackBar);
+    }
+    if (_civIsPressed == false && _resIsPressed == false) {
+      setState(() {
+        _roleNotSelected = true;
+      });
+    }
+  }
+
+  bool passwordConfirmed() {
+    if (_passwordController.text.trim() ==
+        _confPasswordController.text.trim()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool formIncomplete() {
+    if (_emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _surnameController.text.isEmpty ||
+        _firstNameController.text.isEmpty ||
+        _midInitController.text.isEmpty ||
+        _occupationController.text.isEmpty ||
+        _selectedSex == "" ||
+        _selectedBloodtype == "") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confPasswordController.dispose();
+    _surnameController.dispose();
+    _firstNameController.dispose();
+    _midInitController.dispose();
+    _occupationController.dispose();
+    _ageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,6 +313,11 @@ class _Sign1PageState extends State<Sign1Page> {
                               //Button for Civilian
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
+                                  side: BorderSide(
+                                      width: 2.w,
+                                      color: _roleNotSelected
+                                          ? Colors.red
+                                          : Color.fromRGBO(255, 255, 255, 0)),
                                   backgroundColor: _civIsPressed
                                       ? Color.fromRGBO(252, 58, 72, 32)
                                       : Colors.grey[700],
@@ -204,6 +364,11 @@ class _Sign1PageState extends State<Sign1Page> {
                               //Button for Respondents
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
+                                  side: BorderSide(
+                                      width: 1.5.w,
+                                      color: _roleNotSelected
+                                          ? Colors.red
+                                          : Color.fromRGBO(255, 255, 255, 0)),
                                   backgroundColor: _resIsPressed
                                       ? Color.fromRGBO(252, 58, 72, 32)
                                       : Colors.grey[700],
@@ -260,7 +425,9 @@ class _Sign1PageState extends State<Sign1Page> {
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       width: 2.w,
-                                      color: Colors.grey.shade400,
+                                      color: _fieldIsEmpty
+                                          ? Colors.red
+                                          : Colors.grey.shade400,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
@@ -270,6 +437,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                       vertical: 7.h,
                                     ),
                                     child: TextField(
+                                      controller: _emailController,
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
@@ -297,7 +465,9 @@ class _Sign1PageState extends State<Sign1Page> {
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       width: 2.w,
-                                      color: Colors.grey.shade400,
+                                      color: _passMismatch || _fieldIsEmpty
+                                          ? Colors.red
+                                          : Colors.grey.shade400,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
@@ -307,6 +477,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                       vertical: 7.h,
                                     ),
                                     child: TextField(
+                                      controller: _passwordController,
                                       obscureText: true,
                                       style: TextStyle(
                                         color: Colors.black,
@@ -335,7 +506,9 @@ class _Sign1PageState extends State<Sign1Page> {
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       width: 2.w,
-                                      color: Colors.grey.shade400,
+                                      color: _passMismatch || _fieldIsEmpty
+                                          ? Colors.red
+                                          : Colors.grey.shade400,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
@@ -345,6 +518,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                       vertical: 7.h,
                                     ),
                                     child: TextField(
+                                      controller: _confPasswordController,
                                       obscureText: true,
                                       style: TextStyle(
                                         color: Colors.black,
@@ -373,7 +547,9 @@ class _Sign1PageState extends State<Sign1Page> {
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       width: 2.w,
-                                      color: Colors.grey.shade400,
+                                      color: _fieldIsEmpty
+                                          ? Colors.red
+                                          : Colors.grey.shade400,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
@@ -418,7 +594,9 @@ class _Sign1PageState extends State<Sign1Page> {
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           width: 2.w,
-                                          color: Colors.grey.shade400,
+                                          color: _fieldIsEmpty
+                                              ? Colors.red
+                                              : Colors.grey.shade400,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
@@ -429,6 +607,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                         ),
                                         //Insert icon here
                                         child: TextField(
+                                          controller: _surnameController,
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w400,
@@ -452,7 +631,9 @@ class _Sign1PageState extends State<Sign1Page> {
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           width: 2.w,
-                                          color: Colors.grey.shade400,
+                                          color: _fieldIsEmpty
+                                              ? Colors.red
+                                              : Colors.grey.shade400,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
@@ -463,6 +644,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                         ),
                                         //Insert icon here
                                         child: TextField(
+                                          controller: _firstNameController,
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w400,
@@ -485,7 +667,9 @@ class _Sign1PageState extends State<Sign1Page> {
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           width: 2.w,
-                                          color: Colors.grey.shade400,
+                                          color: _fieldIsEmpty
+                                              ? Colors.red
+                                              : Colors.grey.shade400,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
@@ -496,6 +680,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                         ),
                                         //Insert icon here
                                         child: TextField(
+                                          controller: _midInitController,
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 15.sp,
@@ -521,7 +706,9 @@ class _Sign1PageState extends State<Sign1Page> {
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       width: 2.w,
-                                      color: Colors.grey.shade400,
+                                      color: _fieldIsEmpty
+                                          ? Colors.red
+                                          : Colors.grey.shade400,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
@@ -531,6 +718,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                       vertical: 7.h,
                                     ),
                                     child: TextField(
+                                      controller: _occupationController,
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
@@ -564,7 +752,9 @@ class _Sign1PageState extends State<Sign1Page> {
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           width: 2.w,
-                                          color: Colors.grey.shade400,
+                                          color: _fieldIsEmpty
+                                              ? Colors.red
+                                              : Colors.grey.shade400,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
@@ -575,6 +765,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                         ),
                                         //Insert icon here
                                         child: TextField(
+                                          controller: _ageController,
                                           keyboardType: TextInputType.number,
                                           style: TextStyle(
                                             color: Colors.black,
@@ -599,7 +790,9 @@ class _Sign1PageState extends State<Sign1Page> {
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           width: 2.w,
-                                          color: Colors.grey.shade400,
+                                          color: _fieldIsEmpty
+                                              ? Colors.red
+                                              : Colors.grey.shade400,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
@@ -661,7 +854,9 @@ class _Sign1PageState extends State<Sign1Page> {
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           width: 2.w,
-                                          color: Colors.grey.shade400,
+                                          color: _fieldIsEmpty
+                                              ? Colors.red
+                                              : Colors.grey.shade400,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
@@ -787,13 +982,7 @@ class _Sign1PageState extends State<Sign1Page> {
 
                                 Center(
                                   child: GestureDetector(
-                                    onTap: () {
-                                      Get.to(
-                                        () => const Sign2Page(),
-                                        transition: Transition.fadeIn,
-                                        duration: Duration(milliseconds: 300),
-                                      );
-                                    },
+                                    onTap: SignUp,
                                     child: Container(
                                       height: 45.h,
                                       width: 700.w,

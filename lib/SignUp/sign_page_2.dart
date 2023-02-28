@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:rtena_app/SignUp/sign_page_3.dart';
+import 'package:rtena_app/SignUp/sign_page_4.dart';
 import 'package:rtena_app/start_page.dart';
 
 class Sign2Page extends StatelessWidget {
@@ -169,65 +170,37 @@ class Sign2Page extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(height: 30.h),
+                          SizedBox(height: 40.h),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 30.w),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Enter your Contact number below. A 6-digit pin will be sent to your number. It will also be used for future verification',
+                                  'Is this your phone number? Please confirm by pressing "Proceed" upon confirmation.',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 15.sp,
+                                    fontSize: 18.sp,
                                   ),
                                 ),
                                 SizedBox(height: 15.h),
-
-                                //Phone number Text FIeld
-                                Container(
-                                  height: 50.h,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 2.w,
-                                      color: Colors.grey.shade400,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                      vertical: 7.h,
-                                    ),
-                                    child: TextField(
-                                      keyboardType: TextInputType.phone,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 15.sp,
-                                      ),
-                                      decoration: InputDecoration(
-                                        isDense: true,
-                                        prefixIcon: Image.asset(
-                                          'assets/phone_icon.png',
-                                          scale: 4,
-                                        ),
-                                        border: InputBorder.none,
-                                        hintText: 'Contact Number',
-                                        hintStyle: const TextStyle(
-                                            color: Colors.black),
-                                      ),
+                                Center(
+                                  child: Text(
+                                    '09152028287',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 30.sp,
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 14.h),
-
+                                SizedBox(height: 40.h),
                                 Center(
                                   child: GestureDetector(
                                     onTap: () {
                                       Get.to(
-                                        () => const Sign3Page(),
+                                        () => const Sign4Page(),
                                         transition: Transition.fadeIn,
                                         duration: Duration(milliseconds: 300),
                                       );
