@@ -22,6 +22,8 @@ class _Sign1PageState extends State<Sign1Page> {
   bool _fieldIsEmpty = false;
   bool _roleNotSelected = false;
 
+  bool _showPassword = false;
+
   String? _selectedSex;
   String? _selectedBloodtype;
 
@@ -523,7 +525,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                     ),
                                     child: TextField(
                                       controller: _passwordController,
-                                      obscureText: true,
+                                      obscureText: _showPassword,
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
@@ -534,6 +536,18 @@ class _Sign1PageState extends State<Sign1Page> {
                                         prefixIcon: Image.asset(
                                           'assets/password_icon.png',
                                           scale: 4,
+                                        ),
+                                        suffixIcon: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              _showPassword = !_showPassword;
+                                            });
+                                          },
+                                          child: Icon(
+                                            Icons.remove_red_eye,
+                                            size: 20,
+                                            color: Colors.grey,
+                                          ),
                                         ),
                                         border: InputBorder.none,
                                         hintText: 'Password',
@@ -564,7 +578,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                     ),
                                     child: TextField(
                                       controller: _confPasswordController,
-                                      obscureText: true,
+                                      obscureText: _showPassword,
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w400,
@@ -575,6 +589,18 @@ class _Sign1PageState extends State<Sign1Page> {
                                         prefixIcon: Image.asset(
                                           'assets/password_icon.png',
                                           scale: 4,
+                                        ),
+                                        suffixIcon: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              _showPassword = !_showPassword;
+                                            });
+                                          },
+                                          child: Icon(
+                                            Icons.remove_red_eye,
+                                            size: 20,
+                                            color: Colors.grey,
+                                          ),
                                         ),
                                         border: InputBorder.none,
                                         hintText: 'Confirm Password',
