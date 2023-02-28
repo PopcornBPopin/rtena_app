@@ -71,7 +71,7 @@ class CivSelectedPage extends StatelessWidget {
 
                         //Description
                         Text(
-                          'Waiting for confimration of the responders near you. Please hang tight.',
+                          'Waiting for confirmation of the responders near you. Please hang tight.',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w300,
