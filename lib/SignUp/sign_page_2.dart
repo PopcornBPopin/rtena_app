@@ -1,12 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:rtena_app/SignUp/sign_page_4.dart';
 import 'package:rtena_app/start_page.dart';
 
-class Sign2Page extends StatelessWidget {
+class Sign2Page extends StatefulWidget {
   const Sign2Page({Key? key}) : super(key: key);
   @override
+  State<Sign2Page> createState() => _Sign2PageState();
+}
+
+class _Sign2PageState extends State<Sign2Page> {
+  final CollectionReference usersRef =
+      FirebaseFirestore.instance.collection('users');
+      
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(192, 39, 45, 1),
