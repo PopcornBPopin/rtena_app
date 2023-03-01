@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:rtena_app/SignUp/sign_page_3.dart';
 import 'package:rtena_app/SignUp/sign_page_4.dart';
 import 'package:rtena_app/start_page.dart';
 

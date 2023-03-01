@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,6 +15,20 @@ class CivHomePage extends StatefulWidget {
 
 class _CivHomePageState extends State<CivHomePage> {
   final user = FirebaseAuth.instance.currentUser!;
+
+  //document IDs
+  List<String> docIDs = [];
+
+  //getDocIDs
+  Future getDocId() async {
+    await FirebaseFirestore.instance.collection('users').get().then(
+          (snapshot) => snapshot.docs.forEach(
+            (document) {
+              docIDs.add(document.reference.id);
+            },
+          ),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {

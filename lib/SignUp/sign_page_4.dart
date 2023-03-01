@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:rtena_app/checker_page.dart';
 import 'package:rtena_app/start_page.dart';
 
 class Sign4Page extends StatelessWidget {
@@ -145,7 +146,7 @@ class Sign4Page extends StatelessWidget {
                               child: GestureDetector(
                                 onTap: () {
                                   Get.to(
-                                    () => const StartPage(),
+                                    () => const CheckerPage(),
                                     transition: Transition.fadeIn,
                                     duration: Duration(milliseconds: 300),
                                   );

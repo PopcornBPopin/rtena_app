@@ -224,7 +224,8 @@ class _Sign1PageState extends State<Sign1Page> {
   }
 
   bool formIncomplete() {
-    if (_emailController.text.isEmpty ||
+    if (_roleController.text.isEmpty ||
+        _emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         _surnameController.text.isEmpty ||
         _firstNameController.text.isEmpty ||
