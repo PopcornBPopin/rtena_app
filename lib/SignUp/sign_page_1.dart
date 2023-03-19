@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:rtena_app/Civilian/civilian_selected_page.dart';
 import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/login_page.dart';
 import 'package:rtena_app/SignUp/sign_page_2.dart';
@@ -226,7 +227,7 @@ class _Sign1PageState extends State<Sign1Page> {
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   side: BorderSide(
-                                      width: 2.w,
+                                      width: 1.5,
                                       color: _roleNotSelected
                                           ? Colors.red
                                           : Color.fromRGBO(255, 255, 255, 0)),
@@ -243,6 +244,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                   setState(() {
                                     _civIsPressed = true;
                                     _resIsPressed = false;
+                                    _roleNotSelected = false;
                                     _roleController.text = 'Civilian';
                                   });
                                 },
@@ -279,7 +281,7 @@ class _Sign1PageState extends State<Sign1Page> {
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   side: BorderSide(
-                                      width: 1.5.w,
+                                      width: 1.5,
                                       color: _roleNotSelected
                                           ? Colors.red
                                           : Color.fromRGBO(255, 255, 255, 0)),
@@ -296,6 +298,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                   setState(() {
                                     _resIsPressed = true;
                                     _civIsPressed = false;
+                                    _roleNotSelected = false;
                                     _roleController.text = 'Responder';
                                   });
                                 },
@@ -327,6 +330,7 @@ class _Sign1PageState extends State<Sign1Page> {
                               ),
                             ],
                           ),
+
                           SizedBox(height: 20.h),
 
                           //Email address Text field
@@ -471,8 +475,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                 validator: (String? val) {
                                   if (val == null || val.isEmpty) {
                                     return 'Please enter a valid password';
-                                  } else if (val !=
-                                      _passwordController.text.trim()) {
+                                  } else if (val != _passwordController.text) {
                                     return 'Password does not match';
                                   }
                                   return null;
@@ -1222,17 +1225,23 @@ class _Sign1PageState extends State<Sign1Page> {
                           Center(
                             child: GestureDetector(
                               onTap: () {
+                                if (!_civIsPressed && !_resIsPressed) {
+                                  _roleNotSelected = true;
+                                }
                                 final isValid =
                                     _formKey.currentState!.validate();
-                                setState(() {
-                                  _expandScreen = true;
-                                });
-                                if (isValid) {
+                                setState(
+                                  () {
+                                    _expandScreen = true;
+                                  },
+                                );
+                                if (isValid && !_roleNotSelected) {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const Sign2Page()),
+                                      builder: (BuildContext context) =>
+                                          const Sign2Page(),
+                                    ),
                                   );
                                 }
                               },
