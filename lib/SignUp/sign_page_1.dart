@@ -128,6 +128,61 @@ class _Sign1PageState extends State<Sign1Page> {
     if (newDate == null) return;
   }
 
+  //Writing user details to Firestone DB
+  Future addUserDetails(
+      String roleOfUser,
+      String surname,
+      String firstName,
+      String mInit,
+      String contactNumber,
+      String bDate,
+      int age,
+      String sex,
+      String bloodtype,
+      String occupation,
+      String permanentAddress,
+      String homeAddress) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'Role': roleOfUser,
+      'Surname': surname,
+      'First Name': firstName,
+      'M.I': mInit,
+      'Contact Number': contactNumber,
+      'Birthdate': bDate,
+      'Age': age,
+      'Sex': sex,
+      'Bloodtype': bloodtype,
+      'Occupation': occupation,
+      'Permanent Address': permanentAddress,
+      'Home Address': homeAddress,
+    });
+  }
+
+  Future SignUp() async {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+    //Add user details
+    addUserDetails(
+        _roleController.text.trim(),
+        _surnameController.text.trim(),
+        _firstNameController.text.trim(),
+        _midInitController.text.trim(),
+        _contactNumberController.text.trim(),
+        _birthdateController.text.trim(),
+        int.parse(_ageController.text.trim()),
+        _sexController.text.trim(),
+        _bloodtypeController.text.trim(),
+        _occupationController.text.trim(),
+        _permanentAddressController.text.trim(),
+        _homeAddressController.text.trim());
+    Get.to(
+      () => const Sign2Page(),
+      transition: Transition.fade,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1236,13 +1291,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                   },
                                 );
                                 if (isValid && !_roleNotSelected) {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const Sign2Page(),
-                                    ),
-                                  );
+                                  SignUp();
                                 }
                               },
                               child: Padding(
