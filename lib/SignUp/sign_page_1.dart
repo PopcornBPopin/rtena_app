@@ -62,6 +62,8 @@ class _Sign1PageState extends State<Sign1Page> {
   final _bloodtypeController = TextEditingController();
   final _ageController = TextEditingController();
   final _occupationController = TextEditingController();
+  final _permanentAddressController = TextEditingController();
+  final _homeAddressController = TextEditingController();
 
   @override
   //FUNCTIONS
@@ -139,7 +141,7 @@ class _Sign1PageState extends State<Sign1Page> {
                       ],
                     ),
                   ),
-                  height: 1500.h,
+                  height: 1290.h,
                 ),
 
                 // RTENA Logo
@@ -196,7 +198,7 @@ class _Sign1PageState extends State<Sign1Page> {
                 //Form starts here
                 Positioned(
                   top: 195.h,
-                  height: 1000.h,
+                  height: 1025.h,
                   width: MediaQuery.of(context).size.width,
                   child: Container(
                     decoration: BoxDecoration(
@@ -208,7 +210,22 @@ class _Sign1PageState extends State<Sign1Page> {
                     ),
                     child: Column(
                       children: [
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 25.h),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 30.w),
+                            child: Text(
+                              'Please select your role',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 15.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -319,198 +336,207 @@ class _Sign1PageState extends State<Sign1Page> {
                         SizedBox(height: 30.h),
 
                         //Email address Text field
-                        Container(
-                          height: 70.h,
-                          width: 360.w,
-                          child: TextFormField(
-                            validator: (String? val) {
-                              if (val == null || val.isEmpty) {
-                                return 'Please enter a valid email';
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            autofocus: false,
-                            controller: _emailController,
-                            cursorColor: Colors.grey.shade600,
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.all(10),
-                              labelText: 'Email Address',
-                              labelStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                              ),
-                              prefixIcon: Icon(
-                                Icons.email_outlined,
-                                color: Color.fromRGBO(252, 58, 72, 32),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 25.w),
+                          child: Container(
+                            height: 70.h,
+                            child: TextFormField(
+                              validator: (String? val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Please enter a valid email';
+                                }
+                                return null;
+                              },
+                              keyboardType: TextInputType.emailAddress,
+                              autofocus: false,
+                              controller: _emailController,
+                              cursorColor: Colors.grey.shade600,
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.all(10),
+                                labelText: 'Email Address',
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
                                 ),
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(82, 82, 82, 1),
-                                    width: 1),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                                prefixIcon: Icon(
+                                  Icons.email_outlined,
+                                  color: Color.fromRGBO(252, 58, 72, 32),
                                 ),
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(82, 82, 82, 1),
-                                    width: 1),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
                                 ),
-                                borderSide: BorderSide(color: Colors.red),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
                               ),
                             ),
                           ),
                         ),
 
                         //Password Text Field
-                        Container(
-                          height: 70.h,
-                          width: 360.w,
-                          child: TextFormField(
-                            validator: (String? val) {
-                              if (val == null || val.isEmpty) {
-                                return 'Please enter a valid password';
-                              } else if (!_validPass.hasMatch(val)) {
-                                return 'Must have an uppercase and lowercase letters,\na number, and a special character';
-                              } else if (val.length < 8) {
-                                return 'Must be at least 8 characters';
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            autofocus: false,
-                            obscureText: _passwordHidden,
-                            controller: _passwordController,
-                            cursorColor: Colors.grey.shade600,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10),
-                              labelText: 'Password',
-                              labelStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                              ),
-                              prefixIcon: const Icon(
-                                Icons.lock_outline,
-                                color: Color.fromRGBO(252, 58, 72, 32),
-                              ),
-                              suffixIcon: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _passwordHidden = !_passwordHidden;
-                                  });
-                                },
-                                child: _passwordHidden
-                                    ? const Icon(
-                                        Icons.visibility_off,
-                                        color: Color.fromRGBO(82, 82, 82, 1),
-                                      )
-                                    : const Icon(
-                                        Icons.visibility,
-                                        color: Color.fromRGBO(252, 58, 72, 32),
-                                      ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 25.w),
+                          child: Container(
+                            height: 70.h,
+                            child: TextFormField(
+                              validator: (String? val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Please enter a valid password';
+                                } else if (!_validPass.hasMatch(val)) {
+                                  return 'Must have an uppercase and lowercase letters,\na number, and a special character';
+                                } else if (val.length < 8) {
+                                  return 'Must be at least 8 characters';
+                                }
+                                return null;
+                              },
+                              keyboardType: TextInputType.emailAddress,
+                              autofocus: false,
+                              obscureText: _passwordHidden,
+                              controller: _passwordController,
+                              cursorColor: Colors.grey.shade600,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10),
+                                labelText: 'Password',
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
                                 ),
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(82, 82, 82, 1),
-                                    width: 1),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                                prefixIcon: const Icon(
+                                  Icons.lock_outline,
+                                  color: Color.fromRGBO(252, 58, 72, 32),
                                 ),
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(82, 82, 82, 1),
-                                    width: 1),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _passwordHidden = !_passwordHidden;
+                                    });
+                                  },
+                                  child: _passwordHidden
+                                      ? const Icon(
+                                          Icons.visibility_off,
+                                          color: Color.fromRGBO(82, 82, 82, 1),
+                                        )
+                                      : const Icon(
+                                          Icons.visibility,
+                                          color:
+                                              Color.fromRGBO(252, 58, 72, 32),
+                                        ),
                                 ),
-                                borderSide: BorderSide(color: Colors.red),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
                               ),
                             ),
                           ),
                         ),
 
                         //Confirm Password Text Field
-                        Container(
-                          height: 70.h,
-                          width: 360.w,
-                          child: TextFormField(
-                            validator: (String? val) {
-                              if (val == null || val.isEmpty) {
-                                return 'Please enter a valid password';
-                              } else if (!_validPass.hasMatch(val)) {
-                                return 'Must have an uppercase and lowercase letters, a number, and a special character';
-                              } else if (val.length < 8) {
-                                return 'Must be at least 8 characters';
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            autofocus: false,
-                            obscureText: _confPasswordHidden,
-                            controller: _confPasswordController,
-                            cursorColor: Colors.grey.shade600,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10),
-                              labelText: 'Confirm Password',
-                              labelStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                              ),
-                              prefixIcon: const Icon(
-                                Icons.lock_outline,
-                                color: Color.fromRGBO(252, 58, 72, 32),
-                              ),
-                              suffixIcon: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _confPasswordHidden = !_confPasswordHidden;
-                                  });
-                                },
-                                child: _confPasswordHidden
-                                    ? const Icon(
-                                        Icons.visibility_off,
-                                        color: Color.fromRGBO(82, 82, 82, 1),
-                                      )
-                                    : const Icon(
-                                        Icons.visibility,
-                                        color: Color.fromRGBO(252, 58, 72, 32),
-                                      ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 25.w),
+                          child: Container(
+                            height: 70.h,
+                            child: TextFormField(
+                              validator: (String? val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Please enter a valid password';
+                                } else if (!_validPass.hasMatch(val)) {
+                                  return 'Must have an uppercase and lowercase letters, a number, and a special character';
+                                } else if (val.length < 8) {
+                                  return 'Must be at least 8 characters';
+                                }
+                                return null;
+                              },
+                              keyboardType: TextInputType.emailAddress,
+                              autofocus: false,
+                              obscureText: _confPasswordHidden,
+                              controller: _confPasswordController,
+                              cursorColor: Colors.grey.shade600,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10),
+                                labelText: 'Confirm Password',
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
                                 ),
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(82, 82, 82, 1),
-                                    width: 1),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                                prefixIcon: const Icon(
+                                  Icons.lock_outline,
+                                  color: Color.fromRGBO(252, 58, 72, 32),
                                 ),
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(82, 82, 82, 1),
-                                    width: 1),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _confPasswordHidden =
+                                          !_confPasswordHidden;
+                                    });
+                                  },
+                                  child: _confPasswordHidden
+                                      ? const Icon(
+                                          Icons.visibility_off,
+                                          color: Color.fromRGBO(82, 82, 82, 1),
+                                        )
+                                      : const Icon(
+                                          Icons.visibility,
+                                          color:
+                                              Color.fromRGBO(252, 58, 72, 32),
+                                        ),
                                 ),
-                                borderSide: BorderSide(color: Colors.red),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
                               ),
                             ),
                           ),
@@ -542,7 +568,6 @@ class _Sign1PageState extends State<Sign1Page> {
                               Flexible(
                                 flex: 5,
                                 child: Container(
-                                  //padding:EdgeInsets.symmetric(horizontal: 5.w),
                                   height: 70.h,
                                   child: TextFormField(
                                     validator: (String? val) {
@@ -553,7 +578,9 @@ class _Sign1PageState extends State<Sign1Page> {
                                     },
                                     keyboardType: TextInputType.text,
                                     autofocus: false,
-                                    controller: _firstNameController,
+                                    textCapitalization:
+                                        TextCapitalization.words,
+                                    controller: _surnameController,
                                     cursorColor: Colors.grey.shade600,
                                     decoration: const InputDecoration(
                                       contentPadding: EdgeInsets.all(10),
@@ -597,8 +624,6 @@ class _Sign1PageState extends State<Sign1Page> {
                               Flexible(
                                 flex: 5,
                                 child: Container(
-                                  // padding:
-                                  //     EdgeInsets.symmetric(horizontal: 5.w),
                                   height: 70.h,
                                   child: TextFormField(
                                     validator: (String? val) {
@@ -609,6 +634,8 @@ class _Sign1PageState extends State<Sign1Page> {
                                     },
                                     keyboardType: TextInputType.text,
                                     autofocus: false,
+                                    textCapitalization:
+                                        TextCapitalization.words,
                                     controller: _firstNameController,
                                     cursorColor: Colors.grey.shade600,
                                     decoration: const InputDecoration(
@@ -648,11 +675,11 @@ class _Sign1PageState extends State<Sign1Page> {
                                 ),
                               ),
                               SizedBox(width: 8.w),
+
                               //Middle Initial Text Field
                               Flexible(
                                 flex: 2,
                                 child: Container(
-                                  //padding:EdgeInsets.symmetric(horizontal: 5.w),
                                   height: 70.h,
                                   child: TextFormField(
                                     validator: (String? val) {
@@ -663,6 +690,8 @@ class _Sign1PageState extends State<Sign1Page> {
                                     },
                                     keyboardType: TextInputType.text,
                                     autofocus: false,
+                                    textCapitalization:
+                                        TextCapitalization.words,
                                     controller: _midInitController,
                                     cursorColor: Colors.grey.shade600,
                                     decoration: const InputDecoration(
@@ -706,52 +735,54 @@ class _Sign1PageState extends State<Sign1Page> {
                         ),
 
                         //Contact Number Text Field
-                        Container(
-                          height: 70.h,
-                          width: 360.w,
-                          child: TextFormField(
-                            validator: (String? val) {
-                              if (val == null || val.isEmpty) {
-                                return 'Please enter a valid contact number';
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.phone,
-                            autofocus: false,
-                            controller: _contactNumberController,
-                            cursorColor: Colors.grey.shade600,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10),
-                              labelText: 'Contact Number',
-                              labelStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                              ),
-                              prefixIcon: const Icon(
-                                Icons.phone_android_outlined,
-                                color: Color.fromRGBO(252, 58, 72, 32),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 25.w),
+                          child: Container(
+                            height: 70.h,
+                            child: TextFormField(
+                              validator: (String? val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Please enter a valid contact number';
+                                }
+                                return null;
+                              },
+                              keyboardType: TextInputType.phone,
+                              autofocus: false,
+                              controller: _contactNumberController,
+                              cursorColor: Colors.grey.shade600,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10),
+                                labelText: 'Contact Number',
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
                                 ),
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(82, 82, 82, 1),
-                                    width: 1),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                                prefixIcon: const Icon(
+                                  Icons.phone_android_outlined,
+                                  color: Color.fromRGBO(252, 58, 72, 32),
                                 ),
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(82, 82, 82, 1),
-                                    width: 1),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
                                 ),
-                                borderSide: BorderSide(color: Colors.red),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
                               ),
                             ),
                           ),
@@ -759,15 +790,15 @@ class _Sign1PageState extends State<Sign1Page> {
 
                         //Birthdate and Age Selector
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 25.h),
+                          padding: EdgeInsets.symmetric(horizontal: 25.w),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               //Birthdate Selector
                               Flexible(
                                 flex: 4,
                                 child: Container(
                                   height: 70.h,
-                                  width: 360.w,
                                   child: GestureDetector(
                                     onTap: () {
                                       _showBirthdatePicker();
@@ -826,7 +857,6 @@ class _Sign1PageState extends State<Sign1Page> {
                                 flex: 2,
                                 child: Container(
                                   height: 70.h,
-                                  width: 360.w,
                                   child: Container(
                                     child: TextFormField(
                                       validator: (String? val) {
@@ -868,14 +898,13 @@ class _Sign1PageState extends State<Sign1Page> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 8.w),
                             ],
                           ),
                         ),
 
                         //Sex and Bloodtype Field
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 25.h),
+                          padding: EdgeInsets.symmetric(horizontal: 25.w),
                           child: Row(
                             children: [
                               //Sex Dropdown
@@ -883,7 +912,6 @@ class _Sign1PageState extends State<Sign1Page> {
                                 flex: 3,
                                 child: Container(
                                   height: 70.h,
-                                  width: 360.w,
                                   child: DropdownButtonFormField<String>(
                                     validator: (String? val) {
                                       if (val == null || val.isEmpty) {
@@ -959,7 +987,6 @@ class _Sign1PageState extends State<Sign1Page> {
                                 flex: 3,
                                 child: Container(
                                   height: 70.h,
-                                  width: 360.w,
                                   child: DropdownButtonFormField<String>(
                                     validator: (String? val) {
                                       if (val == null || val.isEmpty) {
@@ -1021,12 +1048,247 @@ class _Sign1PageState extends State<Sign1Page> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 8.w),
                             ],
+                          ),
+                        ),
+
+                        //Occupation Text Field
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 25.w),
+                          child: Container(
+                            height: 70.h,
+                            child: TextFormField(
+                              validator: (String? val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Please enter your occupation';
+                                }
+                                return null;
+                              },
+                              keyboardType: TextInputType.text,
+                              autofocus: false,
+                              textCapitalization: TextCapitalization.words,
+                              controller: _occupationController,
+                              cursorColor: Colors.grey.shade600,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10),
+                                labelText: 'Occupation',
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                ),
+                                prefixIcon: const Icon(
+                                  Icons.work_outline,
+                                  color: Color.fromRGBO(252, 58, 72, 32),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        //Permanent Address Text field
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 25.w),
+                          child: Container(
+                            height: 70.h,
+                            child: TextFormField(
+                              validator: (String? val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Please enter your permanent address';
+                                }
+                                return null;
+                              },
+                              keyboardType: TextInputType.text,
+                              autofocus: false,
+                              textCapitalization: TextCapitalization.words,
+                              controller: _permanentAddressController,
+                              cursorColor: Colors.grey.shade600,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10),
+                                labelText: 'Permanent Address',
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                ),
+                                prefixIcon: const Icon(
+                                  Icons.location_on_outlined,
+                                  color: Color.fromRGBO(252, 58, 72, 32),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        //Home Address Text field
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 25.w),
+                          child: Container(
+                            height: 70.h,
+                            child: TextFormField(
+                              validator: (String? val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Please enter your home address';
+                                }
+                                return null;
+                              },
+                              keyboardType: TextInputType.text,
+                              autofocus: false,
+                              textCapitalization: TextCapitalization.words,
+                              controller: _homeAddressController,
+                              cursorColor: Colors.grey.shade600,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10),
+                                labelText: 'Home Address',
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                ),
+                                prefixIcon: const Icon(
+                                  Icons.location_on_outlined,
+                                  color: Color.fromRGBO(252, 58, 72, 32),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10.w),
+                        //Submit button
+                        Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const Sign2Page()),
+                              );
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 25.w),
+                              child: Container(
+                                height: 50.h,
+                                decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Color.fromRGBO(252, 58, 72, 1),
+                                        Color.fromARGB(255, 121, 58, 75),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: const Center(
+                                  child: Text(
+                                    'Submit',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ],
                     ),
+                  ),
+                ),
+
+                Positioned(
+                  left: (MediaQuery.of(context).size.width) / 4,
+                  bottom: 25,
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Already a member? ',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(
+                            () => const LoginPage(),
+                            transition: Transition.fadeIn,
+                            duration: Duration(milliseconds: 300),
+                          );
+                        },
+                        child: const Text(
+                          'Login Now',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -1812,34 +2074,7 @@ class _Sign1PageState extends State<Sign1Page> {
 
 //             //LOGIN HERE CRP
 //             SizedBox(height: 15.h),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 const Text(
-//                   'Already a member? ',
-//                   style: TextStyle(
-//                     color: Colors.white,
-//                     fontWeight: FontWeight.w400,
-//                   ),
-//                 ),
-//                 GestureDetector(
-//                   onTap: () {
-//                     Get.to(
-//                       () => const LoginPage(),
-//                       transition: Transition.fadeIn,
-//                       duration: Duration(milliseconds: 300),
-//                     );
-//                   },
-//                   child: const Text(
-//                     'Login Now',
-//                     style: TextStyle(
-//                       color: Colors.white,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
+
 //           ],
 //         ), //Login Button
 //       ],
