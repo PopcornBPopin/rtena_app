@@ -1031,7 +1031,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                       }).toList(),
                                       onChanged: (String? newValue) {
                                         setState(() {
-                                          _sexSelected = newValue!;
+                                          _sexController.text = newValue!;
                                         });
                                       },
                                     ),
@@ -1101,7 +1101,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                       }).toList(),
                                       onChanged: (String? newValue) {
                                         setState(() {
-                                          _bloodtypeSelected = newValue!;
+                                          _bloodtypeController.text = newValue!;
                                         });
                                       },
                                     ),
@@ -1291,7 +1291,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                   },
                                 );
                                 if (isValid && !_roleNotSelected) {
-                                  SignUp();
+                                  SignUp;
                                 }
                               },
                               child: Padding(
