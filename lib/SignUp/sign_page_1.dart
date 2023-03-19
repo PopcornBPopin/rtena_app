@@ -18,12 +18,19 @@ class _Sign1PageState extends State<Sign1Page> {
   var _fPass;
   var _sPass;
 
+  var _sexSelected;
+  var _bloodtypeSelected;
+
   bool _civIsPressed = false;
   bool _resIsPressed = false;
   bool _roleNotSelected = false;
   bool _passwordHidden = true;
   bool _confPasswordHidden = true;
+  bool _birthdateSelected = false;
   final RegExp _validPass = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
+
+  final _bloodtypeChoice = ["A+", "B+", "AB+", "A-", "B-", "AB-", "O+", "O-"];
+  final _sexChoice = ["Male", "Female"];
 
   DateTime _currentDate = DateTime.now();
   final _monthName = [
@@ -77,13 +84,38 @@ class _Sign1PageState extends State<Sign1Page> {
     super.dispose();
   }
 
-  void _showBirthdatePicker() {
-    showDatePicker(
+  final ThemeData theme = ThemeData.dark().copyWith(
+    colorScheme: ColorScheme.dark(
+      primary: Color.fromRGBO(252, 58, 72, 1),
+      surface: Color.fromRGBO(70, 18, 32, 1),
+    ),
+    dialogBackgroundColor: Color.fromRGBO(70, 18, 32, 1),
+    textTheme: TextTheme(
+      labelLarge: TextStyle(
+        color: Colors.white,
+        fontSize: 18,
+      ),
+    ),
+  );
+
+  Future<void> _showBirthdatePicker() async {
+    DateTime? newDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: _currentDate,
       firstDate: DateTime(1900),
       lastDate: DateTime(2030),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: theme,
+          child: child!,
+        );
+      },
     );
+    setState(() {
+      _birthdateSelected = true;
+      _currentDate = newDate!;
+    });
+    if (newDate == null) return;
   }
 
   @override
@@ -366,7 +398,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                 fontSize: 15,
                               ),
                               prefixIcon: const Icon(
-                                Icons.password,
+                                Icons.lock_outline,
                                 color: Color.fromRGBO(252, 58, 72, 32),
                               ),
                               suffixIcon: GestureDetector(
@@ -439,7 +471,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                 fontSize: 15,
                               ),
                               prefixIcon: const Icon(
-                                Icons.password,
+                                Icons.lock_outline,
                                 color: Color.fromRGBO(252, 58, 72, 32),
                               ),
                               suffixIcon: GestureDetector(
@@ -725,6 +757,7 @@ class _Sign1PageState extends State<Sign1Page> {
                           ),
                         ),
 
+                        //Birthdate and Age Selector
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 25.h),
                           child: Row(
@@ -748,22 +781,19 @@ class _Sign1PageState extends State<Sign1Page> {
                                           return null;
                                         },
                                         enabled: false,
+                                        autofocus: false,
                                         controller: _birthdateController,
-                                        showCursor: false,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.all(10),
-                                          labelText: _currentDate.year
-                                                  .toString() +
-                                              "/" +
-                                              _currentDate.month.toString() +
-                                              "/" +
-                                              _currentDate.day.toString(),
+                                          labelText: _birthdateSelected
+                                              ? "Bday: ${_monthName[_currentDate.month]} ${_currentDate.day} ${_currentDate.year}"
+                                              : "Birthdate",
                                           labelStyle: TextStyle(
                                             color: Colors.black,
                                             fontSize: 15,
                                           ),
                                           prefixIcon: const Icon(
-                                            Icons.calendar_month_outlined,
+                                            Icons.cake_outlined,
                                             color:
                                                 Color.fromRGBO(252, 58, 72, 32),
                                           ),
@@ -793,49 +823,110 @@ class _Sign1PageState extends State<Sign1Page> {
 
                               //Age Text field
                               Flexible(
-                                flex: 4,
+                                flex: 2,
                                 child: Container(
                                   height: 70.h,
                                   width: 360.w,
-                                  child: TextFormField(
+                                  child: Container(
+                                    child: TextFormField(
+                                      validator: (String? val) {
+                                        if (val == null || val.isEmpty) {
+                                          return 'Please enter your birthdate';
+                                        }
+                                        return null;
+                                      },
+                                      enabled: false,
+                                      autofocus: false,
+                                      controller: _birthdateController,
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.all(10),
+                                        labelText: _birthdateSelected
+                                            ? "Age : ${(DateTime.now()).year - _currentDate.year}"
+                                            : "Age",
+                                        labelStyle: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 15,
+                                        ),
+                                        disabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0),
+                                          ),
+                                          borderSide: BorderSide(
+                                              color:
+                                                  Color.fromRGBO(82, 82, 82, 1),
+                                              width: 1),
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0),
+                                          ),
+                                          borderSide:
+                                              BorderSide(color: Colors.red),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 8.w),
+                            ],
+                          ),
+                        ),
+
+                        //Sex and Bloodtype Field
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 25.h),
+                          child: Row(
+                            children: [
+                              //Sex Dropdown
+                              Flexible(
+                                flex: 3,
+                                child: Container(
+                                  height: 70.h,
+                                  width: 360.w,
+                                  child: DropdownButtonFormField<String>(
                                     validator: (String? val) {
                                       if (val == null || val.isEmpty) {
-                                        return 'Please enter a valid contact number';
+                                        return 'Please select your sex';
                                       }
                                       return null;
                                     },
-                                    keyboardType: TextInputType.phone,
-                                    autofocus: false,
-                                    controller: _contactNumberController,
-                                    cursorColor: Colors.grey.shade600,
+                                    value: _sexSelected,
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.all(10),
-                                      labelText: 'Contact Number',
+                                      labelText: "Sex",
                                       labelStyle: TextStyle(
                                         color: Colors.black,
                                         fontSize: 15,
                                       ),
-                                      prefixIcon: const Icon(
-                                        Icons.phone_android_outlined,
-                                        color: Color.fromRGBO(252, 58, 72, 32),
-                                      ),
+                                      prefixIcon: _sexSelected == 'Male'
+                                          ? const Icon(
+                                              Icons.male_outlined,
+                                              color: Color.fromRGBO(
+                                                  252, 58, 72, 32),
+                                            )
+                                          : const Icon(
+                                              Icons.female_outlined,
+                                              color: Color.fromRGBO(
+                                                  252, 58, 72, 32),
+                                            ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(10.0),
                                         ),
                                         borderSide: BorderSide(
-                                            color:
-                                                Color.fromRGBO(82, 82, 82, 1),
-                                            width: 1),
+                                          color: Color.fromRGBO(82, 82, 82, 1),
+                                          width: 1,
+                                        ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(10.0),
                                         ),
                                         borderSide: BorderSide(
-                                            color:
-                                                Color.fromRGBO(82, 82, 82, 1),
-                                            width: 1),
+                                          color: Color.fromRGBO(82, 82, 82, 1),
+                                          width: 1,
+                                        ),
                                       ),
                                       errorBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.all(
@@ -845,9 +936,92 @@ class _Sign1PageState extends State<Sign1Page> {
                                             BorderSide(color: Colors.red),
                                       ),
                                     ),
+                                    items: _sexChoice
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        _sexSelected = newValue!;
+                                      });
+                                    },
                                   ),
                                 ),
                               ),
+                              SizedBox(width: 8.w),
+
+                              //Bloodtype Dropdown
+                              Flexible(
+                                flex: 3,
+                                child: Container(
+                                  height: 70.h,
+                                  width: 360.w,
+                                  child: DropdownButtonFormField<String>(
+                                    validator: (String? val) {
+                                      if (val == null || val.isEmpty) {
+                                        return 'Please select your bloodtype';
+                                      }
+                                      return null;
+                                    },
+                                    value: _bloodtypeSelected,
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.all(10),
+                                      labelText: "Bloodtype",
+                                      labelStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                      ),
+                                      prefixIcon: const Icon(
+                                        Icons.bloodtype_outlined,
+                                        color: Color.fromRGBO(252, 58, 72, 32),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                        borderSide: BorderSide(
+                                          color: Color.fromRGBO(82, 82, 82, 1),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                        borderSide: BorderSide(
+                                          color: Color.fromRGBO(82, 82, 82, 1),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                        borderSide:
+                                            BorderSide(color: Colors.red),
+                                      ),
+                                    ),
+                                    items: _bloodtypeChoice
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        _bloodtypeSelected = newValue!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 8.w),
                             ],
                           ),
                         ),
