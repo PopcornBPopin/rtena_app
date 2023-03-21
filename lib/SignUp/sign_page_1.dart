@@ -1,15 +1,14 @@
-import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:rtena_app/Civilian/civilian_selected_page.dart';
 import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/login_page.dart';
-import 'package:rtena_app/SignUp/sign_page_2.dart';
+import 'package:rtena_app/Civilian/civilian_home_page.dart';
+
+import '../camera_page.dart';
 
 class Sign1Page extends StatefulWidget {
   const Sign1Page({Key? key}) : super(key: key);
@@ -18,8 +17,10 @@ class Sign1Page extends StatefulWidget {
 }
 
 class _Sign1PageState extends State<Sign1Page> {
-  late List<CameraDescription> cameras;
-  late CameraController cameraController;
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  }
 
   var _sexSelected;
   var _bloodtypeSelected;
@@ -90,22 +91,6 @@ class _Sign1PageState extends State<Sign1Page> {
       ),
     ),
   );
-
-  //Show camera
-  void startCamera() async {
-    cameras = await availableCameras();
-    cameraController = CameraController(
-      cameras[0],
-      ResolutionPreset.high,
-      enableAudio: false,
-    );
-    await cameraController.initialize().then((value) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    });
-  }
 
   //Show calendar
   Future<void> _showBirthdatePicker() async {
@@ -195,7 +180,7 @@ class _Sign1PageState extends State<Sign1Page> {
         _permanentAddressController.text.trim(),
         _homeAddressController.text.trim());
     Get.to(
-      () => const Sign2Page(),
+      () => const CivHomePage(),
       transition: Transition.fade,
     );
   }
@@ -215,7 +200,6 @@ class _Sign1PageState extends State<Sign1Page> {
     _bloodtypeController.dispose();
     _contactNumberController.dispose();
     _birthdateController.dispose();
-    cameraController.dispose();
     super.dispose();
   }
 
@@ -1338,7 +1322,11 @@ class _Sign1PageState extends State<Sign1Page> {
                                 padding: EdgeInsets.all(12),
                               ),
                               onPressed: () {
-                                // add the function to execute on button press
+                                Get.to(
+                                  () => CameraScreen(),
+                                  transition: Transition.circularReveal,
+                                  duration: Duration(milliseconds: 300),
+                                );
                               },
                               child: Container(
                                 width: double.infinity,
@@ -1425,11 +1413,12 @@ class _Sign1PageState extends State<Sign1Page> {
                 ),
 
                 Positioned(
-                  left: (MediaQuery.of(context).size.width) / 4,
+                  width: MediaQuery.of(context).size.width,
                   bottom: 30.h,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         'Already a member? ',
                         style: TextStyle(
                           color: Colors.white,
