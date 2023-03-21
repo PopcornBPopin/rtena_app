@@ -1,11 +1,15 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:rtena_app/checker_page.dart';
+import 'package:rtena_app/camera_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  cameras = await availableCameras();
   await Firebase.initializeApp();
   runApp(MyApp());
 }
