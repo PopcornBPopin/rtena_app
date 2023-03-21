@@ -18,9 +18,6 @@ class _ImagePreviewState extends State<ImagePreview> {
   @override
   Widget build(BuildContext context) {
     File image = File(widget.file.path);
-
-    
-    XFile Image = image;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
