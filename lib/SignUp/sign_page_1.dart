@@ -1,6 +1,8 @@
+import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -16,8 +18,8 @@ class Sign1Page extends StatefulWidget {
 }
 
 class _Sign1PageState extends State<Sign1Page> {
-  var _fPass;
-  var _sPass;
+  late List<CameraDescription> cameras;
+  late CameraController cameraController;
 
   var _sexSelected;
   var _bloodtypeSelected;
@@ -29,10 +31,11 @@ class _Sign1PageState extends State<Sign1Page> {
   bool _confPasswordHidden = true;
   bool _birthdateSelected = false;
   bool _expandScreen = false;
+  bool _emailExists = false;
 
   final _formKey = GlobalKey<FormState>();
   final RegExp _validPass = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
-  final RegExp _validEmail = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  final RegExp _validEmail = RegExp(r"^[a-zA-Z0-9.]+@[a-z0-9]+\.[a-z]+");
 
   final _bloodtypeChoice = ["A+", "B+", "AB+", "A-", "B-", "AB-", "O+", "O-"];
   final _sexChoice = ["Male", "Female"];
@@ -73,24 +76,7 @@ class _Sign1PageState extends State<Sign1Page> {
   @override
   //FUNCTIONS
 
-  //Disposes controller when not in used
-  void dispose() {
-    _roleController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confPasswordController.dispose();
-    _surnameController.dispose();
-    _firstNameController.dispose();
-    _midInitController.dispose();
-    _occupationController.dispose();
-    _ageController.dispose();
-    _sexController.dispose();
-    _bloodtypeController.dispose();
-    _contactNumberController.dispose();
-    _birthdateController.dispose();
-    super.dispose();
-  }
-
+  //Calendar Theme
   final ThemeData theme = ThemeData.dark().copyWith(
     colorScheme: ColorScheme.dark(
       primary: Color.fromRGBO(252, 58, 72, 1),
@@ -105,6 +91,23 @@ class _Sign1PageState extends State<Sign1Page> {
     ),
   );
 
+  //Show camera
+  void startCamera() async {
+    cameras = await availableCameras();
+    cameraController = CameraController(
+      cameras[0],
+      ResolutionPreset.high,
+      enableAudio: false,
+    );
+    await cameraController.initialize().then((value) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    });
+  }
+
+  //Show calendar
   Future<void> _showBirthdatePicker() async {
     DateTime? newDate = await showDatePicker(
       context: context,
@@ -130,6 +133,7 @@ class _Sign1PageState extends State<Sign1Page> {
 
   //Writing user details to Firestone DB
   Future addUserDetails(
+      String emailAddress,
       String roleOfUser,
       String surname,
       String firstName,
@@ -143,6 +147,7 @@ class _Sign1PageState extends State<Sign1Page> {
       String permanentAddress,
       String homeAddress) async {
     await FirebaseFirestore.instance.collection('users').add({
+      'Email Address': emailAddress,
       'Role': roleOfUser,
       'Surname': surname,
       'First Name': firstName,
@@ -158,13 +163,25 @@ class _Sign1PageState extends State<Sign1Page> {
     });
   }
 
-  Future SignUp() async {
+  //Sign up
+  Future<void> SignUp() async {
+    String email = _emailController.text.trim();
+    List<String> signInMethods =
+        await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+    if (signInMethods.isNotEmpty) {
+      setState(() {
+        _emailExists = true;
+      });
+      return; // Exit the function if email already exists
+    }
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
+
     //Add user details
     addUserDetails(
+        _emailController.text.trim(),
         _roleController.text.trim(),
         _surnameController.text.trim(),
         _firstNameController.text.trim(),
@@ -183,6 +200,25 @@ class _Sign1PageState extends State<Sign1Page> {
     );
   }
 
+  //Disposes controller when not in used
+  void dispose() {
+    _roleController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confPasswordController.dispose();
+    _surnameController.dispose();
+    _firstNameController.dispose();
+    _midInitController.dispose();
+    _occupationController.dispose();
+    _ageController.dispose();
+    _sexController.dispose();
+    _bloodtypeController.dispose();
+    _contactNumberController.dispose();
+    _birthdateController.dispose();
+    cameraController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -190,7 +226,7 @@ class _Sign1PageState extends State<Sign1Page> {
       body: SafeArea(
         //Scrollview starts here
         child: ListView(
-          itemExtent: _expandScreen ? 1450.h : 1220.h,
+          itemExtent: _expandScreen ? 1620.h : 1350.h,
           children: [
             Stack(
               children: [
@@ -385,8 +421,16 @@ class _Sign1PageState extends State<Sign1Page> {
                               ),
                             ],
                           ),
+                          SizedBox(height: 10.h),
 
-                          SizedBox(height: 20.h),
+                          Visibility(
+                            visible: _roleNotSelected,
+                            child: Text(
+                              'Please select a role',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
 
                           //Email address Text field
                           Padding(
@@ -399,6 +443,8 @@ class _Sign1PageState extends State<Sign1Page> {
                                       val.isEmpty ||
                                       !_validEmail.hasMatch(val)) {
                                     return 'Please enter a valid email';
+                                  } else if (_emailExists) {
+                                    return 'Email Address is already taken';
                                   }
                                   return null;
                                 },
@@ -863,7 +909,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                                     .text.isEmpty ||
                                                 int.parse(
                                                         _ageController.text) <=
-                                                    1) {
+                                                    4) {
                                               return 'Please enter your birthdate';
                                             }
                                             return null;
@@ -917,7 +963,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                           return 'Enter your Birthdate';
                                         } else if (int.parse(
                                                 _ageController.text) <=
-                                            1) {
+                                            4) {
                                           return 'Invalid Age';
                                         }
                                         return null;
@@ -982,17 +1028,18 @@ class _Sign1PageState extends State<Sign1Page> {
                                           color: Colors.black,
                                           fontSize: 15,
                                         ),
-                                        prefixIcon: _sexSelected == 'Male'
-                                            ? const Icon(
-                                                Icons.male_outlined,
-                                                color: Color.fromRGBO(
-                                                    252, 58, 72, 32),
-                                              )
-                                            : const Icon(
-                                                Icons.female_outlined,
-                                                color: Color.fromRGBO(
-                                                    252, 58, 72, 32),
-                                              ),
+                                        prefixIcon:
+                                            _sexController.text == 'Male'
+                                                ? const Icon(
+                                                    Icons.male_outlined,
+                                                    color: Color.fromRGBO(
+                                                        252, 58, 72, 32),
+                                                  )
+                                                : const Icon(
+                                                    Icons.female_outlined,
+                                                    color: Color.fromRGBO(
+                                                        252, 58, 72, 32),
+                                                  ),
                                         enabledBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(10.0),
@@ -1275,7 +1322,55 @@ class _Sign1PageState extends State<Sign1Page> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 10.w),
+                          SizedBox(height: 10.h),
+
+                          //Camera
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 25.w, vertical: 6.h),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Color.fromRGBO(252, 58, 72, 32),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: EdgeInsets.all(12),
+                              ),
+                              onPressed: () {
+                                // add the function to execute on button press
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                height: 80.h,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.white,
+                                      size: 50,
+                                    ),
+                                    Text(
+                                      "Take a picture of your valid ID",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 17.sp),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          Visibility(
+                            visible: _roleNotSelected,
+                            child: Text(
+                              'Please upload a picture of your valid ID',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+
                           //Submit button
                           Center(
                             child: GestureDetector(
