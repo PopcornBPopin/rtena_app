@@ -1,14 +1,15 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/login_page.dart';
 import 'package:rtena_app/Civilian/civilian_home_page.dart';
-
-import '../camera_page.dart';
 
 class Sign1Page extends StatefulWidget {
   const Sign1Page({Key? key}) : super(key: key);
@@ -22,8 +23,12 @@ class _Sign1PageState extends State<Sign1Page> {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
+  File? _validID;
+
   var _sexSelected;
   var _bloodtypeSelected;
+
+  double screenSize = 1350.h;
 
   bool _civIsPressed = false;
   bool _resIsPressed = false;
@@ -31,8 +36,11 @@ class _Sign1PageState extends State<Sign1Page> {
   bool _passwordHidden = true;
   bool _confPasswordHidden = true;
   bool _birthdateSelected = false;
-  bool _expandScreen = false;
   bool _emailExists = false;
+  bool _validIDSelected = false;
+  bool _validIDNotSelected = false;
+  bool _hasSetScreenSizeForm = false;
+  bool _hasSetScreenSizeID = false;
 
   final _formKey = GlobalKey<FormState>();
   final RegExp _validPass = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
@@ -74,7 +82,6 @@ class _Sign1PageState extends State<Sign1Page> {
   final _permanentAddressController = TextEditingController();
   final _homeAddressController = TextEditingController();
 
-  @override
   //FUNCTIONS
 
   //Calendar Theme
@@ -114,6 +121,111 @@ class _Sign1PageState extends State<Sign1Page> {
       _ageController.text = "${(DateTime.now()).year - _currentDate.year}";
     });
     if (newDate == null) return;
+  }
+
+  //Select picture to upload
+  void choosePicture(BuildContext context) {
+    showModalBottomSheet(
+      elevation: 10,
+      backgroundColor: Colors.grey.shade300,
+      context: context,
+      builder: (context) => Container(
+        width: MediaQuery.of(context).size.width,
+        height: 150.h,
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                // backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.all(12),
+                backgroundColor: Colors.white,
+              ),
+              child: Container(
+                alignment: Alignment.center,
+                height: 60.h,
+                width: 130.w,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.camera_alt,
+                      color: Colors.black,
+                    ),
+                    Text(
+                      "Camera",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+              onPressed: () async {
+                grabPhoto(ImageSource.camera);
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                // backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.all(12),
+                backgroundColor: Colors.white,
+              ),
+              child: Container(
+                alignment: Alignment.center,
+                height: 60.h,
+                width: 130.w,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.landscape,
+                      color: Colors.black,
+                    ),
+                    Text(
+                      "Gallery",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+              onPressed: () async {
+                grabPhoto(ImageSource.gallery);
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  //Grab the picture
+  Future grabPhoto(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+      final selectedImage = File(image.path);
+
+      setState(
+        () {
+          this._validID = selectedImage;
+          _validIDSelected = true;
+          if (!_hasSetScreenSizeID) {
+            setState(() {
+              screenSize = screenSize + 120.h;
+            });
+            _hasSetScreenSizeID = true;
+          }
+        },
+      );
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
   }
 
   //Writing user details to Firestone DB
@@ -210,7 +322,7 @@ class _Sign1PageState extends State<Sign1Page> {
       body: SafeArea(
         //Scrollview starts here
         child: ListView(
-          itemExtent: _expandScreen ? 1620.h : 1350.h,
+          itemExtent: screenSize,
           children: [
             Stack(
               children: [
@@ -1308,42 +1420,63 @@ class _Sign1PageState extends State<Sign1Page> {
                           ),
                           SizedBox(height: 10.h),
 
-                          //Camera
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 25.w, vertical: 6.h),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Color.fromRGBO(252, 58, 72, 32),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                          //Upload a picture
+                          Visibility(
+                            visible: !_validIDSelected,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 25.w, vertical: 6.h),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Color.fromRGBO(252, 58, 72, 32),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  padding: EdgeInsets.all(12),
                                 ),
-                                padding: EdgeInsets.all(12),
+                                onPressed: () {
+                                  choosePicture(context);
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 80.h,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.photo_library,
+                                        color: Colors.white,
+                                        size: 40,
+                                      ),
+                                      Text(
+                                        "Upload a picture of your valid ID",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 17.sp),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              onPressed: () {
-                                Get.to(
-                                  () => CameraScreen(),
-                                  transition: Transition.circularReveal,
-                                  duration: Duration(milliseconds: 300),
-                                );
-                              },
+                            ),
+                          ),
+
+                          //Uploaded Picture
+                          Visibility(
+                            visible: _validIDSelected,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 30),
                               child: Container(
-                                width: double.infinity,
-                                height: 80.h,
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
-                                      Icons.camera_alt,
-                                      color: Colors.white,
-                                      size: 50,
-                                    ),
-                                    Text(
-                                      "Take a picture of your valid ID",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 17.sp),
-                                    ),
+                                    _validID != null
+                                        ? Image.file(_validID!,
+                                            width: 250.w,
+                                            height: 250.h,
+                                            fit: BoxFit.cover)
+                                        : Container()
                                   ],
                                 ),
                               ),
@@ -1351,9 +1484,9 @@ class _Sign1PageState extends State<Sign1Page> {
                           ),
 
                           Visibility(
-                            visible: _roleNotSelected,
+                            visible: _validIDNotSelected,
                             child: Text(
-                              'Please upload a picture of your valid ID',
+                              'Upload a picture of your valid ID',
                               style: TextStyle(color: Colors.red),
                             ),
                           ),
@@ -1366,14 +1499,20 @@ class _Sign1PageState extends State<Sign1Page> {
                                 if (!_civIsPressed && !_resIsPressed) {
                                   _roleNotSelected = true;
                                 }
+                                if (!_validIDSelected) {
+                                  _validIDNotSelected = true;
+                                }
                                 final isValid =
                                     _formKey.currentState!.validate();
-                                setState(
-                                  () {
-                                    _expandScreen = true;
-                                  },
-                                );
-                                if (isValid && !_roleNotSelected) {
+                                if (!_hasSetScreenSizeForm) {
+                                  setState(() {
+                                    screenSize = screenSize + 270.h;
+                                  });
+                                  _hasSetScreenSizeForm = true;
+                                }
+                                if (isValid &&
+                                    !_roleNotSelected &&
+                                    !_validIDNotSelected) {
                                   SignUp;
                                 }
                               },
