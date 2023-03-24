@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -240,19 +240,22 @@ class _Sign1PageState extends State<Sign1Page> {
 
   //Writing user details to Firestone DB
   Future addUserDetails(
-      String emailAddress,
-      String roleOfUser,
-      String surname,
-      String firstName,
-      String mInit,
-      String contactNumber,
-      String bDate,
-      int age,
-      String sex,
-      String bloodtype,
-      String occupation,
-      String permanentAddress,
-      String homeAddress) async {
+    String emailAddress,
+    String roleOfUser,
+    String surname,
+    String firstName,
+    String mInit,
+    String contactNumber,
+    String bDate,
+    int age,
+    String sex,
+    String bloodtype,
+    String occupation,
+    String stationAddress,
+    String employer,
+    String permanentAddress,
+    String homeAddress,
+  ) async {
     await FirebaseFirestore.instance.collection('users').add({
       'Email Address': emailAddress,
       'Role': roleOfUser,
@@ -265,22 +268,17 @@ class _Sign1PageState extends State<Sign1Page> {
       'Sex': sex,
       'Bloodtype': bloodtype,
       'Occupation': occupation,
+      'Station Address': stationAddress,
+      'Employer': employer,
       'Permanent Address': permanentAddress,
-      'Home Address': homeAddress,
-    });
+      'Home Address': homeAddress
+    }).then((value) => print("User Added"));
   }
 
+  // late String imageURL;
   //Sign up
-  Future<void> SignUp() async {
-    String email = _emailController.text.trim();
-    List<String> signInMethods =
-        await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-    if (signInMethods.isNotEmpty) {
-      setState(() {
-        _emailExists = true;
-      });
-      return; // Exit the function if email already exists
-    }
+  @override
+  Future SignUp() async {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
@@ -288,19 +286,22 @@ class _Sign1PageState extends State<Sign1Page> {
 
     //Add user details
     addUserDetails(
-        _emailController.text.trim(),
-        _roleController.text.trim(),
-        _surnameController.text.trim(),
-        _firstNameController.text.trim(),
-        _midInitController.text.trim(),
-        _contactNumberController.text.trim(),
-        _birthdateController.text.trim(),
-        int.parse(_ageController.text.trim()),
-        _sexController.text.trim(),
-        _bloodtypeController.text.trim(),
-        _occupationController.text.trim(),
-        _permanentAddressController.text.trim(),
-        _homeAddressController.text.trim());
+      _emailController.text.trim(),
+      _roleController.text.trim(),
+      _surnameController.text.trim(),
+      _firstNameController.text.trim(),
+      _midInitController.text.trim(),
+      _contactNumberController.text.trim(),
+      _birthdateController.text.trim(),
+      int.parse(_ageController.text.trim()),
+      _sexController.text.trim(),
+      _bloodtypeController.text.trim(),
+      _occupationController.text.trim(),
+      _stationAddressController.text.trim(),
+      _employerController.text.trim(),
+      _permanentAddressController.text.trim(),
+      _homeAddressController.text.trim(),
+    );
     Get.to(
       () => const CivHomePage(),
       transition: Transition.fade,
@@ -317,6 +318,8 @@ class _Sign1PageState extends State<Sign1Page> {
     _firstNameController.dispose();
     _midInitController.dispose();
     _occupationController.dispose();
+    _stationAddressController.dispose();
+    _employerController.dispose();
     _ageController.dispose();
     _sexController.dispose();
     _bloodtypeController.dispose();
@@ -824,14 +827,14 @@ class _Sign1PageState extends State<Sign1Page> {
                                 horizontal: 25.w, vertical: 6.h),
                             child: Row(
                               children: [
-                                //Surename Text Field
+                                //Surname Text Field
                                 Flexible(
                                   flex: 5,
                                   child: Container(
                                     child: TextFormField(
                                       validator: (String? val) {
                                         if (val == null || val.isEmpty) {
-                                          return 'Empty surename';
+                                          return 'Empty surname';
                                         }
                                         return null;
                                       },
@@ -843,7 +846,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                       cursorColor: Colors.grey.shade600,
                                       decoration: const InputDecoration(
                                         contentPadding: EdgeInsets.all(10),
-                                        labelText: 'Surename',
+                                        labelText: 'Surname',
                                         labelStyle: TextStyle(
                                           color: Colors.black,
                                           fontSize: 15,
@@ -1665,13 +1668,19 @@ class _Sign1PageState extends State<Sign1Page> {
                                         Column(
                                           children: [
                                             _validID != null
-                                                ? Image.file(_validID!,
-                                                    width:
-                                                        MediaQuery.of(context)
+                                                ? Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        vertical: 5,
+                                                        horizontal: 10),
+                                                    child: Image.file(_validID!,
+                                                        width: MediaQuery.of(
+                                                                context)
                                                             .size
                                                             .width,
-                                                    height: 250.h,
-                                                    fit: BoxFit.contain)
+                                                        height: 250.h,
+                                                        fit: BoxFit.contain),
+                                                  )
                                                 : Container()
                                           ],
                                         ),
@@ -1745,6 +1754,8 @@ class _Sign1PageState extends State<Sign1Page> {
                           Center(
                             child: GestureDetector(
                               onTap: () {
+                                print(!_roleNotSelected);
+                                print(!_validIDNotSelected);
                                 if (!_civIsPressed && !_resIsPressed) {
                                   setState(() {
                                     screenSize = (screenSizeCivExp + 10.h);
@@ -1806,17 +1817,13 @@ class _Sign1PageState extends State<Sign1Page> {
                                   });
                                 }
 
-                                print(_hasSetScreenSizeExpandedForm);
-                                print(_hasSetScreenSizeExpandedFormCiv);
-                                print(_hasSetScreenSizeExpandedFormRes);
-                                print(_validIDSelected);
-
                                 final isValid =
                                     _formKey.currentState!.validate();
+
                                 if (isValid &&
                                     !_roleNotSelected &&
                                     !_validIDNotSelected) {
-                                  SignUp;
+                                  SignUp();
                                 }
                               },
                               child: Padding(

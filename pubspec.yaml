@@ -44,8 +44,8 @@ dependencies:
   firebase_database: ^10.0.14
   camera: ^0.10.3+2
   path_provider: ^2.0.14
-  path:
   image_picker: ^0.8.7
+  firebase_storage: ^11.0.16
   
 
 dev_dependencies:
