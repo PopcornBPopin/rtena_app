@@ -28,7 +28,12 @@ class _Sign1PageState extends State<Sign1Page> {
   var _sexSelected;
   var _bloodtypeSelected;
 
-  double screenSize = 1360.h;
+  double screenSize = 1290.h;
+  double screenSizeCiv = 1290.h;
+  double screenSizeRes = 1485.h;
+  double screenSizeCivExp = 1520.h;
+  double screenSizeResExp = 1780.h;
+  double screenSizeAddPic = 120.h;
 
   bool _civIsPressed = false;
   bool _resIsPressed = false;
@@ -39,7 +44,10 @@ class _Sign1PageState extends State<Sign1Page> {
   bool _emailExists = false;
   bool _validIDSelected = false;
   bool _validIDNotSelected = false;
-  bool _hasSetScreenSizeForm = false;
+
+  bool _hasSetScreenSizeExpandedForm = false;
+  bool _hasSetScreenSizeExpandedFormCiv = false;
+  bool _hasSetScreenSizeExpandedFormRes = false;
   bool _hasSetScreenSizeID = false;
 
   final _formKey = GlobalKey<FormState>();
@@ -79,6 +87,8 @@ class _Sign1PageState extends State<Sign1Page> {
   final _bloodtypeController = TextEditingController();
   final _ageController = TextEditingController();
   final _occupationController = TextEditingController();
+  final _stationAddressController = TextEditingController();
+  final _employerController = TextEditingController();
   final _permanentAddressController = TextEditingController();
   final _homeAddressController = TextEditingController();
 
@@ -217,7 +227,7 @@ class _Sign1PageState extends State<Sign1Page> {
           _validIDSelected = true;
           if (!_hasSetScreenSizeID) {
             setState(() {
-              screenSize = screenSize + 120.h;
+              screenSize = screenSize + 140.h;
             });
             _hasSetScreenSizeID = true;
           }
@@ -432,6 +442,32 @@ class _Sign1PageState extends State<Sign1Page> {
                                     _civIsPressed = true;
                                     _resIsPressed = false;
                                     _roleNotSelected = false;
+                                    if (!_hasSetScreenSizeExpandedFormCiv) {
+                                      setState(() {
+                                        screenSize = screenSizeCiv;
+                                      });
+                                    }
+                                    if (_hasSetScreenSizeExpandedForm ||
+                                        _hasSetScreenSizeExpandedFormCiv) {
+                                      setState(() {
+                                        screenSize = screenSizeCivExp;
+                                      });
+                                    }
+                                    if (_validIDSelected) {
+                                      setState(() {
+                                        screenSize =
+                                            screenSizeCiv + screenSizeAddPic;
+                                      });
+                                    }
+                                    if (_validIDSelected &&
+                                        (_hasSetScreenSizeExpandedFormCiv ||
+                                            _hasSetScreenSizeExpandedForm)) {
+                                      setState(() {
+                                        screenSize =
+                                            screenSizeCivExp + screenSizeAddPic;
+                                      });
+                                    }
+
                                     _roleController.text = 'Civilian';
                                   });
                                 },
@@ -486,6 +522,32 @@ class _Sign1PageState extends State<Sign1Page> {
                                     _resIsPressed = true;
                                     _civIsPressed = false;
                                     _roleNotSelected = false;
+                                    if (!_hasSetScreenSizeExpandedFormRes) {
+                                      setState(() {
+                                        screenSize = screenSizeRes;
+                                      });
+                                    }
+                                    if (_hasSetScreenSizeExpandedForm ||
+                                        _hasSetScreenSizeExpandedFormRes) {
+                                      setState(() {
+                                        screenSize = screenSizeResExp;
+                                      });
+                                    }
+                                    if (_validIDSelected) {
+                                      setState(() {
+                                        screenSize =
+                                            screenSizeRes + screenSizeAddPic;
+                                      });
+                                    }
+                                    if (_validIDSelected &&
+                                        (_hasSetScreenSizeExpandedFormRes ||
+                                            _hasSetScreenSizeExpandedForm)) {
+                                      setState(() {
+                                        screenSize =
+                                            screenSizeResExp + screenSizeAddPic;
+                                      });
+                                    }
+
                                     _roleController.text = 'Responder';
                                   });
                                 },
@@ -1255,54 +1317,173 @@ class _Sign1PageState extends State<Sign1Page> {
                           ),
 
                           //Occupation Text Field
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 25.w, vertical: 6.h),
-                            child: Container(
-                              child: TextFormField(
-                                validator: (String? val) {
-                                  if (val == null || val.isEmpty) {
-                                    return 'Please enter your occupation';
-                                  }
-                                  return null;
-                                },
-                                keyboardType: TextInputType.text,
-                                autofocus: false,
-                                textCapitalization: TextCapitalization.words,
-                                controller: _occupationController,
-                                cursorColor: Colors.grey.shade600,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.all(10),
-                                  labelText: 'Occupation',
-                                  labelStyle: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                  ),
-                                  prefixIcon: const Icon(
-                                    Icons.work_outline,
-                                    color: Color.fromRGBO(252, 58, 72, 32),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.0),
+                          Visibility(
+                            visible: _resIsPressed,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 25.w, vertical: 6.h),
+                              child: Container(
+                                child: TextFormField(
+                                  validator: (String? val) {
+                                    if (val == null || val.isEmpty) {
+                                      return 'Please enter your occupation';
+                                    }
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.text,
+                                  autofocus: false,
+                                  textCapitalization: TextCapitalization.words,
+                                  controller: _occupationController,
+                                  cursorColor: Colors.grey.shade600,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(10),
+                                    labelText: 'Occupation',
+                                    labelStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
                                     ),
-                                    borderSide: BorderSide(
-                                        color: Color.fromRGBO(82, 82, 82, 1),
-                                        width: 1),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.0),
+                                    prefixIcon: const Icon(
+                                      Icons.work_outline,
+                                      color: Color.fromRGBO(252, 58, 72, 32),
                                     ),
-                                    borderSide: BorderSide(
-                                        color: Color.fromRGBO(82, 82, 82, 1),
-                                        width: 1),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.0),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                      borderSide: BorderSide(
+                                          color: Color.fromRGBO(82, 82, 82, 1),
+                                          width: 1),
                                     ),
-                                    borderSide: BorderSide(color: Colors.red),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                      borderSide: BorderSide(
+                                          color: Color.fromRGBO(82, 82, 82, 1),
+                                          width: 1),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                      borderSide: BorderSide(color: Colors.red),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          //Station Address Text Field
+                          Visibility(
+                            visible: _resIsPressed,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 25.w, vertical: 6.h),
+                              child: Container(
+                                child: TextFormField(
+                                  validator: (String? val) {
+                                    if (val == null || val.isEmpty) {
+                                      return 'Please enter your station address';
+                                    }
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.text,
+                                  autofocus: false,
+                                  textCapitalization: TextCapitalization.words,
+                                  controller: _stationAddressController,
+                                  cursorColor: Colors.grey.shade600,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(10),
+                                    labelText: 'Station Address',
+                                    labelStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                    ),
+                                    prefixIcon: const Icon(
+                                      Icons.work_outline,
+                                      color: Color.fromRGBO(252, 58, 72, 32),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                      borderSide: BorderSide(
+                                          color: Color.fromRGBO(82, 82, 82, 1),
+                                          width: 1),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                      borderSide: BorderSide(
+                                          color: Color.fromRGBO(82, 82, 82, 1),
+                                          width: 1),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                      borderSide: BorderSide(color: Colors.red),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          //Employer Text Field
+                          Visibility(
+                            visible: _resIsPressed,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 25.w, vertical: 6.h),
+                              child: Container(
+                                child: TextFormField(
+                                  validator: (String? val) {
+                                    if (val == null || val.isEmpty) {
+                                      return 'Please enter your employer';
+                                    }
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.text,
+                                  autofocus: false,
+                                  textCapitalization: TextCapitalization.words,
+                                  controller: _employerController,
+                                  cursorColor: Colors.grey.shade600,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(10),
+                                    labelText: 'Employer',
+                                    labelStyle: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                    ),
+                                    prefixIcon: const Icon(
+                                      Icons.work_outline,
+                                      color: Color.fromRGBO(252, 58, 72, 32),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                      borderSide: BorderSide(
+                                          color: Color.fromRGBO(82, 82, 82, 1),
+                                          width: 1),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                      borderSide: BorderSide(
+                                          color: Color.fromRGBO(82, 82, 82, 1),
+                                          width: 1),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                      borderSide: BorderSide(color: Colors.red),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1565,19 +1746,73 @@ class _Sign1PageState extends State<Sign1Page> {
                             child: GestureDetector(
                               onTap: () {
                                 if (!_civIsPressed && !_resIsPressed) {
+                                  setState(() {
+                                    screenSize = (screenSizeCivExp + 10.h);
+                                  });
+
                                   _roleNotSelected = true;
+                                  _hasSetScreenSizeExpandedForm = true;
                                 }
+
+                                if (!_civIsPressed &&
+                                    !_resIsPressed &&
+                                    _validIDSelected) {
+                                  setState(() {
+                                    screenSize = (screenSizeCivExp + 10.h) +
+                                        screenSizeAddPic;
+                                  });
+
+                                  _roleNotSelected = true;
+                                  _hasSetScreenSizeExpandedForm = true;
+                                }
+
+                                if (_civIsPressed &&
+                                    !_hasSetScreenSizeExpandedFormCiv) {
+                                  setState(() {
+                                    screenSize = screenSizeCivExp;
+                                  });
+                                  _hasSetScreenSizeExpandedFormCiv = true;
+                                  _hasSetScreenSizeExpandedFormRes = true;
+                                }
+
+                                if (_resIsPressed &&
+                                    !_hasSetScreenSizeExpandedFormRes) {
+                                  setState(() {
+                                    screenSize = screenSizeResExp;
+                                  });
+                                  _hasSetScreenSizeExpandedFormRes = true;
+                                  _hasSetScreenSizeExpandedFormCiv = false;
+                                }
+                                _hasSetScreenSizeExpandedForm = true;
+
                                 if (!_validIDSelected) {
                                   _validIDNotSelected = true;
                                 }
+                                if (_validIDSelected) {
+                                  _validIDNotSelected = false;
+                                }
+
+                                if (_civIsPressed && _validIDSelected) {
+                                  setState(() {
+                                    screenSize =
+                                        screenSizeCivExp + screenSizeAddPic;
+                                  });
+                                }
+
+                                if (_resIsPressed && _validIDSelected) {
+                                  setState(() {
+                                    screenSize =
+                                        screenSizeResExp + screenSizeAddPic;
+                                  });
+                                }
+
+                                print(_hasSetScreenSizeExpandedForm);
+                                print(_hasSetScreenSizeExpandedFormCiv);
+                                print(_hasSetScreenSizeExpandedFormRes);
+                                print(_validIDSelected);
+
                                 final isValid =
                                     _formKey.currentState!.validate();
-                                if (!_hasSetScreenSizeForm) {
-                                  setState(() {
-                                    screenSize = screenSize + 270.h;
-                                  });
-                                  _hasSetScreenSizeForm = true;
-                                }
                                 if (isValid &&
                                     !_roleNotSelected &&
                                     !_validIDNotSelected) {
