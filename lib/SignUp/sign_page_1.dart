@@ -28,6 +28,8 @@ class _Sign1PageState extends State<Sign1Page> {
   var _sexSelected;
   var _bloodtypeSelected;
 
+  late String imageURL;
+
   double screenSize = 1290.h;
   double screenSizeCiv = 1290.h;
   double screenSizeRes = 1485.h;
@@ -44,7 +46,6 @@ class _Sign1PageState extends State<Sign1Page> {
   bool _emailExists = false;
   bool _validIDSelected = false;
   bool _validIDNotSelected = false;
-
   bool _hasSetScreenSizeExpandedForm = false;
   bool _hasSetScreenSizeExpandedFormCiv = false;
   bool _hasSetScreenSizeExpandedFormRes = false;
@@ -240,22 +241,22 @@ class _Sign1PageState extends State<Sign1Page> {
 
   //Writing user details to Firestone DB
   Future addUserDetails(
-    String emailAddress,
-    String roleOfUser,
-    String surname,
-    String firstName,
-    String mInit,
-    String contactNumber,
-    String bDate,
-    int age,
-    String sex,
-    String bloodtype,
-    String occupation,
-    String stationAddress,
-    String employer,
-    String permanentAddress,
-    String homeAddress,
-  ) async {
+      String emailAddress,
+      String roleOfUser,
+      String surname,
+      String firstName,
+      String mInit,
+      String contactNumber,
+      String bDate,
+      int age,
+      String sex,
+      String bloodtype,
+      String occupation,
+      String stationAddress,
+      String employer,
+      String permanentAddress,
+      String homeAddress,
+      String validIDURL) async {
     await FirebaseFirestore.instance.collection('users').add({
       'Email Address': emailAddress,
       'Role': roleOfUser,
@@ -271,14 +272,20 @@ class _Sign1PageState extends State<Sign1Page> {
       'Station Address': stationAddress,
       'Employer': employer,
       'Permanent Address': permanentAddress,
-      'Home Address': homeAddress
-    }).then((value) => print("User Added"));
+      'Home Address': homeAddress,
+      'Valid ID': validIDURL,
+    });
   }
 
-  // late String imageURL;
   //Sign up
-  @override
   Future SignUp() async {
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirValidIDs = referenceRoot.child(
+        "${_firstNameController.text.trim()} ${_surnameController.text.trim()} ValidID");
+
+    referenceDirValidIDs.putFile(_validID!);
+    imageURL = await referenceDirValidIDs.getDownloadURL();
+
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
@@ -301,6 +308,7 @@ class _Sign1PageState extends State<Sign1Page> {
       _employerController.text.trim(),
       _permanentAddressController.text.trim(),
       _homeAddressController.text.trim(),
+      imageURL,
     );
     Get.to(
       () => const CivHomePage(),
