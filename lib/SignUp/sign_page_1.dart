@@ -28,7 +28,7 @@ class _Sign1PageState extends State<Sign1Page> {
   var _sexSelected;
   var _bloodtypeSelected;
 
-  double screenSize = 1350.h;
+  double screenSize = 1360.h;
 
   bool _civIsPressed = false;
   bool _resIsPressed = false;
@@ -517,7 +517,7 @@ class _Sign1PageState extends State<Sign1Page> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 10.h),
+                          SizedBox(height: 5.h),
 
                           Visibility(
                             visible: _roleNotSelected,
@@ -1467,21 +1467,89 @@ class _Sign1PageState extends State<Sign1Page> {
                             visible: _validIDSelected,
                             child: Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 30),
+                                  const EdgeInsets.symmetric(horizontal: 25),
                               child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  border: Border.all(
+                                      color: Color.fromRGBO(82, 82, 82, 1),
+                                      width: 1),
+                                ),
                                 child: Column(
                                   children: [
-                                    _validID != null
-                                        ? Image.file(_validID!,
-                                            width: 250.w,
-                                            height: 250.h,
-                                            fit: BoxFit.cover)
-                                        : Container()
+                                    Stack(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            _validID != null
+                                                ? Image.file(_validID!,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    height: 250.h,
+                                                    fit: BoxFit.contain)
+                                                : Container()
+                                          ],
+                                        ),
+                                        Positioned(
+                                          height: 50.h,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              52,
+                                          bottom: 0,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Color.fromRGBO(
+                                                  0, 0, 0, 0.700),
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft:
+                                                    Radius.circular(8.0),
+                                                bottomRight:
+                                                    Radius.circular(8.0),
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20),
+                                              child: Row(
+                                                children: [
+                                                  IconButton(
+                                                    icon: Icon(Icons.close),
+                                                    color: Colors.white,
+                                                    onPressed: () {
+                                                      choosePicture(context);
+                                                    },
+                                                  ),
+                                                  Expanded(
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "Choose another photo?",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 17.sp),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
                           ),
+                          SizedBox(height: 5.h),
 
                           Visibility(
                             visible: _validIDNotSelected,
