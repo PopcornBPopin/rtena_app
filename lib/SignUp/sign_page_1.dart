@@ -130,8 +130,8 @@ class _Sign1PageState extends State<Sign1Page> {
       _birthdateSelected = true;
       _currentDate = newDate!;
       _birthdateController.text = "${_monthName[_currentDate.month - 1]} ${_currentDate.day} ${_currentDate.year}";
-      _ageController.text = _currentDate.month + 1 > DateTime.now().month
-          ? _currentDate.day >= DateTime.now().day
+      _ageController.text = _currentDate.month <= DateTime.now().month
+          ? _currentDate.day <= DateTime.now().day
               ? "${(DateTime.now()).year - _currentDate.year}"
               : "${(DateTime.now()).year - _currentDate.year - 1}"
           : "${(DateTime.now()).year - _currentDate.year - 1}";
@@ -140,13 +140,13 @@ class _Sign1PageState extends State<Sign1Page> {
   }
 
   //Show success prompt
-  void successAlert() {
+  void quickAlert(QuickAlertType animtype, String title, String text) {
     QuickAlert.show(
         backgroundColor: Colors.grey.shade200,
         context: context,
-        type: QuickAlertType.success,
-        title: "Registration Successful!",
-        text: "You are successfuly registered",
+        type: animtype,
+        title: title,
+        text: text,
         confirmBtnColor: Colors.white,
         confirmBtnTextStyle: TextStyle(
           fontWeight: FontWeight.normal,
@@ -176,7 +176,6 @@ class _Sign1PageState extends State<Sign1Page> {
           children: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                // backgroundColor: Color.fromRGBO(252, 58, 72, 32),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -207,7 +206,6 @@ class _Sign1PageState extends State<Sign1Page> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                // backgroundColor: Color.fromRGBO(252, 58, 72, 32),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -221,11 +219,11 @@ class _Sign1PageState extends State<Sign1Page> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.landscape,
                       color: Colors.black,
                     ),
-                    Text(
+                    const Text(
                       "Gallery",
                       style: TextStyle(color: Colors.black),
                     ),
@@ -307,13 +305,15 @@ class _Sign1PageState extends State<Sign1Page> {
     referenceDirValidIDs.putFile(_validID!);
     imageURL = await referenceDirValidIDs.getDownloadURL();
 
+    quickAlert(QuickAlertType.loading, "Standby!", "Uploading your data to our database");
+
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
 
     //Add user details
-    addUserDetails(
+    await addUserDetails(
       _emailController.text.trim(),
       _roleController.text.trim(),
       _surnameController.text.trim(),
@@ -331,6 +331,8 @@ class _Sign1PageState extends State<Sign1Page> {
       _homeAddressController.text.trim(),
       imageURL,
     );
+    Navigator.of(context).pop();
+    quickAlert(QuickAlertType.success, "Registration Successful!", "You are successfully registered");
   }
 
   //Disposes controller when not in used
@@ -390,26 +392,27 @@ class _Sign1PageState extends State<Sign1Page> {
                                   duration: Duration(milliseconds: 300),
                                 );
                               },
-                              child: Icon(
+                              child: const Icon(
                                 Icons.arrow_back,
                                 color: Colors.white,
                                 size: 30,
                               ),
                             ),
                           ),
-                          Positioned(
-                            top: 30,
-                            right: -10,
-                            child: Opacity(
-                              opacity: 0.15,
-                              child: Container(
-                                child: Image.asset(
-                                  'assets/RLOGO.png',
-                                  scale: 2.5,
-                                ),
-                              ),
-                            ),
-                          ),
+                          //RTENA LOGO
+                          // Positioned(
+                          //   top: 30,
+                          //   right: -10,
+                          //   child: Opacity(
+                          //     opacity: 0.15,
+                          //     child: Container(
+                          //       child: Image.asset(
+                          //         'assets/RLOGO.png',
+                          //         scale: 2.5,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: Container(
@@ -450,19 +453,20 @@ class _Sign1PageState extends State<Sign1Page> {
                         key: _formKey,
                         child: Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(40),
-                                bottomRight: Radius.circular(40),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(40),
+                              bottomRight: Radius.circular(40),
+                            ),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
+                                spreadRadius: 7,
+                                blurRadius: 10,
+                                offset: Offset(0, 0),
                               ),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
-                                  spreadRadius: 7,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 0),
-                                )
-                              ]),
+                            ],
+                          ),
                           child: Column(
                             children: [
                               SizedBox(height: 30.h),
@@ -1590,11 +1594,11 @@ class _Sign1PageState extends State<Sign1Page> {
                                                         },
                                                       ),
                                                       Expanded(
-                                                        child: Align(
+                                                        child: const Align(
                                                           alignment: Alignment.center,
                                                           child: Text(
                                                             "Choose another photo?",
-                                                            style: TextStyle(color: Colors.white, fontSize: 17.sp),
+                                                            style: TextStyle(color: Colors.white),
                                                           ),
                                                         ),
                                                       ),
@@ -1630,24 +1634,28 @@ class _Sign1PageState extends State<Sign1Page> {
                                   ),
                                   padding: EdgeInsets.all(12),
                                 ),
-                                onPressed: () {
+                                onPressed: () async {
                                   if (!_civIsPressed && !_resIsPressed) {
                                     setState(() {
                                       _roleNotSelected = true;
                                     });
                                   }
 
-                                  if (!_validIDSelected) {
+                                  if (_validID == null) {
                                     setState(() {
                                       _validIDNotSelected = true;
                                     });
                                   }
 
-                                  final isValid = _formKey.currentState!.validate();
+                                  if (_validID != null) {
+                                    setState(() {
+                                      _validIDNotSelected = false;
+                                    });
+                                  }
+                                  bool _isValid = _formKey.currentState!.validate();
 
-                                  if (isValid && !_roleNotSelected && !_validIDNotSelected) {
+                                  if (_isValid && !_roleNotSelected && !_validIDNotSelected) {
                                     SignUp();
-                                    successAlert();
                                   }
                                 },
                                 child: Container(
