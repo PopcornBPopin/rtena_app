@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:rtena_app/Civilian/civilian_home_page.dart';
+import 'package:rtena_app/login_page.dart';
 import 'package:rtena_app/start_page.dart';
 
 class Sign1Page extends StatefulWidget {
@@ -154,7 +155,8 @@ class _Sign1PageState extends State<Sign1Page> {
         onConfirmBtnTap: () {
           Get.to(
             () => const CivHomePage(),
-            transition: Transition.fade,
+            transition: Transition.fadeIn,
+            duration: Duration(milliseconds: 300),
           );
         });
   }
@@ -329,7 +331,6 @@ class _Sign1PageState extends State<Sign1Page> {
       _homeAddressController.text.trim(),
       imageURL,
     );
-    successAlert();
   }
 
   //Disposes controller when not in used
@@ -385,8 +386,8 @@ class _Sign1PageState extends State<Sign1Page> {
                               onTap: () {
                                 Get.to(
                                   () => const StartPage(),
-                                  transition: Transition.circularReveal,
-                                  duration: Duration(milliseconds: 1000),
+                                  transition: Transition.fadeIn,
+                                  duration: Duration(milliseconds: 300),
                                 );
                               },
                               child: Icon(
@@ -400,7 +401,7 @@ class _Sign1PageState extends State<Sign1Page> {
                             top: 30,
                             right: -10,
                             child: Opacity(
-                              opacity: 0.2,
+                              opacity: 0.15,
                               child: Container(
                                 child: Image.asset(
                                   'assets/RLOGO.png',
@@ -487,7 +488,6 @@ class _Sign1PageState extends State<Sign1Page> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      successAlert();
                                       setState(() {
                                         _civIsPressed = true;
                                         _resIsPressed = false;
@@ -1647,6 +1647,7 @@ class _Sign1PageState extends State<Sign1Page> {
 
                                   if (isValid && !_roleNotSelected && !_validIDNotSelected) {
                                     SignUp();
+                                    successAlert();
                                   }
                                 },
                                 child: Container(
@@ -1687,7 +1688,7 @@ class _Sign1PageState extends State<Sign1Page> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 30.h),
+                      SizedBox(height: 40.h),
 
                       //Already a member prompt
                       Row(
@@ -1702,7 +1703,11 @@ class _Sign1PageState extends State<Sign1Page> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              setState(() {});
+                              Get.to(
+                                () => const LoginPage(),
+                                transition: Transition.fadeIn,
+                                duration: Duration(milliseconds: 300),
+                              );
                             },
                             child: const Text(
                               'Login Now',
@@ -1714,7 +1719,7 @@ class _Sign1PageState extends State<Sign1Page> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 30.h)
+                      SizedBox(height: 40.h)
                     ],
                   ),
                 ),

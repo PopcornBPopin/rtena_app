@@ -81,20 +81,18 @@ class _StartPageState extends State<StartPage> {
               //Login Button
               Center(
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     Get.to(
                       () => const LoginPage(),
-                      transition: Transition.fadeIn,
-                      duration: Duration(milliseconds: 300),
+                      transition: await Transition.fadeIn,
+                      duration: Duration(milliseconds: 200),
                     );
                   },
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 150),
                     width: 700.w,
                     height: 45.h,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15)),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
                     child: Center(
                         child: Text(
                       'Login',
@@ -111,11 +109,11 @@ class _StartPageState extends State<StartPage> {
               //Sign Up Button
               Center(
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     Get.to(
                       () => const Sign1Page(),
-                      transition: Transition.circularReveal,
-                      duration: Duration(milliseconds: 1000),
+                      transition: await Transition.fadeIn,
+                      duration: Duration(milliseconds: 200),
                     );
                   },
                   child: Container(

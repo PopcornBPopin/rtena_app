@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:rtena_app/checker_page.dart';
+
 import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/SignUp/sign_page_1.dart';
 
@@ -17,7 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  bool _fieldIsEmpty = false;
   bool _passwordHidden = true;
   bool _emailExists = false;
 
@@ -29,11 +28,6 @@ class _LoginPageState extends State<LoginPage> {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
-    );
-    Get.to(
-      () => const CheckerPage(),
-      transition: Transition.circularReveal,
-      duration: Duration(milliseconds: 1000),
     );
   }
 
@@ -71,8 +65,8 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () {
                         Get.to(
                           () => const StartPage(),
-                          transition: Transition.circularReveal,
-                          duration: Duration(milliseconds: 1000),
+                          transition: Transition.fadeIn,
+                          duration: Duration(milliseconds: 300),
                         );
                       },
                       child: Icon(
@@ -84,13 +78,13 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Positioned(
                     top: 40,
-                    right: -150,
+                    right: -60,
                     child: Opacity(
-                      opacity: 0.2,
+                      opacity: 0.15,
                       child: Container(
                         child: Image.asset(
                           'assets/RLOGO.png',
-                          scale: 1.7,
+                          scale: 2,
                         ),
                       ),
                     ),
@@ -102,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 200.h),
+                          SizedBox(height: 160.h),
                           //Register Title String
                           Text(
                             'Welcome Back!',
@@ -122,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                               fontSize: 18.sp,
                             ),
                           ),
-                          SizedBox(height: 200.h),
+                          SizedBox(height: 180.h),
                         ],
                       ),
                     ),
@@ -271,7 +265,24 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 50.h),
+                    SizedBox(height: 10.h),
+
+                    Padding(
+                      padding: const EdgeInsets.only(right: 30),
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          child: Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 60.h),
 
                     //Login button
                     ElevatedButton(
@@ -282,7 +293,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         padding: EdgeInsets.all(12),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        signIn();
+                      },
                       child: Container(
                         width: double.infinity,
                         height: 40.h,
@@ -320,14 +333,14 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 30.h),
+              SizedBox(height: 50.h),
 
-              //Already a member prompt
+              //Not a member prompt
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Already a member? ',
+                    'Not a member? ',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w400,
@@ -335,10 +348,14 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      setState(() {});
+                      Get.to(
+                        () => const Sign1Page(),
+                        transition: Transition.fadeIn,
+                        duration: Duration(microseconds: 300),
+                      );
                     },
                     child: const Text(
-                      'Login Now',
+                      'Register Now',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -347,7 +364,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 30.h)
+              SizedBox(height: 40.h)
             ],
           ),
         ),

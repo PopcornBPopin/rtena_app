@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
+          // theme: ThemeData(fontFamily: "Gilroy"),
           home: CheckerPage(),
         );
       },
