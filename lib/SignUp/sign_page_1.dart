@@ -302,15 +302,17 @@ class _Sign1PageState extends State<Sign1Page> {
     Reference referenceRoot = FirebaseStorage.instance.ref();
     Reference referenceDirValidIDs = referenceRoot.child("${_firstNameController.text.trim()} ${_surnameController.text.trim()} ValidID");
 
-    referenceDirValidIDs.putFile(_validID!);
-    imageURL = await referenceDirValidIDs.getDownloadURL();
-
     quickAlert(QuickAlertType.loading, "Standby!", "Uploading your data to our database");
+
+    await referenceDirValidIDs.putFile(_validID!);
+    imageURL = await referenceDirValidIDs.getDownloadURL();
+    print("Stored image to storage");
 
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
+    print("Added user to auth");
 
     //Add user details
     await addUserDetails(
@@ -331,6 +333,8 @@ class _Sign1PageState extends State<Sign1Page> {
       _homeAddressController.text.trim(),
       imageURL,
     );
+    print("Added user deets to firestone");
+
     Navigator.of(context).pop();
     quickAlert(QuickAlertType.success, "Registration Successful!", "You are successfully registered");
   }
@@ -399,20 +403,20 @@ class _Sign1PageState extends State<Sign1Page> {
                               ),
                             ),
                           ),
-                          //RTENA LOGO
-                          // Positioned(
-                          //   top: 30,
-                          //   right: -10,
-                          //   child: Opacity(
-                          //     opacity: 0.15,
-                          //     child: Container(
-                          //       child: Image.asset(
-                          //         'assets/RLOGO.png',
-                          //         scale: 2.5,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
+                          // RTENA LOGO
+                          Positioned(
+                            top: 30,
+                            right: -10,
+                            child: Opacity(
+                              opacity: 0.15,
+                              child: Container(
+                                child: Image.asset(
+                                  'assets/RLOGO.png',
+                                  scale: 2.5,
+                                ),
+                              ),
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: Container(
@@ -646,8 +650,8 @@ class _Sign1PageState extends State<Sign1Page> {
                                     validator: (String? val) {
                                       if (val == null || val.isEmpty) {
                                         return 'Please enter a valid password';
-                                      } else if (!_validPass.hasMatch(val)) {
-                                        return 'Must have an uppercase and lowercase letters,\na number, and a special character';
+                                        // } else if (!_validPass.hasMatch(val)) {
+                                        //   return 'Must have an uppercase and lowercase letters,\na number, and a special character';
                                       } else if (val.length < 8) {
                                         return 'Must be at least 8 characters';
                                       }
@@ -1590,6 +1594,10 @@ class _Sign1PageState extends State<Sign1Page> {
                                                         icon: Icon(Icons.close),
                                                         color: Colors.white,
                                                         onPressed: () {
+                                                          setState(() {
+                                                            _validID = null;
+                                                            _validIDSelected = false;
+                                                          });
                                                           choosePicture(context);
                                                         },
                                                       ),
