@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:rtena_app/Civilian/civilian_home_page.dart';
 import 'package:rtena_app/login_page.dart';
@@ -21,10 +24,13 @@ class Sign1Page extends StatefulWidget {
 class _Sign1PageState extends State<Sign1Page> {
   void initState() {
     super.initState();
+    getConnectivity();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp
     ]);
   }
+
+  ConnectivityResult result = ConnectivityResult.none;
 
   File? _validID;
 
@@ -32,6 +38,7 @@ class _Sign1PageState extends State<Sign1Page> {
   var _bloodtypeSelected;
 
   late String imageURL;
+  late StreamSubscription subscription;
 
   bool _civIsPressed = false;
   bool _resIsPressed = false;
@@ -42,6 +49,7 @@ class _Sign1PageState extends State<Sign1Page> {
   bool _emailExists = false;
   bool _validIDSelected = false;
   bool _validIDNotSelected = false;
+  bool _hasInternet = false;
 
   final _formKey = GlobalKey<FormState>();
   final RegExp _validPass = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
@@ -96,7 +104,81 @@ class _Sign1PageState extends State<Sign1Page> {
   final _permanentAddressController = TextEditingController();
   final _homeAddressController = TextEditingController();
 
+  final notConnectedSnackbar = SnackBar(
+    content: Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.wifi_off,
+            size: 25,
+            color: Colors.white,
+          ),
+          Expanded(
+            child: Center(
+              child: Text(
+                'No Internet Connection',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    backgroundColor: Colors.black,
+    duration: Duration(seconds: 5),
+    behavior: SnackBarBehavior.fixed,
+    elevation: 1,
+  );
+
+  final connectedSnackbar = SnackBar(
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.wifi_outlined,
+          size: 25,
+          color: Colors.green,
+        ),
+        Expanded(
+          child: Center(
+            child: Text(
+              'Connection Restored',
+              style: TextStyle(
+                fontSize: 18.sp,
+                color: Colors.green,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+    backgroundColor: Colors.black,
+    duration: Duration(seconds: 5),
+    behavior: SnackBarBehavior.fixed,
+    elevation: 1,
+  );
+
   //FUNCTIONS
+
+  void getConnectivity() {
+    subscription = Connectivity().onConnectivityChanged.listen(
+      (ConnectivityResult result) async {
+        _hasInternet = await InternetConnectionChecker().hasConnection;
+        if (!_hasInternet) {
+          print("No internet");
+          ScaffoldMessenger.of(context).showSnackBar(notConnectedSnackbar);
+        } else {
+          print("Connected");
+          ScaffoldMessenger.of(context).showSnackBar(connectedSnackbar);
+        }
+      },
+    );
+  }
+
   //Calendar Theme
   final ThemeData theme = ThemeData.dark().copyWith(
     colorScheme: ColorScheme.dark(
@@ -352,7 +434,9 @@ class _Sign1PageState extends State<Sign1Page> {
   }
 
   //Disposes controller when not in used
+  @override
   void dispose() {
+    subscription.cancel();
     _roleController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -1672,9 +1756,13 @@ class _Sign1PageState extends State<Sign1Page> {
                                       _validIDNotSelected = false;
                                     });
                                   }
+
+                                  if (!_hasInternet) {
+                                    ScaffoldMessenger.of(context).showSnackBar(notConnectedSnackbar);
+                                  }
                                   bool _isValid = _formKey.currentState!.validate();
 
-                                  if (_isValid && !_roleNotSelected && !_validIDNotSelected) {
+                                  if (_hasInternet && _isValid && !_roleNotSelected && !_validIDNotSelected) {
                                     SignUp();
                                   }
                                 },
