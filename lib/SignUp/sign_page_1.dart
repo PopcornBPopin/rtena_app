@@ -140,25 +140,30 @@ class _Sign1PageState extends State<Sign1Page> {
   }
 
   //Show success prompt
-  void quickAlert(QuickAlertType animtype, String title, String text) {
+  void quickAlert(QuickAlertType animtype, String title, String text, Color color) {
     QuickAlert.show(
-        backgroundColor: Colors.grey.shade200,
-        context: context,
-        type: animtype,
-        title: title,
-        text: text,
-        confirmBtnColor: Colors.white,
-        confirmBtnTextStyle: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: Colors.green,
-        ),
-        onConfirmBtnTap: () {
+      backgroundColor: Colors.grey.shade200,
+      context: context,
+      type: animtype,
+      title: title,
+      text: text,
+      confirmBtnColor: Colors.white,
+      confirmBtnTextStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: color,
+      ),
+      onConfirmBtnTap: () {
+        if (animtype == QuickAlertType.success)
           Get.to(
             () => const CivHomePage(),
             transition: Transition.fadeIn,
             duration: Duration(milliseconds: 300),
           );
-        });
+        else {
+          Navigator.of(context).pop();
+        }
+      },
+    );
   }
 
   //Select picture to upload
@@ -302,20 +307,27 @@ class _Sign1PageState extends State<Sign1Page> {
     Reference referenceRoot = FirebaseStorage.instance.ref();
     Reference referenceDirValidIDs = referenceRoot.child("${_firstNameController.text.trim()} ${_surnameController.text.trim()} ValidID");
 
-    quickAlert(QuickAlertType.loading, "Standby!", "Uploading your data to our database");
+    quickAlert(QuickAlertType.loading, "Standby!", "Uploading your data to our database", Colors.blue);
+
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+    } catch (e) {
+      Navigator.of(context).pop();
+      quickAlert(QuickAlertType.error, "Authentication Failed!", "Email you have entered already exists", Colors.red);
+      print("Email you have entered already exists");
+      return;
+    }
+    print("Added user to auth");
 
     await referenceDirValidIDs.putFile(_validID!);
     imageURL = await referenceDirValidIDs.getDownloadURL();
     print("Stored image to storage");
 
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
-    print("Added user to auth");
-
     //Add user details
-    await addUserDetails(
+    addUserDetails(
       _emailController.text.trim(),
       _roleController.text.trim(),
       _surnameController.text.trim(),
@@ -336,7 +348,7 @@ class _Sign1PageState extends State<Sign1Page> {
     print("Added user deets to firestone");
 
     Navigator.of(context).pop();
-    quickAlert(QuickAlertType.success, "Registration Successful!", "You are successfully registered");
+    quickAlert(QuickAlertType.success, "Registration Successful!", "You are successfully registered", Colors.green);
   }
 
   //Disposes controller when not in used
@@ -650,8 +662,8 @@ class _Sign1PageState extends State<Sign1Page> {
                                     validator: (String? val) {
                                       if (val == null || val.isEmpty) {
                                         return 'Please enter a valid password';
-                                        // } else if (!_validPass.hasMatch(val)) {
-                                        //   return 'Must have an uppercase and lowercase letters,\na number, and a special character';
+                                      } else if (!_validPass.hasMatch(val)) {
+                                        return 'Must have an uppercase and lowercase letters,\na number, and a special character';
                                       } else if (val.length < 8) {
                                         return 'Must be at least 8 characters';
                                       }
