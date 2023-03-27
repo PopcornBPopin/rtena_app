@@ -7,6 +7,11 @@ import 'package:rtena_app/checker_page.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // ErrorWidget.builder = (FlutterErrorDetails details) => const Scaffold(
+  //       body: Center(),
+  //       backgroundColor: Colors.transparent,
+  //     );
+
   runApp(MyApp());
 }
 

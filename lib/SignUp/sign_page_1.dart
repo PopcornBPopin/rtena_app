@@ -24,9 +24,12 @@ class Sign1Page extends StatefulWidget {
 class _Sign1PageState extends State<Sign1Page> {
   void initState() {
     super.initState();
-    getConnectivity();
+
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp
+      DeviceOrientation.portraitUp,
+    ]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
     ]);
   }
 
@@ -36,6 +39,8 @@ class _Sign1PageState extends State<Sign1Page> {
 
   var _sexSelected;
   var _bloodtypeSelected;
+
+  bool acceptedTermsCondition = false;
 
   late String imageURL;
   late StreamSubscription subscription;
@@ -50,6 +55,8 @@ class _Sign1PageState extends State<Sign1Page> {
   bool _validIDSelected = false;
   bool _validIDNotSelected = false;
   bool _hasInternet = false;
+  bool _agreeTerms = false;
+  bool _agreePriv = false;
 
   final _formKey = GlobalKey<FormState>();
   final RegExp _validPass = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
@@ -104,6 +111,7 @@ class _Sign1PageState extends State<Sign1Page> {
   final _permanentAddressController = TextEditingController();
   final _homeAddressController = TextEditingController();
 
+  //Snackbar
   final notConnectedSnackbar = SnackBar(
     content: Container(
       child: Row(
@@ -162,6 +170,34 @@ class _Sign1PageState extends State<Sign1Page> {
     elevation: 1,
   );
 
+  final incompleteFieldSnackbar = SnackBar(
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.info_outline,
+          size: 25,
+          color: Colors.white,
+        ),
+        Expanded(
+          child: Center(
+            child: Text(
+              'Invalid form. Check your inputs.',
+              style: TextStyle(
+                fontSize: 18.sp,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+    backgroundColor: Colors.redAccent,
+    duration: Duration(seconds: 5),
+    behavior: SnackBarBehavior.fixed,
+    elevation: 1,
+  );
+
   //FUNCTIONS
 
   void getConnectivity() {
@@ -170,10 +206,14 @@ class _Sign1PageState extends State<Sign1Page> {
         _hasInternet = await InternetConnectionChecker().hasConnection;
         if (!_hasInternet) {
           print("No internet");
-          ScaffoldMessenger.of(context).showSnackBar(notConnectedSnackbar);
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(notConnectedSnackbar);
         } else {
           print("Connected");
-          ScaffoldMessenger.of(context).showSnackBar(connectedSnackbar);
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(connectedSnackbar);
         }
       },
     );
@@ -245,6 +285,137 @@ class _Sign1PageState extends State<Sign1Page> {
           Navigator.of(context).pop();
         }
       },
+    );
+  }
+
+  void showTermsCond(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => Center(
+        child: Scaffold(
+          backgroundColor: Colors.black.withOpacity(0.3),
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+                      spreadRadius: 7,
+                      blurRadius: 10,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                ),
+                height: 700.h,
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 15.h),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Container(
+                        child: Icon(
+                          Icons.check,
+                          size: 100,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 5.h),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Container(
+                        child: const Text(
+                          "Terms & conditions",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(color: Colors.black, fontSize: 45, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    Expanded(
+                      child: Container(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 30),
+                                child: Container(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "I. Introduction",
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                      ),
+                                      const Text(
+                                        "   This is a seniors' project of the developers Eniceo, Mora, Pacis. It is a partial compliance to their course's final requirement. The mobile application's, and its other components', intention is to create an accessible and convenient means of communicating with responders of your current situation. That being sais, the mobile application requires your permission with your mobile device's: \n\nFinal State (Location, Mobile Date, WiFi, Phone) \n\nInitiation State (Camera, Library or Files Manager)\n\n",
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                      ),
+                                      const Text(
+                                        "II. Permissions Terms",
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                      ),
+                                      const Text(
+                                        "   Location - It is to determine your mobile device's accurate location, should an incident happen to you and you accessed our mobile app. WiFi/Mobile Data - It is to override your internet connection if you (a) are not connected to the internet, or (b) have a slow internet connection through WiFi. Your internet connection is needed to update our database with your current location, if it would be done online. Phone - It is to update our database with your current location, if it would be done offline. We are using GSM technologies to cater offline means of communicating. Camera - It is to take a picture of your valid ID.Library/Files Manager - It is if, instead, you want to find your valid ID in your files\n\n",
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                      ),
+                                      const Text(
+                                        "III. Privacy Terms",
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                      ),
+                                      const Text(
+                                        "   We collect your personal information for the sole purpose of relaying that information to a responder, should you encounter an incident that requires it. Your personal information will only be read-and-write accessible (editable) by the servers and developers of the mobile application and its components. Your personal information is also to ensure liability and accountability of your actions.\n\n",
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                      ),
+                                      const Text(
+                                        "IV. Agreement",
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                      ),
+                                      const Text(
+                                        "   By checking the boxes below, you agree with allowing access permissions on your mobile phone and collecting your data\n",
+                                        textAlign: TextAlign.justify,
+                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _agreeTerms = !_agreeTerms;
+                                          });
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.h)
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -597,6 +768,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                         _resIsPressed = false;
                                         _roleNotSelected = false;
                                         _roleController.text = 'Civilian';
+                                        showTermsCond(context);
                                       });
                                     },
                                     child: SizedBox(
@@ -1758,9 +1930,17 @@ class _Sign1PageState extends State<Sign1Page> {
                                   }
 
                                   if (!_hasInternet) {
-                                    ScaffoldMessenger.of(context).showSnackBar(notConnectedSnackbar);
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(notConnectedSnackbar);
                                   }
                                   bool _isValid = _formKey.currentState!.validate();
+
+                                  if (!_isValid) {
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(incompleteFieldSnackbar);
+                                  }
 
                                   if (_hasInternet && _isValid && !_roleNotSelected && !_validIDNotSelected) {
                                     SignUp();
