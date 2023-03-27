@@ -24,12 +24,9 @@ class Sign1Page extends StatefulWidget {
 class _Sign1PageState extends State<Sign1Page> {
   void initState() {
     super.initState();
-
+    getConnectivity();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-    ]);
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitDown,
     ]);
   }
 
@@ -39,8 +36,6 @@ class _Sign1PageState extends State<Sign1Page> {
 
   var _sexSelected;
   var _bloodtypeSelected;
-
-  bool acceptedTermsCondition = false;
 
   late String imageURL;
   late StreamSubscription subscription;
@@ -57,6 +52,7 @@ class _Sign1PageState extends State<Sign1Page> {
   bool _hasInternet = false;
   bool _agreeTerms = false;
   bool _agreePriv = false;
+  bool _notAcceptedTermsPriv = false;
 
   final _formKey = GlobalKey<FormState>();
   final RegExp _validPass = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
@@ -199,7 +195,7 @@ class _Sign1PageState extends State<Sign1Page> {
   );
 
   //FUNCTIONS
-
+  //Internet Connectivity checker
   void getConnectivity() {
     subscription = Connectivity().onConnectivityChanged.listen(
       (ConnectivityResult result) async {
@@ -288,6 +284,7 @@ class _Sign1PageState extends State<Sign1Page> {
     );
   }
 
+  //Displays the terms and conditions of the app
   void showTermsCond(BuildContext context) {
     showDialog(
       context: context,
@@ -299,7 +296,7 @@ class _Sign1PageState extends State<Sign1Page> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.grey.shade200,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     bottomRight: Radius.circular(30),
@@ -318,7 +315,7 @@ class _Sign1PageState extends State<Sign1Page> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 15.h),
+                    SizedBox(height: 20.h),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
                       child: Container(
@@ -329,86 +326,121 @@ class _Sign1PageState extends State<Sign1Page> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 5.h),
+                    SizedBox(height: 10.h),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
                       child: Container(
                         child: const Text(
                           "Terms & conditions",
                           textAlign: TextAlign.left,
-                          style: TextStyle(color: Colors.black, fontSize: 45, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.black, fontSize: 40, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                     SizedBox(height: 20.h),
                     Expanded(
                       child: Container(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 30),
-                                child: Container(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "I. Introduction",
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                      ),
-                                      const Text(
-                                        "   This is a seniors' project of the developers Eniceo, Mora, Pacis. It is a partial compliance to their course's final requirement. The mobile application's, and its other components', intention is to create an accessible and convenient means of communicating with responders of your current situation. That being sais, the mobile application requires your permission with your mobile device's: \n\nFinal State (Location, Mobile Date, WiFi, Phone) \n\nInitiation State (Camera, Library or Files Manager)\n\n",
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                      ),
-                                      const Text(
-                                        "II. Permissions Terms",
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                      ),
-                                      const Text(
-                                        "   Location - It is to determine your mobile device's accurate location, should an incident happen to you and you accessed our mobile app. WiFi/Mobile Data - It is to override your internet connection if you (a) are not connected to the internet, or (b) have a slow internet connection through WiFi. Your internet connection is needed to update our database with your current location, if it would be done online. Phone - It is to update our database with your current location, if it would be done offline. We are using GSM technologies to cater offline means of communicating. Camera - It is to take a picture of your valid ID.Library/Files Manager - It is if, instead, you want to find your valid ID in your files\n\n",
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                      ),
-                                      const Text(
-                                        "III. Privacy Terms",
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                      ),
-                                      const Text(
-                                        "   We collect your personal information for the sole purpose of relaying that information to a responder, should you encounter an incident that requires it. Your personal information will only be read-and-write accessible (editable) by the servers and developers of the mobile application and its components. Your personal information is also to ensure liability and accountability of your actions.\n\n",
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                      ),
-                                      const Text(
-                                        "IV. Agreement",
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                      ),
-                                      const Text(
-                                        "   By checking the boxes below, you agree with allowing access permissions on your mobile phone and collecting your data\n",
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            _agreeTerms = !_agreeTerms;
-                                          });
-                                        },
-                                      )
-                                    ],
+                        child: RawScrollbar(
+                          thickness: 7.5,
+                          thumbColor: Colors.redAccent,
+                          thumbVisibility: true,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                                  child: Container(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "I. Introduction",
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          "   This is a seniors' project of the developers and a partial compliance to their course's final requirement. The mobile application's, and its other components', intention is to create an accessible and convenient means of communicating with responders of your current situation. That being sais, the mobile application requires your permission with your mobile device's: \n\nFinal State (Location, Mobile Date, WiFi, Phone) \n\nInitiation State (Camera, Library or Files Manager)\n\n",
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                        ),
+                                        const Text(
+                                          "II. Permissions Terms",
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          "   Location - It is to determine your mobile device's accurate location, should an incident happen to you and you accessed our mobile app. WiFi/Mobile Data - It is to override your internet connection if you (a) are not connected to the internet, or (b) have a slow internet connection through WiFi. Your internet connection is needed to update our database with your current location, if it would be done online. Phone - It is to update our database with your current location, if it would be done offline. We are using GSM technologies to cater offline means of communicating. Camera - It is to take a picture of your valid ID.Library/Files Manager - It is if, instead, you want to find your valid ID in your files\n\n",
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                        ),
+                                        const Text(
+                                          "III. Privacy Terms",
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          "   We collect your personal information for the sole purpose of relaying that information to a responder, should you encounter an incident that requires it. Your personal information will only be read-and-write accessible (editable) by the servers and developers of the mobile application and its components. Your personal information is also to ensure liability and accountability of your actions.\n\n",
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                        ),
+                                        const Text(
+                                          "IV. Agreement",
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          "   By proceeding, you agree with allowing access permissions on your mobile phone and collecting your data\n",
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                        ),
+                                        SizedBox(height: 20.h),
+                                        Center(
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20),
+                                              ),
+                                              padding: EdgeInsets.all(12),
+                                              backgroundColor: Colors.white,
+                                            ),
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              height: 20.h,
+                                              width: 90.w,
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  const Text(
+                                                    "Proceed",
+                                                    style: TextStyle(color: Colors.black),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(height: 10.h)
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 20.h)
+                    Center(
+                      child: Icon(
+                        Icons.keyboard_double_arrow_down,
+                        color: Colors.black,
+                        size: 30,
+                      ),
+                    ),
+                    SizedBox(height: 50.h),
                   ],
                 ),
               ),
@@ -768,7 +800,6 @@ class _Sign1PageState extends State<Sign1Page> {
                                         _resIsPressed = false;
                                         _roleNotSelected = false;
                                         _roleController.text = 'Civilian';
-                                        showTermsCond(context);
                                       });
                                     },
                                     child: SizedBox(
@@ -1899,7 +1930,80 @@ class _Sign1PageState extends State<Sign1Page> {
                                   style: TextStyle(color: Colors.red),
                                 ),
                               ),
-                              SizedBox(height: 20.h),
+                              SizedBox(height: 30.h),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Container(
+                                    child: Column(children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _agreeTerms = true;
+                                        showTermsCond(context);
+                                      });
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          _agreeTerms ? Icons.square : Icons.square_outlined,
+                                          color: _agreeTerms ? Colors.red : Color.fromRGBO(82, 82, 82, 1),
+                                          size: 25,
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 5),
+                                            child: Text(
+                                              "I have read the Terms and Conditions of RTena",
+                                              style: TextStyle(fontSize: 17.sp),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _agreePriv = !_agreePriv;
+                                      });
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          _agreePriv ? Icons.square : Icons.square_outlined,
+                                          color: _agreePriv ? Colors.red : Color.fromRGBO(82, 82, 82, 1),
+                                          size: 25,
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 5),
+                                            child: Text(
+                                              "I allow my personal data to be accessed",
+                                              style: TextStyle(fontSize: 17.sp),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ])),
+                              ),
+                              SizedBox(height: 5.h),
+
+                              Visibility(
+                                visible: _notAcceptedTermsPriv,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Read and agree to the terms provided',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 30.h),
 
                               //Submit button
                               ElevatedButton(
@@ -1930,19 +2034,27 @@ class _Sign1PageState extends State<Sign1Page> {
                                   }
 
                                   if (!_hasInternet) {
-                                    ScaffoldMessenger.of(context)
-                                      ..hideCurrentSnackBar()
-                                      ..showSnackBar(notConnectedSnackbar);
+                                    ScaffoldMessenger.of(context).showSnackBar(notConnectedSnackbar);
                                   }
                                   bool _isValid = _formKey.currentState!.validate();
 
                                   if (!_isValid) {
-                                    ScaffoldMessenger.of(context)
-                                      ..hideCurrentSnackBar()
-                                      ..showSnackBar(incompleteFieldSnackbar);
+                                    ScaffoldMessenger.of(context).showSnackBar(incompleteFieldSnackbar);
                                   }
 
-                                  if (_hasInternet && _isValid && !_roleNotSelected && !_validIDNotSelected) {
+                                  if (!_agreePriv && !_agreeTerms) {
+                                    setState(() {
+                                      _notAcceptedTermsPriv = true;
+                                    });
+                                  }
+
+                                  if (_agreePriv && _agreePriv) {
+                                    setState(() {
+                                      _notAcceptedTermsPriv = false;
+                                    });
+                                  }
+
+                                  if (_hasInternet && _isValid && !_roleNotSelected && !_validIDNotSelected && !_notAcceptedTermsPriv) {
                                     SignUp();
                                   }
                                 },
