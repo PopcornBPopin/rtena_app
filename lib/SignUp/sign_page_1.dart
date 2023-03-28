@@ -22,10 +22,10 @@ class Sign1Page extends StatefulWidget {
 }
 
 class _Sign1PageState extends State<Sign1Page> {
+  @override
   void initState() {
-    super.initState();
     getConnectivity();
-
+    super.initState();
     Future.delayed(Duration(milliseconds: 1500)).then((_) {
       _scrollController.addListener(() {});
       showDialog(
