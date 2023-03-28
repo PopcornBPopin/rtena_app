@@ -26,7 +26,7 @@ class _Sign1PageState extends State<Sign1Page> {
   void initState() {
     getConnectivity();
     super.initState();
-    Future.delayed(Duration(milliseconds: 1500)).then((_) {
+    Future.delayed(Duration(seconds: 1)).then((_) {
       _scrollController.addListener(() {});
       showDialog(
         context: context,
