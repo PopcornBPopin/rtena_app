@@ -115,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
       print("Invalid email or password");
       return;
     }
+    Navigator.of(context).pop();
   }
 
   void getConnectivity() {
