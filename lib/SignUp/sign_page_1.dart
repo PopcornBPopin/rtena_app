@@ -245,7 +245,11 @@ class _Sign1PageState extends State<Sign1Page> {
                                                               _notAcceptedTermsPriv = false;
                                                             });
                                                           }
-                                                          !_notAcceptedTermsPriv ? Navigator.of(context).pop() : null;
+                                                          if (!_notAcceptedTermsPriv && _agreePriv && _agreeTerms) {
+                                                            Navigator.of(context).pop();
+                                                          } else {
+                                                            null;
+                                                          }
                                                         },
                                                       ),
                                                     ),
@@ -272,7 +276,7 @@ class _Sign1PageState extends State<Sign1Page> {
                               ),
                               onPressed: () {
                                 setState(() {
-                                  _scrollController.animateTo(1018, duration: Duration(milliseconds: 500), curve: Curves.easeInOutCubic);
+                                  _scrollController.animateTo(1019, duration: Duration(milliseconds: 500), curve: Curves.ease);
                                 });
                               },
                             ),
