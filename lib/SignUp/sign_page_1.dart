@@ -219,6 +219,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                                           ),
                                                           padding: EdgeInsets.all(12),
                                                           backgroundColor: _agreeTerms && _agreePriv ? Colors.white : Colors.grey.shade300,
+                                                          elevation: _agreeTerms && _agreePriv ? 3 : 0,
                                                         ),
                                                         child: Container(
                                                           alignment: Alignment.center,
@@ -229,7 +230,7 @@ class _Sign1PageState extends State<Sign1Page> {
                                                             children: [
                                                               Text(
                                                                 "Proceed",
-                                                                style: TextStyle(color: _agreeTerms && _agreePriv ? Colors.black : Colors.grey.shade800),
+                                                                style: TextStyle(color: _agreeTerms && _agreePriv ? Colors.black : Colors.grey.shade600),
                                                               ),
                                                             ],
                                                           ),
