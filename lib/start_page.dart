@@ -23,6 +23,18 @@ class _StartPageState extends State<StartPage> {
   @override
   void initState() {
     super.initState();
+    _pageController.addListener(() {});
+    WidgetsBinding.instance.addPostFrameCallback((_) => animateSlider());
+  }
+
+  void animateSlider() {
+    Future.delayed(Duration(seconds: 2)).then((_) {
+      int nextPage = _pageController.page!.round() + 1;
+      if (nextPage == 3) {
+        nextPage = 0;
+      }
+      _pageController.animateToPage(nextPage, duration: Duration(milliseconds: 1500), curve: Curves.ease).then((_) => animateSlider());
+    });
   }
 
   @override
