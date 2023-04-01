@@ -1,10 +1,19 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:rtena_app/Civilian/civilian_selected_page.dart';
 import 'package:rtena_app/start_page.dart';
+
+import '../SignUp/sign_page_1.dart';
 
 class CivHomePage extends StatefulWidget {
   const CivHomePage({Key? key}) : super(key: key);
@@ -14,160 +23,283 @@ class CivHomePage extends StatefulWidget {
 }
 
 class _CivHomePageState extends State<CivHomePage> {
-  final user = FirebaseAuth.instance.currentUser!;
+  void initState() {
+    getConnectivity();
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitDown,
+    // ]);
+  }
 
-  //document IDs
-  List<String> docIDs = [];
+  bool _hasInternet = false;
 
-  //getDocIDs
-  Future getDocId() async {
-    await FirebaseFirestore.instance.collection('users').get().then(
-          (snapshot) => snapshot.docs.forEach(
-            (document) {
-              docIDs.add(document.reference.id);
-            },
+  late StreamSubscription subscription;
+
+  //Text Controllers
+
+  //Snackbar
+  final notConnectedSnackbar = SnackBar(
+    content: Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.wifi_off,
+            size: 25,
+            color: Colors.white,
           ),
-        );
+          Expanded(
+            child: Center(
+              child: Text(
+                'No Internet Connection',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    backgroundColor: Colors.black,
+    duration: Duration(seconds: 5),
+    behavior: SnackBarBehavior.fixed,
+    elevation: 1,
+  );
+
+  final connectedSnackbar = SnackBar(
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.wifi_outlined,
+          size: 25,
+          color: Colors.green,
+        ),
+        Expanded(
+          child: Center(
+            child: Text(
+              'Connection Restored',
+              style: TextStyle(
+                fontSize: 18.sp,
+                color: Colors.green,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+    backgroundColor: Colors.black,
+    duration: Duration(seconds: 5),
+    behavior: SnackBarBehavior.fixed,
+    elevation: 1,
+  );
+
+  // FUNCTIONS
+  void getConnectivity() {
+    subscription = Connectivity().onConnectivityChanged.listen(
+      (ConnectivityResult result) async {
+        _hasInternet = await InternetConnectionChecker().hasConnection;
+        if (!_hasInternet) {
+          print("No internet");
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(notConnectedSnackbar);
+        } else {
+          print("Connected");
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(connectedSnackbar);
+        }
+      },
+    );
+  }
+
+  //Popup
+  void quickAlert(QuickAlertType animtype, String title, String text, Color color) {
+    QuickAlert.show(
+      backgroundColor: Colors.grey.shade200,
+      context: context,
+      type: animtype,
+      title: title,
+      text: text,
+      confirmBtnColor: Colors.white,
+      confirmBtnTextStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: color,
+      ),
+      onConfirmBtnTap: () {
+        if (animtype == QuickAlertType.success)
+          Get.to(
+            () => const CivHomePage(),
+            transition: Transition.fadeIn,
+            duration: Duration(milliseconds: 300),
+          );
+        else {
+          Navigator.of(context).pop();
+        }
+      },
+    );
+  }
+
+  void quickForgotAlert(QuickAlertType animtype, String title, String text, Color color) {
+    QuickAlert.show(
+      backgroundColor: Colors.grey.shade200,
+      context: context,
+      type: animtype,
+      title: title,
+      text: text,
+      confirmBtnColor: Colors.white,
+      confirmBtnTextStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: color,
+      ),
+      onConfirmBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color.fromRGBO(192, 39, 45, 1),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.center,
-              colors: [
-                Color.fromRGBO(252, 58, 72, 1),
-                Color.fromRGBO(70, 18, 32, 1),
-              ],
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromRGBO(252, 58, 72, 1),
+            Color.fromRGBO(70, 18, 32, 1),
+          ],
+        ),
+      ),
+      child: Scaffold(
+        bottomNavigationBar: GNav(
+          backgroundColor: Colors.white,
+          tabBackgroundColor: Colors.white,
+          tabActiveBorder: Border.all(color: Colors.grey.shade600),
+          tabBorderRadius: 40,
+          tabMargin: EdgeInsets.all(10),
+          padding: EdgeInsets.all(15),
+          gap: 8,
+          tabs: [
+            GButton(
+              icon: Icons.home,
+              text: "Home",
             ),
-          ),
-          height: double.infinity,
-          width: double.infinity,
+            GButton(
+              icon: Icons.contact_emergency,
+              text: "Emergency Contacts",
+            ),
+            GButton(
+              icon: Icons.settings,
+              text: "Settings",
+            )
+          ],
+        ),
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //Logo - Textfields
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 35.h),
-                  //LOGO
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        //Logo
-                        SizedBox(
-                          child: GestureDetector(
-                            onTap: () {
-                              Get.to(
-                                () => const StartPage(),
-                                transition: Transition.fadeIn,
-                                duration: Duration(milliseconds: 300),
-                              );
-                            },
-                            child: Image.asset(
-                              'assets/RLOGO.png',
-                              scale: 20,
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Stack(
+                        children: [
+                          Positioned(
+                            top: 30,
+                            right: -10,
+                            child: Opacity(
+                              opacity: 0.15,
+                              child: Container(
+                                child: Image.asset(
+                                  'assets/RLOGO.png',
+                                  scale: 2.5,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 25.h),
-
-                  //Welcome Back
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: Text(
-                      'Welcome Back! ' + user.email!,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30.sp,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: Text(
-                      'What kind of emergency are you involved in?',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w300,
-                        fontSize: 15.sp,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 30.h),
-
-                  //FORM STARTS HERE
-                  Container(
-                    height: 624.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        bottomRight: Radius.circular(40),
-                      ),
-                      color: Colors.white,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 25.h),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30.w),
-                          child: Text(
-                            'Select the button of emergency you want to report.',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17.sp,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 80.h),
+                                  //Register Title String
+                                  Text(
+                                    'Welcome Back!',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 37.sp,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  //Substring
+                                  Text(
+                                    'What kind of emergency are you involved in?',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 18.sp,
+                                    ),
+                                  ),
+                                  SizedBox(height: 40.h),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10.h),
+                        ],
+                      ),
 
-                        //Grid of Selection
-                        Column(
-                          children: [
-                            //Fire and Health
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(height: 30.h),
-                                //Button for Fire
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 85.h,
-                                        width: 180.w,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Color.fromRGBO(102, 0, 0, 90),
-                                            border: Border.all(
-                                              width: 1.5.w,
-                                              color: Colors.white,
+                      //Form Starts HERE
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(40),
+                            ),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
+                                spreadRadius: 7,
+                                blurRadius: 10,
+                                offset: Offset(0, 0),
+                              )
+                            ]),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  //Button for Fire
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            // add your onPressed logic here
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color.fromRGBO(102, 0, 0, 90),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(20),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: 10.h),
-                                          child: Center(
+                                          ),
+                                          child: Container(
+                                            height: 100.h,
+                                            width: MediaQuery.of(context).size.width,
                                             child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Image.asset(
                                                   'assets/fire_icon.png',
@@ -184,34 +316,30 @@ class _CivHomePageState extends State<CivHomePage> {
                                               ],
                                             ),
                                           ),
-                                        ),
-                                      )
-                                    ],
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                ),
-
-                                //Button for Health
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 85.h,
-                                        width: 180.w,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Color.fromRGBO(153, 0, 51, 40),
-                                            border: Border.all(
-                                              width: 1.5.w,
-                                              color: Colors.white,
+                                  SizedBox(width: 10.w),
+                                  //Button for Health
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            // add your onPressed logic here
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color.fromRGBO(153, 0, 51, 40),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(20),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: 10.h),
-                                          child: Center(
+                                          ),
+                                          child: Container(
+                                            height: 100.h,
+                                            width: MediaQuery.of(context).size.width,
                                             child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Image.asset(
                                                   'assets/health_icon.png',
@@ -228,381 +356,20 @@ class _CivHomePageState extends State<CivHomePage> {
                                               ],
                                             ),
                                           ),
-                                        ),
-                                      )
-                                    ],
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10.h),
-
-                            //Murder and Assault
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 30.h,
-                                ),
-                                //Button for Murder
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 85.h,
-                                        width: 180.w,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Color.fromRGBO(95, 2, 31, 40),
-                                            border: Border.all(
-                                              width: 1.5.w,
-                                              color: Colors.white,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: 10.h),
-                                          child: Center(
-                                            child: Column(
-                                              children: [
-                                                Image.asset(
-                                                  'assets/murder_icon.png',
-                                                  scale: 1.5,
-                                                ),
-                                                SizedBox(height: 2.h),
-                                                Text(
-                                                  'Murder',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-
-                                //Button for Assault
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 85.h,
-                                        width: 180.w,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Color.fromRGBO(140, 0, 26, 40),
-                                            border: Border.all(
-                                              width: 1.5.w,
-                                              color: Colors.white,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: 10.h),
-                                          child: Center(
-                                            child: Column(
-                                              children: [
-                                                Image.asset(
-                                                  'assets/assault_icon.png',
-                                                  scale: 1.5,
-                                                ),
-                                                SizedBox(height: 2.h),
-                                                Text(
-                                                  'Assault',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10.h),
-
-                            //Flood and Earthquake
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 30.h,
-                                ),
-                                //Button for Flood
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 85.h,
-                                        width: 180.w,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Color.fromRGBO(255, 144, 0, 1),
-                                            border: Border.all(
-                                              width: 1.5.w,
-                                              color: Colors.white,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: 10).h,
-                                          child: Center(
-                                            child: Column(
-                                              children: [
-                                                Image.asset(
-                                                  'assets/flood_icon.png',
-                                                  scale: 23,
-                                                ),
-                                                SizedBox(height: 2.h),
-                                                Text(
-                                                  'Flood',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-
-                                //Button for Earthquake
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 85.h,
-                                        width: 180.w,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Color.fromRGBO(55, 6, 23, 40),
-                                            border: Border.all(
-                                              width: 1.5.w,
-                                              color: Colors.white,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: 10.h),
-                                          child: Center(
-                                            child: Column(
-                                              children: [
-                                                Image.asset(
-                                                  'assets/earthquake_icon.png',
-                                                  scale: 25,
-                                                ),
-                                                SizedBox(height: 2.h),
-                                                Text(
-                                                  'Earthquake',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10.h),
-
-                            //Kidnapping and Robbery
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(height: 30.h),
-                                //Button for Kidnapping
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 85.h,
-                                        width: 180.w,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Color.fromRGBO(157, 2, 8, 40),
-                                            border: Border.all(
-                                              width: 1.5.w,
-                                              color: Colors.white,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: 10.h),
-                                          child: Center(
-                                            child: Column(
-                                              children: [
-                                                Image.asset(
-                                                  'assets/kidnap_icon.png',
-                                                  scale: 16,
-                                                ),
-                                                SizedBox(height: 2.h),
-                                                Text(
-                                                  'Kidnapping',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-
-                                //Button for Robbery
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 85.h,
-                                        width: 180.w,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Color.fromRGBO(220, 47, 2, 40),
-                                            border: Border.all(
-                                              width: 1.5.w,
-                                              color: Colors.white,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: 10.h),
-                                          child: Center(
-                                            child: Column(
-                                              children: [
-                                                Image.asset(
-                                                  'assets/robbery_icon.png',
-                                                  scale: 1.5,
-                                                ),
-                                                SizedBox(height: 2.h),
-                                                Text(
-                                                  'Robbery',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20.h),
-
-                        //Button for Alert
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30.w),
-                              child: Text(
-                                "Don't know the emergency? Just press the 'Alert' button",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 17.sp,
-                                ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10.h),
-
-                        //Button for Alert - Proceed to selected page
-                        Center(
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 85.h,
-                                width: 180.w,
-                                decoration: BoxDecoration(
-                                    color: Color.fromRGBO(232, 93, 4, 40),
-                                    border: Border.all(
-                                      width: 1.5.w,
-                                      color: Colors.white,
-                                    ),
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Get.to(
-                                      () => const CivSelectedPage(),
-                                      transition: Transition.fadeIn,
-                                      duration: Duration(milliseconds: 300),
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: 10.h),
-                                    child: Center(
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            'assets/responder_icon.png',
-                                            scale: 1.5,
-                                          ),
-                                          SizedBox(height: 2.h),
-                                          Text(
-                                            'Alert',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
+                              SizedBox(height: 500)
                             ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ],
           ),

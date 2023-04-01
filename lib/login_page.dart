@@ -20,25 +20,29 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   void initState() {
-    super.initState();
     getConnectivity();
+    super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitDown,
+    // ]);
   }
 
   bool _passwordHidden = true;
-  bool _emailExists = false;
   bool _hasInternet = false;
 
   late StreamSubscription subscription;
 
-  final RegExp _validPass = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
+  // final RegExp _validPass = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
   final RegExp _validEmail = RegExp(r"^[a-zA-Z0-9.]+@[a-z0-9]+\.[a-z]+");
 
   //Text Controllers
   final _formKey = GlobalKey<FormState>();
+  final _forgotformKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
+  final _forgotemailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   //Snackbar
@@ -116,6 +120,23 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     Navigator.of(context).pop();
+    Get.to(
+      () => const CivHomePage(),
+      transition: Transition.fadeIn,
+      duration: Duration(milliseconds: 300),
+    );
+  }
+
+  Future forgotUseEmailPassword() async {
+    quickAlert(QuickAlertType.loading, "Standby!", "Checking if your account exists", Colors.blue);
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: _forgotemailController.text.trim());
+    } catch (e) {
+      Navigator.of(context).pop();
+      quickAlert(QuickAlertType.error, "Authentication Failed!", "Account does not exist", Colors.red);
+    }
+    Navigator.of(context).pop();
+    quickForgotAlert(QuickAlertType.success, "Reset Successful!", "Password reset link sent, please check your email", Colors.green);
   }
 
   void getConnectivity() {
@@ -137,134 +158,213 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void forgotPassowrd(BuildContext context) {
+  void forgotPassword(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => Center(
-        child: Scaffold(
-          backgroundColor: Colors.black.withOpacity(0.3),
-          body: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
-                      spreadRadius: 7,
-                      blurRadius: 10,
-                      offset: Offset(0, 0),
-                    ),
-                  ],
-                ),
-                height: 700.h,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20.h),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Container(
-                        child: Icon(
-                          Icons.question_mark,
-                          size: 100,
-                          color: Colors.redAccent,
-                        ),
+      builder: (context) => StatefulBuilder(builder: (context, setState) {
+        return WillPopScope(
+          onWillPop: () {
+            return Future.value(true);
+          },
+          child: Center(
+            child: Scaffold(
+              backgroundColor: Colors.black.withOpacity(0.3),
+              body: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
                       ),
-                    ),
-                    SizedBox(height: 10.h),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Container(
-                        child: const Text(
-                          "Forgot your password?",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(color: Colors.black, fontSize: 35, fontWeight: FontWeight.bold),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+                          spreadRadius: 7,
+                          blurRadius: 10,
+                          offset: Offset(0, 0),
                         ),
-                      ),
+                      ],
                     ),
-                    SizedBox(height: 20.h),
-                    Expanded(
-                      child: Container(
-                        child: RawScrollbar(
-                          thickness: 7.5,
-                          thumbColor: Colors.redAccent,
-                          thumbVisibility: true,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                                  child: Container(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          "Don't worry enter your registered email address to receive password reset",
-                                          textAlign: TextAlign.justify,
-                                          style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(height: 20.h),
-                                        Center(
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20),
-                                              ),
-                                              padding: EdgeInsets.all(12),
-                                              backgroundColor: Colors.white,
-                                            ),
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              height: 20.h,
-                                              width: 90.w,
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  const Text(
-                                                    "Proceed",
-                                                    style: TextStyle(color: Colors.black),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(height: 10.h)
-                                      ],
-                                    ),
+                    height: 600.h,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 20.h),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                right: 20,
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: Icon(Icons.close),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 30),
+                                child: Container(
+                                  child: Icon(
+                                    Icons.question_mark,
+                                    size: 100,
+                                    color: Colors.redAccent,
                                   ),
                                 ),
-                              ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Container(
+                            child: const Text(
+                              "Forgot your password?",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(color: Colors.black, fontSize: 35, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
-                      ),
+                        SizedBox(height: 20.h),
+                        Expanded(
+                          child: Container(
+                            child: RawScrollbar(
+                              thickness: 7.5,
+                              thumbColor: Colors.redAccent,
+                              thumbVisibility: true,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                                      child: Container(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(height: 40.h),
+                                            const Text(
+                                              "Don't worry enter your registered email address to receive password reset.",
+                                              textAlign: TextAlign.justify,
+                                              style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                            ),
+                                            SizedBox(height: 30.h),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
+                                    //Email Address
+                                    Form(
+                                      key: _forgotformKey,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 6.h),
+                                        child: Container(
+                                          child: TextFormField(
+                                            validator: (String? val) {
+                                              if (val == null || val.isEmpty || !_validEmail.hasMatch(val)) {
+                                                return 'Please enter a valid email';
+                                              }
+                                              return null;
+                                            },
+                                            keyboardType: TextInputType.emailAddress,
+                                            textInputAction: TextInputAction.next,
+                                            autofocus: false,
+                                            controller: _forgotemailController,
+                                            cursorColor: Colors.grey.shade600,
+                                            decoration: const InputDecoration(
+                                              contentPadding: EdgeInsets.all(10),
+                                              labelText: 'Email Address',
+                                              labelStyle: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                              ),
+                                              prefixIcon: Icon(
+                                                Icons.email_outlined,
+                                                color: Color.fromRGBO(252, 58, 72, 32),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(10.0),
+                                                ),
+                                                borderSide: BorderSide(color: Color.fromRGBO(82, 82, 82, 1), width: 1),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(10.0),
+                                                ),
+                                                borderSide: BorderSide(color: Color.fromRGBO(82, 82, 82, 1), width: 1),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(10.0),
+                                                ),
+                                                borderSide: BorderSide(color: Colors.red),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                    SizedBox(height: 10.h),
+
+                                    Center(
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          padding: EdgeInsets.all(12),
+                                          backgroundColor: Colors.white,
+                                        ),
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          height: 20.h,
+                                          width: 90.w,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                "Proceed",
+                                                style: TextStyle(color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          if (!_hasInternet) {
+                                            ScaffoldMessenger.of(context).showSnackBar(notConnectedSnackbar);
+                                          }
+                                          bool _isValid = _forgotformKey.currentState!.validate();
+                                          if (_isValid && _hasInternet) {
+                                            forgotUseEmailPassword();
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.h),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Center(
-                      child: Icon(
-                        Icons.keyboard_double_arrow_down,
-                        color: Colors.black,
-                        size: 30,
-                      ),
-                    ),
-                    SizedBox(height: 50.h),
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
@@ -295,9 +395,28 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void quickForgotAlert(QuickAlertType animtype, String title, String text, Color color) {
+    QuickAlert.show(
+      backgroundColor: Colors.grey.shade200,
+      context: context,
+      type: animtype,
+      title: title,
+      text: text,
+      confirmBtnColor: Colors.white,
+      confirmBtnTextStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: color,
+      ),
+      onConfirmBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
+    _forgotemailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -418,8 +537,6 @@ class _LoginPageState extends State<LoginPage> {
                               validator: (String? val) {
                                 if (val == null || val.isEmpty || !_validEmail.hasMatch(val)) {
                                   return 'Please enter a valid email';
-                                } else if (_emailExists) {
-                                  return 'Email Address is already taken';
                                 }
                                 return null;
                               },
@@ -470,10 +587,10 @@ class _LoginPageState extends State<LoginPage> {
                               validator: (String? val) {
                                 if (val == null || val.isEmpty) {
                                   return 'Please enter a valid password';
-                                } else if (!_validPass.hasMatch(val)) {
-                                  return 'Must have an uppercase and lowercase letters,\na number, and a special character';
-                                } else if (val.length < 8) {
-                                  return 'Must be at least 8 characters';
+                                  // } else if (!_validPass.hasMatch(val)) {
+                                  //   return 'Must have an uppercase and lowercase letters,\na number, and a special character';
+                                } else if (val.length <= 6) {
+                                  return 'Must be at least 6 characters';
                                 }
                                 return null;
                               },
@@ -537,7 +654,7 @@ class _LoginPageState extends State<LoginPage> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              forgotPassowrd(context);
+                              forgotPassword(context);
                             });
                           },
                           child: Padding(

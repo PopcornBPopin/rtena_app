@@ -26,7 +26,7 @@ class _Sign1PageState extends State<Sign1Page> {
   void initState() {
     getConnectivity();
     super.initState();
-    Future.delayed(Duration(seconds: 1)).then((_) {
+    Future.delayed(Duration(milliseconds: 500)).then((_) {
       _scrollController.addListener(() {});
       showDialog(
         context: context,
@@ -324,7 +324,7 @@ class _Sign1PageState extends State<Sign1Page> {
   bool _notAcceptedTermsPriv = false;
 
   final _formKey = GlobalKey<FormState>();
-  final RegExp _validPass = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
+  // final RegExp _validPass = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
   final RegExp _validEmail = RegExp(r"^[a-zA-Z0-9.]+@[a-z0-9]+\.[a-z]+");
   final _bloodtypeChoice = [
     "A+",
@@ -780,7 +780,6 @@ class _Sign1PageState extends State<Sign1Page> {
         body: SafeArea(
           //Scrollview starts here
           child: Column(
-            // itemExtent: screenSize,
             children: [
               Expanded(
                 child: SingleChildScrollView(
@@ -1053,10 +1052,10 @@ class _Sign1PageState extends State<Sign1Page> {
                                     validator: (String? val) {
                                       if (val == null || val.isEmpty) {
                                         return 'Please enter a valid password';
-                                      } else if (!_validPass.hasMatch(val)) {
-                                        return 'Must have an uppercase and lowercase letters,\na number, and a special character';
-                                      } else if (val.length < 8) {
-                                        return 'Must be at least 8 characters';
+                                        // } else if (!_validPass.hasMatch(val)) {
+                                        //   return 'Must have an uppercase and lowercase letters,\na number, and a special character';
+                                      } else if (val.length <= 6) {
+                                        return 'Must be at least 6 characters';
                                       }
                                       return null;
                                     },
