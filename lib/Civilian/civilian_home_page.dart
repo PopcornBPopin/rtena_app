@@ -369,7 +369,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                             ),
                                           ),
                                           onPressed: () {
-                                            startTimer();
+                                            if (!_timerRunning) {
+                                              startTimer();
+                                            }
+                                            if (_timerRunning) {
+                                              stopTimer();
+                                            }
                                           },
                                           child: SizedBox(
                                             height: 100.h,
@@ -381,35 +386,25 @@ class _CivHomePageState extends State<CivHomePage> {
                                                 children: [
                                                   Visibility(
                                                     visible: _timerRunning,
-                                                    child: GestureDetector(
-                                                      child: Container(
-                                                        height: 100.h,
-                                                        width: 165.w,
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          children: [
-                                                            Text(
-                                                              '$seconds',
-                                                              style: TextStyle(
-                                                                fontSize: 30,
-                                                                fontWeight: FontWeight.bold,
-                                                                color: Colors.white,
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              "Tap to cancel",
-                                                              style: TextStyle(
-                                                                fontWeight: FontWeight.normal,
-                                                                color: Colors.white,
-                                                              ),
-                                                            ),
-                                                          ],
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Text(
+                                                          '$seconds',
+                                                          style: TextStyle(
+                                                            fontSize: 30,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.white,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      onTap: () {
-                                                        print("STOP TIMER");
-                                                        stopTimer();
-                                                      },
+                                                        Text(
+                                                          "Tap to cancel",
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.normal,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   Visibility(
