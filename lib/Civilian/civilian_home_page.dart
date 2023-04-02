@@ -35,6 +35,7 @@ class _CivHomePageState extends State<CivHomePage> {
   void dispose() {
     super.dispose();
     subscription.cancel();
+    timer?.cancel();
   }
 
   bool _hasInternet = false;
