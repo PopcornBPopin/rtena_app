@@ -87,183 +87,186 @@ class _Sign1PageState extends State<Sign1Page> {
                           SizedBox(height: 20.h),
                           Expanded(
                             child: Container(
-                              child: SingleChildScrollView(
-                                controller: _scrollController,
-                                child: Column(
-                                  children: [
-                                    RawScrollbar(
-                                      thickness: 7.5,
-                                      thumbColor: Colors.redAccent,
-                                      thumbVisibility: true,
-                                      child: SingleChildScrollView(
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 30),
-                                              child: Container(
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    const Text(
-                                                      "I. Introduction",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                                    ),
-                                                    const Text(
-                                                      "   This is a seniors' project of the developers and a partial compliance to their course's final requirement. The mobile application's, and its other components', intention is to create an accessible and convenient means of communicating with responders of your current situation. That being sais, the mobile application requires your permission with your mobile device's: \n\nFinal State (Location, Mobile Date, WiFi, Phone) \n\nInitiation State (Camera, Library or Files Manager)\n\n",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                                    ),
-                                                    const Text(
-                                                      "II. Permissions Terms",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                                    ),
-                                                    const Text(
-                                                      "   Location - It is to determine your mobile device's accurate location, should an incident happen to you and you accessed our mobile app. WiFi/Mobile Data - It is to override your internet connection if you (a) are not connected to the internet, or (b) have a slow internet connection through WiFi. Your internet connection is needed to update our database with your current location, if it would be done online. Phone - It is to update our database with your current location, if it would be done offline. We are using GSM technologies to cater offline means of communicating. Camera - It is to take a picture of your valid ID.Library/Files Manager - It is if, instead, you want to find your valid ID in your files\n\n",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                                    ),
-                                                    const Text(
-                                                      "III. Privacy Terms",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                                    ),
-                                                    const Text(
-                                                      "   We collect your personal information for the sole purpose of relaying that information to a responder, should you encounter an incident that requires it. Your personal information will only be read-and-write accessible (editable) by the servers and developers of the mobile application and its components. Your personal information is also to ensure liability and accountability of your actions.\n\n",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                                    ),
-                                                    const Text(
-                                                      "IV. Agreement",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                                    ),
-                                                    const Text(
-                                                      "   By ticking the two boxes below, you agree with allowing access permissions on your mobile phone and collecting your data\n",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                                    ),
-                                                    SizedBox(height: 20.h),
-                                                    Container(
-                                                      child: Column(
-                                                        children: [
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              setState(() {
-                                                                _agreeTerms = !_agreeTerms;
-                                                              });
-                                                            },
-                                                            child: Row(
-                                                              children: [
-                                                                Icon(
-                                                                  _agreeTerms ? Icons.check_box : Icons.square_outlined,
-                                                                  color: _agreeTerms ? Colors.red : Color.fromRGBO(82, 82, 82, 1),
-                                                                  size: 30,
-                                                                ),
-                                                                Expanded(
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.only(left: 5),
-                                                                    child: Text(
-                                                                      "I have read the Terms and Conditions of RTena",
-                                                                      style: TextStyle(fontSize: 17.sp),
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          SizedBox(height: 10.h),
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              setState(() {
-                                                                _agreePriv = !_agreePriv;
-                                                              });
-                                                            },
-                                                            child: Row(
-                                                              children: [
-                                                                Icon(
-                                                                  _agreePriv ? Icons.check_box : Icons.square_outlined,
-                                                                  color: _agreePriv ? Colors.red : Color.fromRGBO(82, 82, 82, 1),
-                                                                  size: 30,
-                                                                ),
-                                                                Expanded(
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.only(left: 5),
-                                                                    child: Text(
-                                                                      "I allow my personal data to be accessed",
-                                                                      style: TextStyle(fontSize: 17.sp),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
+                              child: ScrollConfiguration(
+                                behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+                                child: SingleChildScrollView(
+                                  controller: _scrollController,
+                                  child: Column(
+                                    children: [
+                                      RawScrollbar(
+                                        thickness: 7.5,
+                                        thumbColor: Colors.redAccent,
+                                        thumbVisibility: true,
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 30),
+                                                child: Container(
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      const Text(
+                                                        "I. Introduction",
+                                                        textAlign: TextAlign.justify,
+                                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
                                                       ),
-                                                    ),
-                                                    SizedBox(height: 20.h),
-                                                    Visibility(
-                                                      visible: _notAcceptedTermsPriv,
-                                                      child: Text(
-                                                        'Please agree to the terms and conditions of RTena',
-                                                        style: TextStyle(color: Colors.red),
+                                                      const Text(
+                                                        "   This is a seniors' project of the developers and a partial compliance to their course's final requirement. The mobile application's, and its other components', intention is to create an accessible and convenient means of communicating with responders of your current situation. That being sais, the mobile application requires your permission with your mobile device's: \n\nFinal State (Location, Mobile Date, WiFi, Phone) \n\nInitiation State (Camera, Library or Files Manager)\n\n",
+                                                        textAlign: TextAlign.justify,
+                                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
                                                       ),
-                                                    ),
-                                                    SizedBox(height: 10.h),
-                                                    Center(
-                                                      child: ElevatedButton(
-                                                        style: ElevatedButton.styleFrom(
-                                                          shape: RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(20),
-                                                          ),
-                                                          padding: EdgeInsets.all(12),
-                                                          backgroundColor: _agreeTerms && _agreePriv ? Colors.white : Colors.grey.shade300,
-                                                          elevation: _agreeTerms && _agreePriv ? 3 : 0,
-                                                        ),
-                                                        child: Container(
-                                                          alignment: Alignment.center,
-                                                          height: 20.h,
-                                                          width: 90.w,
-                                                          child: Column(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            children: [
-                                                              Text(
-                                                                "Proceed",
-                                                                style: TextStyle(color: _agreeTerms && _agreePriv ? Colors.black : Colors.grey.shade600),
+                                                      const Text(
+                                                        "II. Permissions Terms",
+                                                        textAlign: TextAlign.justify,
+                                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                      ),
+                                                      const Text(
+                                                        "   Location - It is to determine your mobile device's accurate location, should an incident happen to you and you accessed our mobile app. WiFi/Mobile Data - It is to override your internet connection if you (a) are not connected to the internet, or (b) have a slow internet connection through WiFi. Your internet connection is needed to update our database with your current location, if it would be done online. Phone - It is to update our database with your current location, if it would be done offline. We are using GSM technologies to cater offline means of communicating. Camera - It is to take a picture of your valid ID.Library/Files Manager - It is if, instead, you want to find your valid ID in your files\n\n",
+                                                        textAlign: TextAlign.justify,
+                                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                                      ),
+                                                      const Text(
+                                                        "III. Privacy Terms",
+                                                        textAlign: TextAlign.justify,
+                                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                      ),
+                                                      const Text(
+                                                        "   We collect your personal information for the sole purpose of relaying that information to a responder, should you encounter an incident that requires it. Your personal information will only be read-and-write accessible (editable) by the servers and developers of the mobile application and its components. Your personal information is also to ensure liability and accountability of your actions.\n\n",
+                                                        textAlign: TextAlign.justify,
+                                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                                      ),
+                                                      const Text(
+                                                        "IV. Agreement",
+                                                        textAlign: TextAlign.justify,
+                                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                      ),
+                                                      const Text(
+                                                        "   By ticking the two boxes below, you agree with allowing access permissions on your mobile phone and collecting your data\n",
+                                                        textAlign: TextAlign.justify,
+                                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                                      ),
+                                                      SizedBox(height: 20.h),
+                                                      Container(
+                                                        child: Column(
+                                                          children: [
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  _agreeTerms = !_agreeTerms;
+                                                                });
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  Icon(
+                                                                    _agreeTerms ? Icons.check_box : Icons.square_outlined,
+                                                                    color: _agreeTerms ? Colors.red : Color.fromRGBO(82, 82, 82, 1),
+                                                                    size: 30,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Padding(
+                                                                      padding: const EdgeInsets.only(left: 5),
+                                                                      child: Text(
+                                                                        "I have read the Terms and Conditions of RTena",
+                                                                        style: TextStyle(fontSize: 17.sp),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
                                                               ),
-                                                            ],
-                                                          ),
+                                                            ),
+                                                            SizedBox(height: 10.h),
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  _agreePriv = !_agreePriv;
+                                                                });
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  Icon(
+                                                                    _agreePriv ? Icons.check_box : Icons.square_outlined,
+                                                                    color: _agreePriv ? Colors.red : Color.fromRGBO(82, 82, 82, 1),
+                                                                    size: 30,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Padding(
+                                                                      padding: const EdgeInsets.only(left: 5),
+                                                                      child: Text(
+                                                                        "I allow my personal data to be accessed",
+                                                                        style: TextStyle(fontSize: 17.sp),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                        onPressed: () {
-                                                          if (!_agreePriv && !_agreeTerms) {
-                                                            setState(() {
-                                                              _notAcceptedTermsPriv = true;
-                                                            });
-                                                          }
-                                                          if (_agreePriv && _agreeTerms) {
-                                                            setState(() {
-                                                              _notAcceptedTermsPriv = false;
-                                                            });
-                                                          }
-                                                          if (!_notAcceptedTermsPriv && _agreePriv && _agreeTerms) {
-                                                            Navigator.of(context).pop();
-                                                          } else {
-                                                            null;
-                                                          }
-                                                        },
                                                       ),
-                                                    ),
-                                                    SizedBox(height: 10.h),
-                                                  ],
+                                                      SizedBox(height: 20.h),
+                                                      Visibility(
+                                                        visible: _notAcceptedTermsPriv,
+                                                        child: Text(
+                                                          'Please agree to the terms and conditions of RTena',
+                                                          style: TextStyle(color: Colors.red),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 10.h),
+                                                      Center(
+                                                        child: ElevatedButton(
+                                                          style: ElevatedButton.styleFrom(
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(20),
+                                                            ),
+                                                            padding: EdgeInsets.all(12),
+                                                            backgroundColor: _agreeTerms && _agreePriv ? Colors.white : Colors.grey.shade300,
+                                                            elevation: _agreeTerms && _agreePriv ? 3 : 0,
+                                                          ),
+                                                          child: Container(
+                                                            alignment: Alignment.center,
+                                                            height: 20.h,
+                                                            width: 90.w,
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Text(
+                                                                  "Proceed",
+                                                                  style: TextStyle(color: _agreeTerms && _agreePriv ? Colors.black : Colors.grey.shade600),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          onPressed: () {
+                                                            if (!_agreePriv && !_agreeTerms) {
+                                                              setState(() {
+                                                                _notAcceptedTermsPriv = true;
+                                                              });
+                                                            }
+                                                            if (_agreePriv && _agreeTerms) {
+                                                              setState(() {
+                                                                _notAcceptedTermsPriv = false;
+                                                              });
+                                                            }
+                                                            if (!_notAcceptedTermsPriv && _agreePriv && _agreeTerms) {
+                                                              Navigator.of(context).pop();
+                                                            } else {
+                                                              null;
+                                                            }
+                                                          },
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 10.h),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -404,7 +407,7 @@ class _Sign1PageState extends State<Sign1Page> {
       ),
     ),
     backgroundColor: Colors.black,
-    duration: Duration(seconds: 5),
+    duration: Duration(seconds: 2),
     behavior: SnackBarBehavior.fixed,
     elevation: 1,
   );
@@ -432,7 +435,7 @@ class _Sign1PageState extends State<Sign1Page> {
       ],
     ),
     backgroundColor: Colors.black,
-    duration: Duration(seconds: 5),
+    duration: Duration(seconds: 2),
     behavior: SnackBarBehavior.fixed,
     elevation: 1,
   );

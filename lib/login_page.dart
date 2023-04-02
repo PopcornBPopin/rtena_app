@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     ),
     backgroundColor: Colors.black,
-    duration: Duration(seconds: 5),
+    duration: Duration(seconds: 2),
     behavior: SnackBarBehavior.fixed,
     elevation: 1,
   );
@@ -99,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
       ],
     ),
     backgroundColor: Colors.black,
-    duration: Duration(seconds: 5),
+    duration: Duration(seconds: 21),
     behavior: SnackBarBehavior.fixed,
     elevation: 1,
   );
