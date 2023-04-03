@@ -232,7 +232,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                             _role = userData['Role'];
                                             return Column(
                                               children: [
-                                                SizedBox(height: 20.h),
+                                                SizedBox(height: 15.h),
                                                 Align(
                                                   alignment: Alignment.centerLeft,
                                                   child: Padding(
