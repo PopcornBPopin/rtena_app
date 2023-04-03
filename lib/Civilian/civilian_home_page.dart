@@ -1,17 +1,13 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rtena_app/SignUp/sign_page_1.dart';
+import 'package:rtena_app/Civilian/civilian_start_page.dart';
 
 class CivHomePage extends StatefulWidget {
   const CivHomePage({Key? key}) : super(key: key);
@@ -52,67 +48,6 @@ class _CivHomePageState extends State<CivHomePage> {
   bool _alertEmergencySelected = false;
   late StreamSubscription subscription;
 
-  //Text Controllers
-
-  //Snackbar
-  final notConnectedSnackbar = SnackBar(
-    content: Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.wifi_off,
-            size: 25,
-            color: Colors.white,
-          ),
-          Expanded(
-            child: Center(
-              child: Text(
-                'No Internet Connection',
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-    backgroundColor: Colors.black,
-    duration: Duration(seconds: 2),
-    behavior: SnackBarBehavior.fixed,
-    elevation: 1,
-  );
-
-  final connectedSnackbar = SnackBar(
-    content: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.wifi_outlined,
-          size: 25,
-          color: Colors.green,
-        ),
-        Expanded(
-          child: Center(
-            child: Text(
-              'Connection Restored',
-              style: TextStyle(
-                fontSize: 18.sp,
-                color: Colors.green,
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-    backgroundColor: Colors.black,
-    duration: Duration(seconds: 2),
-    behavior: SnackBarBehavior.fixed,
-    elevation: 1,
-  );
-
   // FUNCTIONS
   void getConnectivity() {
     subscription = Connectivity().onConnectivityChanged.listen(
@@ -120,14 +55,8 @@ class _CivHomePageState extends State<CivHomePage> {
         _hasInternet = await InternetConnectionChecker().hasConnection;
         if (!_hasInternet) {
           print("No internet");
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(notConnectedSnackbar);
         } else {
           print("Connected");
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(connectedSnackbar);
         }
       },
     );
@@ -221,48 +150,6 @@ class _CivHomePageState extends State<CivHomePage> {
         ),
       ),
       child: Scaffold(
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 20,
-                color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: GNav(
-              haptic: true,
-              backgroundColor: Colors.white,
-              tabBackgroundColor: Colors.white,
-              tabActiveBorder: Border.all(color: Colors.grey.shade700),
-              tabBorderRadius: 30,
-              padding: EdgeInsets.all(12),
-              duration: Duration(milliseconds: 300),
-              gap: 10,
-              tabs: [
-                GButton(
-                  icon: Icons.home,
-                  text: "Home",
-                ),
-                GButton(
-                  icon: Icons.contact_emergency,
-                  text: "Contacts",
-                ),
-                GButton(
-                  icon: Icons.person_pin_rounded,
-                  text: "Profile",
-                ),
-                GButton(
-                  icon: Icons.settings,
-                  text: "Settings",
-                )
-              ],
-            ),
-          ),
-        ),
         backgroundColor: Colors.transparent,
         body: SafeArea(
           child: Column(
@@ -298,7 +185,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                     SizedBox(height: 75.h),
                                     GestureDetector(
                                       onTap: () {
-                                        Get.to(Sign1Page());
+                                        Get.to(CivStartPage());
                                       },
                                       child: Text(
                                         'Welcome Back!',
@@ -384,12 +271,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                           opacity: _timerRunning && !_fireEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: _fireEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
+                                              backgroundColor: _fireEmergencySelected ? const Color.fromRGBO(102, 0, 0, 1) : Colors.white,
                                               padding: EdgeInsets.symmetric(horizontal: 5.w),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(20),
                                                 side: BorderSide(
-                                                  color: _fireEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Color.fromRGBO(82, 82, 82, 1),
+                                                  color: _fireEmergencySelected ? const Color.fromRGBO(102, 0, 0, 1) : Color.fromRGBO(82, 82, 82, 1),
                                                   width: 1,
                                                 ),
                                               ),
@@ -452,7 +339,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                         children: [
                                                           Icon(
                                                             FontAwesomeIcons.fire,
-                                                            color: Colors.red,
+                                                            color: const Color.fromRGBO(102, 0, 0, 1),
                                                             size: 35,
                                                           ),
                                                           SizedBox(height: 2.h),
@@ -474,12 +361,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                           opacity: _timerRunning && !_healthEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: _healthEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
+                                              backgroundColor: _healthEmergencySelected ? const Color.fromRGBO(153, 0, 51, 1) : Colors.white,
                                               padding: EdgeInsets.symmetric(horizontal: 5.w),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(20),
                                                 side: BorderSide(
-                                                  color: _healthEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Color.fromRGBO(82, 82, 82, 1),
+                                                  color: _healthEmergencySelected ? const Color.fromRGBO(153, 0, 51, 1) : Color.fromRGBO(82, 82, 82, 1),
                                                   width: 1,
                                                 ),
                                               ),
@@ -542,7 +429,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                         children: [
                                                           Icon(
                                                             Icons.health_and_safety,
-                                                            color: Colors.red,
+                                                            color: const Color.fromRGBO(153, 0, 51, 1),
                                                             size: 40,
                                                           ),
                                                           Text(
@@ -571,12 +458,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                           opacity: _timerRunning && !_murderEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: _murderEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
+                                              backgroundColor: _murderEmergencySelected ? const Color.fromARGB(223, 177, 28, 38) : Colors.white,
                                               padding: EdgeInsets.symmetric(horizontal: 5.w),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(20),
                                                 side: BorderSide(
-                                                  color: _murderEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Color.fromRGBO(82, 82, 82, 1),
+                                                  color: _murderEmergencySelected ? const Color.fromARGB(223, 177, 28, 38) : Color.fromRGBO(82, 82, 82, 1),
                                                   width: 1,
                                                 ),
                                               ),
@@ -639,7 +526,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                         children: [
                                                           Icon(
                                                             FontAwesomeIcons.solidFaceDizzy,
-                                                            color: Colors.red,
+                                                            color: const Color.fromARGB(223, 177, 28, 38),
                                                             size: 35,
                                                           ),
                                                           SizedBox(height: 2.h),
@@ -661,12 +548,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                           opacity: _timerRunning && !_assaultEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: _assaultEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
+                                              backgroundColor: _assaultEmergencySelected ? const Color.fromARGB(255, 163, 49, 70) : Colors.white,
                                               padding: EdgeInsets.symmetric(horizontal: 5.w),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(20),
                                                 side: BorderSide(
-                                                  color: _assaultEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Color.fromRGBO(82, 82, 82, 1),
+                                                  color: _assaultEmergencySelected ? const Color.fromRGBO(184, 58, 67, 0.878) : Color.fromRGBO(82, 82, 82, 1),
                                                   width: 1,
                                                 ),
                                               ),
@@ -729,7 +616,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                         children: [
                                                           Icon(
                                                             FontAwesomeIcons.handFist,
-                                                            color: Colors.red,
+                                                            color: const Color.fromRGBO(184, 58, 67, 0.878),
                                                             size: 35,
                                                           ),
                                                           SizedBox(height: 2.h),
@@ -758,12 +645,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                           opacity: _timerRunning && !_floodEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: _floodEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
+                                              backgroundColor: _floodEmergencySelected ? const Color.fromRGBO(255, 144, 0, 1) : Colors.white,
                                               padding: EdgeInsets.symmetric(horizontal: 5.w),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(20),
                                                 side: BorderSide(
-                                                  color: _floodEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Color.fromRGBO(82, 82, 82, 1),
+                                                  color: _floodEmergencySelected ? const Color.fromRGBO(255, 144, 0, 1) : Color.fromRGBO(82, 82, 82, 1),
                                                   width: 1,
                                                 ),
                                               ),
@@ -826,7 +713,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                         children: [
                                                           Icon(
                                                             FontAwesomeIcons.water,
-                                                            color: Colors.red,
+                                                            color: const Color.fromRGBO(255, 144, 0, 1),
                                                             size: 35,
                                                           ),
                                                           SizedBox(height: 2.h),
@@ -848,12 +735,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                           opacity: _timerRunning && !_equakeEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: _equakeEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
+                                              backgroundColor: _equakeEmergencySelected ? Color.fromARGB(255, 255, 102, 0) : Colors.white,
                                               padding: EdgeInsets.symmetric(horizontal: 5.w),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(20),
                                                 side: BorderSide(
-                                                  color: _equakeEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Color.fromRGBO(82, 82, 82, 1),
+                                                  color: _equakeEmergencySelected ? Color.fromARGB(255, 255, 102, 0) : Color.fromRGBO(82, 82, 82, 1),
                                                   width: 1,
                                                 ),
                                               ),
@@ -916,7 +803,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                         children: [
                                                           Icon(
                                                             FontAwesomeIcons.houseChimneyCrack,
-                                                            color: Colors.red,
+                                                            color: Color.fromARGB(255, 255, 102, 0),
                                                             size: 35,
                                                           ),
                                                           SizedBox(height: 2.h),
@@ -945,12 +832,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                           opacity: _timerRunning && !_kidnapEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: _kidnapEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
+                                              backgroundColor: _kidnapEmergencySelected ? const Color.fromRGBO(157, 2, 8, 1) : Colors.white,
                                               padding: EdgeInsets.symmetric(horizontal: 5.w),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(20),
                                                 side: BorderSide(
-                                                  color: _kidnapEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Color.fromRGBO(82, 82, 82, 1),
+                                                  color: _kidnapEmergencySelected ? const Color.fromRGBO(157, 2, 8, 1) : Color.fromRGBO(82, 82, 82, 1),
                                                   width: 1,
                                                 ),
                                               ),
@@ -1013,7 +900,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                         children: [
                                                           Icon(
                                                             FontAwesomeIcons.solidFaceSadCry,
-                                                            color: Colors.red,
+                                                            color: const Color.fromRGBO(157, 2, 8, 1),
                                                             size: 35,
                                                           ),
                                                           SizedBox(height: 2.h),
@@ -1035,12 +922,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                           opacity: _timerRunning && !_robberyEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: _robberyEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
+                                              backgroundColor: _robberyEmergencySelected ? const Color.fromRGBO(220, 47, 2, 1) : Colors.white,
                                               padding: EdgeInsets.symmetric(horizontal: 5.w),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(20),
                                                 side: BorderSide(
-                                                  color: _robberyEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Color.fromRGBO(82, 82, 82, 1),
+                                                  color: _robberyEmergencySelected ? const Color.fromRGBO(220, 47, 2, 1) : Color.fromRGBO(82, 82, 82, 1),
                                                   width: 1,
                                                 ),
                                               ),
@@ -1103,7 +990,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                         children: [
                                                           Icon(
                                                             FontAwesomeIcons.userNinja,
-                                                            color: Colors.red,
+                                                            color: const Color.fromRGBO(220, 47, 2, 1),
                                                             size: 35,
                                                           ),
                                                           SizedBox(height: 2.h),
@@ -1159,12 +1046,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                       opacity: _timerRunning && !_alertEmergencySelected ? 0.6 : 1,
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: _alertEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
+                                          backgroundColor: _alertEmergencySelected ? const Color.fromARGB(255, 202, 68, 27) : Colors.white,
                                           padding: EdgeInsets.symmetric(horizontal: 5.w),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(20),
                                             side: BorderSide(
-                                              color: _alertEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Color.fromRGBO(82, 82, 82, 1),
+                                              color: _alertEmergencySelected ? const Color.fromARGB(255, 202, 68, 27) : Color.fromRGBO(82, 82, 82, 1),
                                               width: 1,
                                             ),
                                           ),
@@ -1227,7 +1114,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                     children: [
                                                       Icon(
                                                         Icons.notifications_active,
-                                                        color: Colors.red,
+                                                        color: const Color.fromARGB(255, 202, 68, 27),
                                                         size: 40,
                                                       ),
                                                       Text(
@@ -1243,8 +1130,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                         ),
                                       ),
                                     ),
-
-                                    SizedBox(height: 30.h),
+                                    SizedBox(height: 50.h),
                                   ],
                                 ),
                               ),

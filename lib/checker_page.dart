@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rtena_app/Civilian/civilian_start_page.dart';
 import 'package:rtena_app/start_page.dart';
 import 'Civilian/civilian_home_page.dart';
 
@@ -13,7 +14,7 @@ class CheckerPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return CivHomePage();
+            return CivStartPage();
           } else {
             return StartPage();
           }
