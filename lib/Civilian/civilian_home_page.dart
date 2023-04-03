@@ -49,6 +49,7 @@ class _CivHomePageState extends State<CivHomePage> {
   bool _equakeEmergencySelected = false;
   bool _kidnapEmergencySelected = false;
   bool _robberyEmergencySelected = false;
+  bool _alertEmergencySelected = false;
   late StreamSubscription subscription;
 
   //Text Controllers
@@ -177,30 +178,32 @@ class _CivHomePageState extends State<CivHomePage> {
     );
   }
 
-  static const maxSeconds = 6;
+  static const maxSeconds = 5;
   int seconds = maxSeconds;
   Timer? timer;
   //Countdown timer
   void startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (_) {
-      if (seconds > 0) {
-        setState(() {
-          _timerRunning = true;
-          _emergencySelected = true;
-          seconds--;
-        });
-      } else {
-        stopTimer();
-      }
+    setState(() {
+      timer = Timer.periodic(Duration(seconds: 1), (_) {
+        if (seconds > 0) {
+          setState(() {
+            _timerRunning = true;
+            _emergencySelected = true;
+            --seconds;
+          });
+        } else {
+          stopTimer();
+        }
+      });
     });
   }
 
   void stopTimer() {
-    timer?.cancel();
     setState(() {
-      seconds = maxSeconds;
+      timer?.cancel();
       _timerRunning = false;
       _emergencySelected = false;
+      seconds = maxSeconds;
     });
   }
 
@@ -378,7 +381,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Opacity(
-                                          opacity: _emergencySelected && !_fireEmergencySelected ? 0.6 : 1,
+                                          opacity: _timerRunning && !_fireEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: _fireEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
@@ -390,14 +393,14 @@ class _CivHomePageState extends State<CivHomePage> {
                                                   width: 1,
                                                 ),
                                               ),
-                                              elevation: _emergencySelected ? 1 : 3,
+                                              elevation: _timerRunning && !_fireEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
                                                 _fireEmergencySelected = true;
                                                 _emergencySelected = true;
                                                 startTimer();
-                                                Future.delayed(const Duration(seconds: 7), () {
+                                                Future.delayed(const Duration(seconds: 6), () {
                                                   setState(() {
                                                     _fireEmergencySelected = false;
                                                     _emergencySelected = false;
@@ -408,6 +411,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                 stopTimer();
                                                 setState(() {
                                                   _fireEmergencySelected = false;
+                                                  _emergencySelected = false;
                                                 });
                                               }
                                             },
@@ -467,7 +471,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                         ),
                                         SizedBox(width: 10.w),
                                         Opacity(
-                                          opacity: _emergencySelected && !_healthEmergencySelected ? 0.6 : 1,
+                                          opacity: _timerRunning && !_healthEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: _healthEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
@@ -479,14 +483,14 @@ class _CivHomePageState extends State<CivHomePage> {
                                                   width: 1,
                                                 ),
                                               ),
-                                              elevation: _emergencySelected ? 1 : 3,
+                                              elevation: _timerRunning && !_healthEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
                                                 _healthEmergencySelected = true;
                                                 _emergencySelected = true;
                                                 startTimer();
-                                                Future.delayed(const Duration(seconds: 7), () {
+                                                Future.delayed(const Duration(seconds: 6), () {
                                                   setState(() {
                                                     _healthEmergencySelected = false;
                                                     _emergencySelected = false;
@@ -497,6 +501,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                 stopTimer();
                                                 setState(() {
                                                   _healthEmergencySelected = false;
+                                                  _emergencySelected = false;
                                                 });
                                               }
                                             },
@@ -563,7 +568,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Opacity(
-                                          opacity: _emergencySelected && !_murderEmergencySelected ? 0.6 : 1,
+                                          opacity: _timerRunning && !_murderEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: _murderEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
@@ -575,14 +580,14 @@ class _CivHomePageState extends State<CivHomePage> {
                                                   width: 1,
                                                 ),
                                               ),
-                                              elevation: _emergencySelected ? 1 : 3,
+                                              elevation: _timerRunning && !_murderEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
                                                 _murderEmergencySelected = true;
                                                 _emergencySelected = true;
                                                 startTimer();
-                                                Future.delayed(const Duration(seconds: 7), () {
+                                                Future.delayed(const Duration(seconds: 6), () {
                                                   setState(() {
                                                     _murderEmergencySelected = false;
                                                     _emergencySelected = false;
@@ -593,6 +598,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                 stopTimer();
                                                 setState(() {
                                                   _murderEmergencySelected = false;
+                                                  _emergencySelected = false;
                                                 });
                                               }
                                             },
@@ -652,7 +658,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                         ),
                                         SizedBox(width: 10.w),
                                         Opacity(
-                                          opacity: _emergencySelected && !_assaultEmergencySelected ? 0.6 : 1,
+                                          opacity: _timerRunning && !_assaultEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: _assaultEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
@@ -664,14 +670,14 @@ class _CivHomePageState extends State<CivHomePage> {
                                                   width: 1,
                                                 ),
                                               ),
-                                              elevation: _emergencySelected ? 1 : 3,
+                                              elevation: _timerRunning && !_assaultEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
                                                 _assaultEmergencySelected = true;
                                                 _emergencySelected = true;
                                                 startTimer();
-                                                Future.delayed(const Duration(seconds: 7), () {
+                                                Future.delayed(const Duration(seconds: 6), () {
                                                   setState(() {
                                                     _assaultEmergencySelected = false;
                                                     _emergencySelected = false;
@@ -682,6 +688,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                 stopTimer();
                                                 setState(() {
                                                   _assaultEmergencySelected = false;
+                                                  _emergencySelected = false;
                                                 });
                                               }
                                             },
@@ -748,7 +755,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Opacity(
-                                          opacity: _emergencySelected && !_floodEmergencySelected ? 0.6 : 1,
+                                          opacity: _timerRunning && !_floodEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: _floodEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
@@ -760,14 +767,14 @@ class _CivHomePageState extends State<CivHomePage> {
                                                   width: 1,
                                                 ),
                                               ),
-                                              elevation: _emergencySelected ? 1 : 3,
+                                              elevation: _timerRunning && !_floodEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
                                                 _floodEmergencySelected = true;
                                                 _emergencySelected = true;
                                                 startTimer();
-                                                Future.delayed(const Duration(seconds: 7), () {
+                                                Future.delayed(const Duration(seconds: 6), () {
                                                   setState(() {
                                                     _floodEmergencySelected = false;
                                                     _emergencySelected = false;
@@ -778,6 +785,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                 stopTimer();
                                                 setState(() {
                                                   _floodEmergencySelected = false;
+                                                  _emergencySelected = false;
                                                 });
                                               }
                                             },
@@ -837,7 +845,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                         ),
                                         SizedBox(width: 10.w),
                                         Opacity(
-                                          opacity: _emergencySelected && !_equakeEmergencySelected ? 0.6 : 1,
+                                          opacity: _timerRunning && !_equakeEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: _equakeEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
@@ -849,14 +857,14 @@ class _CivHomePageState extends State<CivHomePage> {
                                                   width: 1,
                                                 ),
                                               ),
-                                              elevation: _emergencySelected ? 1 : 3,
+                                              elevation: _timerRunning && !_equakeEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
                                                 _equakeEmergencySelected = true;
                                                 _emergencySelected = true;
                                                 startTimer();
-                                                Future.delayed(const Duration(seconds: 7), () {
+                                                Future.delayed(const Duration(seconds: 6), () {
                                                   setState(() {
                                                     _equakeEmergencySelected = false;
                                                     _emergencySelected = false;
@@ -867,6 +875,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                 stopTimer();
                                                 setState(() {
                                                   _equakeEmergencySelected = false;
+                                                  _emergencySelected = false;
                                                 });
                                               }
                                             },
@@ -933,7 +942,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Opacity(
-                                          opacity: _emergencySelected && !_kidnapEmergencySelected ? 0.6 : 1,
+                                          opacity: _timerRunning && !_kidnapEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: _kidnapEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
@@ -945,14 +954,14 @@ class _CivHomePageState extends State<CivHomePage> {
                                                   width: 1,
                                                 ),
                                               ),
-                                              elevation: _emergencySelected ? 1 : 3,
+                                              elevation: _timerRunning && !_kidnapEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
                                                 _kidnapEmergencySelected = true;
                                                 _emergencySelected = true;
                                                 startTimer();
-                                                Future.delayed(const Duration(seconds: 7), () {
+                                                Future.delayed(const Duration(seconds: 6), () {
                                                   setState(() {
                                                     _kidnapEmergencySelected = false;
                                                     _emergencySelected = false;
@@ -963,6 +972,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                 stopTimer();
                                                 setState(() {
                                                   _kidnapEmergencySelected = false;
+                                                  _emergencySelected = false;
                                                 });
                                               }
                                             },
@@ -1022,7 +1032,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                         ),
                                         SizedBox(width: 10.w),
                                         Opacity(
-                                          opacity: _emergencySelected && !_robberyEmergencySelected ? 0.6 : 1,
+                                          opacity: _timerRunning && !_robberyEmergencySelected ? 0.6 : 1,
                                           child: ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: _robberyEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
@@ -1034,14 +1044,14 @@ class _CivHomePageState extends State<CivHomePage> {
                                                   width: 1,
                                                 ),
                                               ),
-                                              elevation: _emergencySelected ? 1 : 3,
+                                              elevation: _timerRunning && !_robberyEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
                                                 _robberyEmergencySelected = true;
                                                 _emergencySelected = true;
                                                 startTimer();
-                                                Future.delayed(const Duration(seconds: 7), () {
+                                                Future.delayed(const Duration(seconds: 6), () {
                                                   setState(() {
                                                     _robberyEmergencySelected = false;
                                                     _emergencySelected = false;
@@ -1052,6 +1062,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                 stopTimer();
                                                 setState(() {
                                                   _robberyEmergencySelected = false;
+                                                  _emergencySelected = false;
                                                 });
                                               }
                                             },
@@ -1144,39 +1155,90 @@ class _CivHomePageState extends State<CivHomePage> {
                                     ),
                                     SizedBox(height: 15.h),
 
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
-                                          side: BorderSide(
-                                            color: Color.fromRGBO(82, 82, 82, 1),
-                                            width: 1,
+                                    Opacity(
+                                      opacity: _timerRunning && !_alertEmergencySelected ? 0.6 : 1,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: _alertEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Colors.white,
+                                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(20),
+                                            side: BorderSide(
+                                              color: _alertEmergencySelected ? Color.fromRGBO(252, 58, 72, 32) : Color.fromRGBO(82, 82, 82, 1),
+                                              width: 1,
+                                            ),
                                           ),
+                                          elevation: _timerRunning && !_alertEmergencySelected ? 1 : 3,
                                         ),
-                                      ),
-                                      onPressed: () {
-                                        setState(() {});
-                                      },
-                                      child: SizedBox(
-                                        height: 100.h,
-                                        width: 165.w,
-                                        child: Center(
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.notifications_active,
-                                                color: Colors.red,
-                                                size: 40,
-                                              ),
-                                              Text(
-                                                "Alert",
-                                                style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
-                                              ),
-                                            ],
+                                        onPressed: () {
+                                          if (!_timerRunning && !_emergencySelected) {
+                                            _alertEmergencySelected = true;
+                                            _emergencySelected = true;
+                                            startTimer();
+                                            Future.delayed(const Duration(seconds: 6), () {
+                                              setState(() {
+                                                _alertEmergencySelected = false;
+                                                _emergencySelected = false;
+                                              });
+                                            });
+                                          }
+                                          if (_timerRunning && _alertEmergencySelected) {
+                                            stopTimer();
+                                            setState(() {
+                                              _alertEmergencySelected = false;
+                                              _emergencySelected = false;
+                                            });
+                                          }
+                                        },
+                                        child: SizedBox(
+                                          height: 100.h,
+                                          width: 165.w,
+                                          child: Center(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Visibility(
+                                                  visible: _alertEmergencySelected,
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                        '$seconds',
+                                                        style: TextStyle(
+                                                          fontSize: 30,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "Tap to cancel",
+                                                        style: TextStyle(
+                                                          fontWeight: FontWeight.normal,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Visibility(
+                                                  visible: !_alertEmergencySelected,
+                                                  child: Column(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.notifications_active,
+                                                        color: Colors.red,
+                                                        size: 40,
+                                                      ),
+                                                      Text(
+                                                        "Alert",
+                                                        style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
