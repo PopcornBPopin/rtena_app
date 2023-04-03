@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:rtena_app/Civilian/civilian_home_page.dart';
+import 'package:rtena_app/Civilian/civilian_start_page.dart';
 import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/SignUp/sign_page_1.dart';
 
@@ -121,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
     }
     Navigator.of(context).pop();
     Get.to(
-      () => const CivHomePage(),
+      () => const CivStartPage(),
       transition: Transition.fadeIn,
       duration: Duration(milliseconds: 300),
     );
@@ -384,7 +384,7 @@ class _LoginPageState extends State<LoginPage> {
       onConfirmBtnTap: () {
         if (animtype == QuickAlertType.success)
           Get.to(
-            () => const CivHomePage(),
+            () => const CivStartPage(),
             transition: Transition.fadeIn,
             duration: Duration(milliseconds: 300),
           );

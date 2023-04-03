@@ -8,6 +8,8 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rtena_app/Civilian/civilian_start_page.dart';
+import 'package:rtena_app/SignUp/sign_page_1.dart';
+import 'package:rtena_app/login_page.dart';
 
 class CivHomePage extends StatefulWidget {
   const CivHomePage({Key? key}) : super(key: key);
@@ -185,7 +187,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                     SizedBox(height: 75.h),
                                     GestureDetector(
                                       onTap: () {
-                                        Get.to(CivStartPage());
+                                        Get.to(Sign1Page());
                                       },
                                       child: Text(
                                         'Welcome Back!',

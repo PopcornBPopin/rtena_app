@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,9 +24,6 @@ class _CivContactsPageState extends State<CivContactsPage> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitDown,
-    // ]);
   }
 
   void dispose() {
@@ -151,7 +151,7 @@ class _CivContactsPageState extends State<CivContactsPage> {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 10),
                                         child: Text(
-                                          "Tap the button that corresponds to the emergency you are currently involved in.",
+                                          'Test',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: Colors.black,

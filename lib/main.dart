@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,11 +8,9 @@ import 'package:rtena_app/checker_page.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // ErrorWidget.builder = (FlutterErrorDetails details) => const Scaffold(
-  //       body: Center(),
-  //       backgroundColor: Colors.transparent,
-  //     );
-
+  FirebaseFirestore.instance.settings = Settings(
+    persistenceEnabled: true,
+  );
   runApp(MyApp());
 }
 
