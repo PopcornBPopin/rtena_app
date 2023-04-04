@@ -1395,6 +1395,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                   child: Row(
                                                     children: [
                                                       Expanded(
+                                                        flex: 5,
                                                         child: GestureDetector(
                                                           onLongPress: () {
                                                             setState(() {
@@ -1443,6 +1444,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                       ),
                                                       SizedBox(width: 10.w),
                                                       Expanded(
+                                                        flex: 4,
                                                         child: GestureDetector(
                                                           onLongPress: () {
                                                             setState(() {
