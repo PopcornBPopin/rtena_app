@@ -1194,7 +1194,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                       children: [
                                                         SizedBox(height: 20.h),
                                                         Text(
-                                                          "Long press on the fields you want to edit, everything is editable besides your Email Address",
+                                                          "Long press on the fields you want to edit and tap to deselect.\n\n Everything is editable besides your Email Address",
                                                           textAlign: TextAlign.center,
                                                           style: TextStyle(
                                                             color: Colors.black,

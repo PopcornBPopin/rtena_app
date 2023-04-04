@@ -42,6 +42,7 @@ class _CivContactsPageState extends State<CivContactsPage> {
   }
 
   bool _hasInternet = false;
+
   late StreamSubscription subscription;
   late String _emailAddress = "";
 
@@ -103,18 +104,23 @@ class _CivContactsPageState extends State<CivContactsPage> {
     _emailAddress = user!.email!;
   }
 
-  //Show success prompt
-  void quickAlert(QuickAlertType animtype, String title, String text, Color color) {
+  void quickAlert(QuickAlertType animtype, String title, String text, String confirmText, Color color) {
     QuickAlert.show(
       backgroundColor: Colors.grey.shade200,
       context: context,
       type: animtype,
       title: title,
       text: text,
+      confirmBtnText: confirmText,
       confirmBtnColor: Colors.white,
       confirmBtnTextStyle: TextStyle(
+        fontSize: 18.sp,
         fontWeight: FontWeight.bold,
         color: color,
+      ),
+      cancelBtnTextStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.red,
       ),
       onConfirmBtnTap: () {
         Navigator.of(context).pop();
@@ -150,7 +156,7 @@ class _CivContactsPageState extends State<CivContactsPage> {
 
     Navigator.of(context).pop();
     _formKey.currentState!.reset();
-    quickAlert(QuickAlertType.success, "Register Successful!", "New emergency contact added", Colors.green);
+    quickAlert(QuickAlertType.success, "Register Successful!", "New emergency contact added", "Okay", Colors.green);
   }
 
   void addContact(BuildContext context) {
@@ -572,6 +578,7 @@ class _CivContactsPageState extends State<CivContactsPage> {
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
                   child: SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
                     child: Column(
                       children: [
                         Stack(
@@ -647,10 +654,25 @@ class _CivContactsPageState extends State<CivContactsPage> {
                                 padding: const EdgeInsets.symmetric(horizontal: 20),
                                 child: Column(
                                   children: [
+                                    SizedBox(height: 40.h),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                                        child: Text(
+                                          "Tap the button that corresponds to the person you want to call",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 18.sp,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                     SizedBox(height: 30.h),
-                                    SizedBox(height: 15.h),
                                     Container(
-                                      height: 500.h,
+                                      height: 420.h,
                                       child: StreamBuilder<QuerySnapshot>(
                                         stream: FirebaseFirestore.instance.collection('users').doc(_emailAddress).collection('contact numbers').snapshots(),
                                         builder: (context, snapshot) {
@@ -680,7 +702,118 @@ class _CivContactsPageState extends State<CivContactsPage> {
                                             itemBuilder: (context, index) {
                                               return Column(
                                                 children: [
-                                                  Text(snap[index]['Full Name'] + snap[index]['Email Address']),
+                                                  Column(
+                                                    children: [
+                                                      ElevatedButton(
+                                                        style: ElevatedButton.styleFrom(
+                                                          backgroundColor: Colors.white,
+                                                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(20),
+                                                            side: BorderSide(
+                                                              color: Color.fromRGBO(82, 82, 82, 1),
+                                                              width: 1,
+                                                            ),
+                                                          ),
+                                                          elevation: 3,
+                                                        ),
+                                                        onPressed: () {},
+                                                        child: SizedBox(
+                                                          height: 120.h,
+                                                          width: MediaQuery.of(context).size.width,
+                                                          child: Stack(
+                                                            children: [
+                                                              Positioned(
+                                                                top: 10,
+                                                                right: 10,
+                                                                child: IconButton(
+                                                                  icon: Icon(
+                                                                    Icons.delete,
+                                                                    color: Colors.red,
+                                                                  ),
+                                                                  onPressed: () {
+                                                                    setState(
+                                                                      () {
+                                                                        QuickAlert.show(
+                                                                          backgroundColor: Colors.grey.shade200,
+                                                                          context: context,
+                                                                          type: QuickAlertType.confirm,
+                                                                          title: "Delete Confirmation",
+                                                                          text: "Are you sure you want to remove ${snap[index]['Full Name']} from your contacts?",
+                                                                          confirmBtnText: "Yes",
+                                                                          confirmBtnColor: Colors.white,
+                                                                          confirmBtnTextStyle: TextStyle(
+                                                                            fontSize: 18.sp,
+                                                                            fontWeight: FontWeight.bold,
+                                                                            color: Colors.black,
+                                                                          ),
+                                                                          cancelBtnTextStyle: TextStyle(
+                                                                            fontWeight: FontWeight.bold,
+                                                                            color: Colors.red,
+                                                                          ),
+                                                                          onConfirmBtnTap: () {
+                                                                            var contactNumbers = FirebaseFirestore.instance.collection('users').doc(_emailAddress).collection('contact numbers');
+                                                                            contactNumbers.doc(snap[index]['Full Name'].toString()).delete();
+                                                                            Navigator.of(context).pop();
+                                                                          },
+                                                                          onCancelBtnTap: () {
+                                                                            Navigator.of(context).pop();
+                                                                          },
+                                                                        );
+                                                                      },
+                                                                    );
+                                                                  },
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding: EdgeInsets.symmetric(horizontal: 30),
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      snap[index]['Full Name'],
+                                                                      style: TextStyle(
+                                                                        fontSize: 20.sp,
+                                                                        fontWeight: FontWeight.w400,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(height: 5.h),
+                                                                    Text(
+                                                                      'Relationship:\t\t\t\t\t\t\t\t\t' + snap[index]['Relationship'],
+                                                                      style: TextStyle(
+                                                                        fontSize: 16.sp,
+                                                                        fontWeight: FontWeight.normal,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      'Contact Number:\t ' + snap[index]['Contact Number'],
+                                                                      style: TextStyle(
+                                                                        fontSize: 16.sp,
+                                                                        fontWeight: FontWeight.normal,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      'Email Address:\t\t\t\t\t' + snap[index]['Email Address'],
+                                                                      style: TextStyle(
+                                                                        fontSize: 16.sp,
+                                                                        fontWeight: FontWeight.normal,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 20.h),
+                                                    ],
+                                                  ),
                                                 ],
                                               );
                                             },
