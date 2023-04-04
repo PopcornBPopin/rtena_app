@@ -725,7 +725,7 @@ class _CivContactsPageState extends State<CivContactsPage> {
                                                             children: [
                                                               Positioned(
                                                                 top: 10,
-                                                                right: 10,
+                                                                right: 0,
                                                                 child: IconButton(
                                                                   icon: Icon(
                                                                     Icons.delete,
@@ -765,8 +765,19 @@ class _CivContactsPageState extends State<CivContactsPage> {
                                                                   },
                                                                 ),
                                                               ),
+                                                              // Positioned(
+                                                              //   top: 10,
+                                                              //   right: 35,
+                                                              //   child: IconButton(
+                                                              //     onPressed: () {},
+                                                              //     icon: Icon(
+                                                              //       Icons.edit,
+                                                              //       color: Colors.black,
+                                                              //     ),
+                                                              //   ),
+                                                              // ),
                                                               Padding(
-                                                                padding: EdgeInsets.symmetric(horizontal: 30),
+                                                                padding: EdgeInsets.only(left: 20),
                                                                 child: Column(
                                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
