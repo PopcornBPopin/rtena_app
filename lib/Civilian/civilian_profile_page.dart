@@ -30,9 +30,21 @@ class _CivProfilePageState extends State<CivProfilePage> {
     // ]);
   }
 
+  //Disposes controllers when not in used
+  @override
   void dispose() {
-    super.dispose();
+    _surnameController.dispose();
+    _firstNameController.dispose();
+    _midInitController.dispose();
+    _contactNumberController.dispose();
+    _birthdateController.dispose();
+    _sexController.dispose();
+    _bloodtypeController.dispose();
+    _ageController.dispose();
+    _permanentAddressController.dispose();
+    _homeAddressController.dispose();
     subscription.cancel();
+    super.dispose();
   }
 
   bool _hasInternet = false;
@@ -250,8 +262,6 @@ class _CivProfilePageState extends State<CivProfilePage> {
   }
 
   Future UpdateFields() async {
-    print("HELLO DOWN");
-    print(_age);
     if (!_ageController.text.isEmpty) {
       _age = int.parse(_ageController.text.trim());
     }
@@ -1053,13 +1063,28 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                       onTap: () {
                                         Get.to(CivStartPage());
                                       },
-                                      child: Text(
-                                        'Your Profile',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 37.sp,
-                                        ),
+                                      child: StreamBuilder<DocumentSnapshot>(
+                                        stream: FirebaseFirestore.instance.collection('users').doc(_emailAddress).snapshots(),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData) {
+                                            return Text(
+                                              'Hi!',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 37.sp,
+                                              ),
+                                            );
+                                          }
+                                          return Text(
+                                            'Hi! $_firstName',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 37.sp,
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
                                     SizedBox(height: 10.h),

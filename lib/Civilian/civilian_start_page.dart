@@ -8,6 +8,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:rtena_app/Civilian/civilian_contacts_page.dart';
 import 'package:rtena_app/Civilian/civilian_home_page.dart';
 import 'package:rtena_app/Civilian/civilian_profile_page.dart';
+import 'package:rtena_app/Civilian/civilian_settings_page.dart';
 
 class CivStartPage extends StatefulWidget {
   const CivStartPage({Key? key}) : super(key: key);
@@ -122,7 +123,8 @@ class _CivStartPageState extends State<CivStartPage> {
   static final List<Widget> _NavScreens = <Widget>[
     CivHomePage(),
     CivContactsPage(),
-    CivProfilePage()
+    CivProfilePage(),
+    CivSettingsPage()
   ];
 
   @override

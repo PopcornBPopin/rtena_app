@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,9 +9,7 @@ import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rtena_app/Civilian/civilian_start_page.dart';
 import 'package:rtena_app/SignUp/sign_page_1.dart';
-import 'package:rtena_app/login_page.dart';
 
 class CivHomePage extends StatefulWidget {
   const CivHomePage({Key? key}) : super(key: key);
@@ -21,6 +21,7 @@ class CivHomePage extends StatefulWidget {
 class _CivHomePageState extends State<CivHomePage> {
   void initState() {
     getConnectivity();
+    getUserData();
     super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -48,7 +49,10 @@ class _CivHomePageState extends State<CivHomePage> {
   bool _kidnapEmergencySelected = false;
   bool _robberyEmergencySelected = false;
   bool _alertEmergencySelected = false;
+
   late StreamSubscription subscription;
+  late String _firstName = "";
+  late String _emailAddress = "";
 
   // FUNCTIONS
   void getConnectivity() {
@@ -62,6 +66,13 @@ class _CivHomePageState extends State<CivHomePage> {
         }
       },
     );
+  }
+
+  //Grab user document from Firebase Firestone
+  void getUserData() async {
+    print(_emailAddress);
+    User? user = FirebaseAuth.instance.currentUser;
+    _emailAddress = user!.email!;
   }
 
   //Popup
@@ -189,13 +200,30 @@ class _CivHomePageState extends State<CivHomePage> {
                                       onTap: () {
                                         Get.to(Sign1Page());
                                       },
-                                      child: Text(
-                                        'Welcome Back!',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 37.sp,
-                                        ),
+                                      child: StreamBuilder<DocumentSnapshot>(
+                                        stream: FirebaseFirestore.instance.collection('users').doc(_emailAddress).snapshots(),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData) {
+                                            return Text(
+                                              'Hello!',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 37.sp,
+                                              ),
+                                            );
+                                          }
+                                          final userData = snapshot.data!.data() as Map<String, dynamic>;
+                                          _firstName = userData['First Name'];
+                                          return Text(
+                                            'Hello! $_firstName',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 37.sp,
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
                                     SizedBox(height: 10.h),
