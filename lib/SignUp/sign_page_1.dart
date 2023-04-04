@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:rtena_app/Civilian/civilian_home_page.dart';
 import 'package:rtena_app/Civilian/civilian_start_page.dart';
 import 'package:rtena_app/login_page.dart';
 import 'package:rtena_app/start_page.dart';

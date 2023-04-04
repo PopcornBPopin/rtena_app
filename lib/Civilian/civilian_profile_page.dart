@@ -37,7 +37,6 @@ class _CivProfilePageState extends State<CivProfilePage> {
 
   bool _hasInternet = false;
   bool _editButtonPressed = false;
-  bool _fieldSelected = false;
   bool _fullNameFieldSelected = false;
   bool _contactNumberFieldSelected = false;
   bool _birthdateFieldSelected = false;
@@ -221,23 +220,6 @@ class _CivProfilePageState extends State<CivProfilePage> {
   void getUserData() async {
     User? user = FirebaseAuth.instance.currentUser;
     _emailAddress = user!.email!;
-
-    print("Hello " + _emailAddress);
-    final DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(_emailAddress).get();
-
-    if (userDoc.exists) {
-      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
-      _firstName = userData['First Name'];
-      _midInit = userData['M.I'];
-      _surname = userData['Surname'];
-      _contactNumber = userData['Contact Number'];
-      _birthdate = userData['Birthdate'];
-      _age = userData['Age'];
-      _sex = userData['Sex'];
-      _bloodtype = userData['Bloodtype'];
-      _permanentAddress = userData['Permanent Address'];
-      _homeAddress = userData['Home Address'];
-    }
   }
 
   //Writing user details to Firestone DB
@@ -254,20 +236,26 @@ class _CivProfilePageState extends State<CivProfilePage> {
     String homeAddress,
   ) async {
     await FirebaseFirestore.instance.collection('users').doc(_emailAddress.toLowerCase()).update({
-      'Surname': surname,
-      'First Name': firstName,
-      'M.I': mInit,
-      'Contact Number': contactNumber,
-      'Birthdate': bDate,
+      'Surname': surname.isEmpty ? _surname : surname,
+      'First Name': firstName.isEmpty ? _firstName : firstName,
+      'M.I': mInit.isEmpty ? _midInit : mInit,
+      'Contact Number': contactNumber.isEmpty ? _contactNumber : contactNumber,
+      'Birthdate': bDate.isEmpty ? _birthdate : bDate,
       'Age': age,
-      'Sex': sex,
-      'Bloodtype': bloodtype,
-      'Permanent Address': permanentAddress,
-      'Home Address': homeAddress,
+      'Sex': sex.isEmpty ? _sex : sex,
+      'Bloodtype': bloodtype.isEmpty ? _bloodtype : bloodtype,
+      'Permanent Address': permanentAddress.isEmpty ? _permanentAddress : permanentAddress,
+      'Home Address': homeAddress.isEmpty ? _homeAddress : homeAddress,
     });
   }
 
   Future UpdateFields() async {
+    print("HELLO DOWN");
+    print(_age);
+    if (!_ageController.text.isEmpty) {
+      _age = int.parse(_ageController.text.trim());
+    }
+
     //Add user details
     updateUserDetails(
       _surnameController.text.trim(),
@@ -275,7 +263,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
       _midInitController.text.trim(),
       _contactNumberController.text.trim(),
       _birthdateController.text.trim(),
-      int.parse(_ageController.text.trim()),
+      _age,
       _sexController.text.trim(),
       _bloodtypeController.text.trim(),
       _permanentAddressController.text.trim(),
@@ -763,7 +751,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                 ),
 
                                                 Visibility(
-                                                  visible: _birthdateFieldSelected,
+                                                  visible: _bloodtypeFieldSelected,
                                                   child: Padding(
                                                     padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 7.h),
                                                     child: Container(
@@ -1357,10 +1345,6 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                                 prefixIcon: Icon(
                                                                   Icons.cake,
                                                                   color: Color.fromRGBO(252, 58, 72, 32),
-                                                                ),
-                                                                suffixIcon: Icon(
-                                                                  Icons.close,
-                                                                  color: _birthdateFieldSelected ? Colors.red : Colors.white,
                                                                 ),
                                                                 disabledBorder: OutlineInputBorder(
                                                                   borderRadius: BorderRadius.all(
