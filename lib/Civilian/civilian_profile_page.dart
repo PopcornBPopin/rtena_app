@@ -342,7 +342,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                   child: Container(
                                     child: Icon(
                                       Icons.edit_note,
-                                      size: 50,
+                                      size: 60,
                                       color: Colors.redAccent,
                                     ),
                                   ),

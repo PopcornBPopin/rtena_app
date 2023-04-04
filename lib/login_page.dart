@@ -212,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                                 child: Container(
                                   child: Icon(
                                     Icons.question_mark,
-                                    size: 100,
+                                    size: 60,
                                     color: Colors.redAccent,
                                   ),
                                 ),
@@ -247,7 +247,7 @@ class _LoginPageState extends State<LoginPage> {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            SizedBox(height: 40.h),
+                                            SizedBox(height: 30.h),
                                             const Text(
                                               "Don't worry enter your registered email address to receive password reset.",
                                               textAlign: TextAlign.justify,
@@ -311,48 +311,62 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       ),
                                     ),
-
-                                    SizedBox(height: 10.h),
-
-                                    Center(
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(20),
-                                          ),
-                                          padding: EdgeInsets.all(12),
-                                          backgroundColor: Colors.white,
-                                        ),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: 20.h,
-                                          width: 90.w,
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                "Proceed",
-                                                style: TextStyle(color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          if (!_hasInternet) {
-                                            ScaffoldMessenger.of(context).showSnackBar(notConnectedSnackbar);
-                                          }
-                                          bool _isValid = _forgotformKey.currentState!.validate();
-                                          if (_isValid && _hasInternet) {
-                                            forgotUseEmailPassword();
-                                            Navigator.of(context).pop();
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(height: 10.h),
+                                    SizedBox(height: 20.h),
                                   ],
                                 ),
                               ),
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                            ),
+                            padding: EdgeInsets.all(12),
+                          ),
+                          onPressed: () async {
+                            if (!_hasInternet) {
+                              ScaffoldMessenger.of(context).showSnackBar(notConnectedSnackbar);
+                            }
+                            bool _isValid = _forgotformKey.currentState!.validate();
+                            if (_isValid && _hasInternet) {
+                              forgotUseEmailPassword();
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: 40.h,
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Proceed",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20.sp,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 20,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Icon(
+                                    Icons.next_plan,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ),

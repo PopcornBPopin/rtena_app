@@ -58,7 +58,7 @@ class _Sign1PageState extends State<Sign1Page> {
                           ),
                         ],
                       ),
-                      height: 700.h,
+                      height: 650.h,
                       width: MediaQuery.of(context).size.width,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +69,7 @@ class _Sign1PageState extends State<Sign1Page> {
                             child: Container(
                               child: Icon(
                                 Icons.check,
-                                size: 100,
+                                size: 60,
                                 color: Colors.redAccent,
                               ),
                             ),
@@ -81,7 +81,7 @@ class _Sign1PageState extends State<Sign1Page> {
                               child: const Text(
                                 "Terms & conditions",
                                 textAlign: TextAlign.left,
-                                style: TextStyle(color: Colors.black, fontSize: 40, fontWeight: FontWeight.bold),
+                                style: TextStyle(color: Colors.black, fontSize: 35, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -205,59 +205,6 @@ class _Sign1PageState extends State<Sign1Page> {
                                                           ],
                                                         ),
                                                       ),
-                                                      SizedBox(height: 20.h),
-                                                      Visibility(
-                                                        visible: _notAcceptedTermsPriv,
-                                                        child: Text(
-                                                          'Please agree to the terms and conditions of RTena',
-                                                          style: TextStyle(color: Colors.red),
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: 10.h),
-                                                      Center(
-                                                        child: ElevatedButton(
-                                                          style: ElevatedButton.styleFrom(
-                                                            shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(20),
-                                                            ),
-                                                            padding: EdgeInsets.all(12),
-                                                            backgroundColor: _agreeTerms && _agreePriv ? Colors.white : Colors.grey.shade300,
-                                                            elevation: _agreeTerms && _agreePriv ? 3 : 0,
-                                                          ),
-                                                          child: Container(
-                                                            alignment: Alignment.center,
-                                                            height: 20.h,
-                                                            width: 90.w,
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              children: [
-                                                                Text(
-                                                                  "Proceed",
-                                                                  style: TextStyle(color: _agreeTerms && _agreePriv ? Colors.black : Colors.grey.shade600),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          onPressed: () {
-                                                            if (!_agreePriv && !_agreeTerms) {
-                                                              setState(() {
-                                                                _notAcceptedTermsPriv = true;
-                                                              });
-                                                            }
-                                                            if (_agreePriv && _agreeTerms) {
-                                                              setState(() {
-                                                                _notAcceptedTermsPriv = false;
-                                                              });
-                                                            }
-                                                            if (!_notAcceptedTermsPriv && _agreePriv && _agreeTerms) {
-                                                              Navigator.of(context).pop();
-                                                            } else {
-                                                              null;
-                                                            }
-                                                          },
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: 10.h),
                                                     ],
                                                   ),
                                                 ),
@@ -286,7 +233,84 @@ class _Sign1PageState extends State<Sign1Page> {
                               },
                             ),
                           ),
-                          SizedBox(height: 30.h),
+                          Visibility(
+                            visible: _notAcceptedTermsPriv,
+                            child: Column(
+                              children: [
+                                SizedBox(height: 10.h),
+                                Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                                    child: Text(
+                                      'Please agree to the terms and conditions of RTena',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: Colors.red, fontSize: 17.sp),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 10.h),
+                              ],
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                              ),
+                              padding: EdgeInsets.all(12),
+                            ),
+                            onPressed: () async {
+                              if (!_agreePriv && !_agreeTerms) {
+                                setState(() {
+                                  _notAcceptedTermsPriv = true;
+                                });
+                              }
+                              if (_agreePriv && _agreeTerms) {
+                                setState(() {
+                                  _notAcceptedTermsPriv = false;
+                                });
+                              }
+                              if (!_notAcceptedTermsPriv && _agreePriv && _agreeTerms) {
+                                Navigator.of(context).pop();
+                              } else {
+                                null;
+                              }
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              height: 40.h,
+                              child: Stack(
+                                children: [
+                                  Center(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Proceed",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20.sp,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 20,
+                                    top: 0,
+                                    bottom: 0,
+                                    child: Icon(
+                                      Icons.next_plan,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
