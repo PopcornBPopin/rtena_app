@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:rtena_app/Civilian/civilian_start_page.dart';
+import 'package:rtena_app/start_page.dart';
 
 class CivSettingsPage extends StatefulWidget {
   const CivSettingsPage({Key? key}) : super(key: key);
@@ -101,8 +102,32 @@ class _CivSettingsPageState extends State<CivSettingsPage> {
     );
   }
 
-  void signUserOut() {
-    FirebaseAuth.instance.signOut();
+  void signUserOut() async {
+    QuickAlert.show(
+      backgroundColor: Colors.grey.shade200,
+      context: context,
+      type: QuickAlertType.confirm,
+      title: "Sign Out Confirmation",
+      text: "Are you sure you want to sign out?",
+      confirmBtnText: "Yes",
+      confirmBtnColor: Colors.white,
+      confirmBtnTextStyle: TextStyle(
+        fontSize: 18.sp,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+      cancelBtnTextStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.red,
+      ),
+      onConfirmBtnTap: () async {
+        await FirebaseAuth.instance.signOut().then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StartPage())));
+        Navigator.of(context).pop();
+      },
+      onCancelBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
   }
 
   void getUserData() async {

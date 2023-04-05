@@ -709,7 +709,10 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           onPressed: () {
                             bool _isValid = _formKey.currentState!.validate();
-                            if (_isValid) {
+                            if (!_hasInternet) {
+                              ScaffoldMessenger.of(context).showSnackBar(notConnectedSnackbar);
+                            }
+                            if (_isValid && _hasInternet) {
                               signIn();
                             }
                           },

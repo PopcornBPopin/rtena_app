@@ -138,69 +138,74 @@ class _CivStartPageState extends State<CivStartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromRGBO(252, 58, 72, 1),
-            Color.fromRGBO(70, 18, 32, 1),
-          ],
-        ),
-      ),
-      child: Scaffold(
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 20,
-                color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
-              ),
+    return WillPopScope(
+      onWillPop: () {
+        return Future.value(false);
+      },
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromRGBO(252, 58, 72, 1),
+              Color.fromRGBO(70, 18, 32, 1),
             ],
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: GNav(
-              haptic: true,
-              backgroundColor: Colors.white,
-              tabBackgroundColor: Colors.white,
-              tabActiveBorder: Border.all(color: Colors.grey.shade700),
-              tabBorderRadius: 30,
-              padding: EdgeInsets.all(12),
-              duration: Duration(milliseconds: 300),
-              gap: 10,
-              tabs: [
-                GButton(
-                  icon: Icons.home,
-                  text: "Home",
+        ),
+        child: Scaffold(
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 20,
+                  color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
                 ),
-                GButton(
-                  icon: Icons.contact_emergency,
-                  text: "Contacts",
-                ),
-                GButton(
-                  icon: Icons.person_pin_rounded,
-                  text: "Profile",
-                ),
-                GButton(
-                  icon: Icons.settings,
-                  text: "Settings",
-                )
               ],
-              selectedIndex: _selectedIndex,
-              onTabChange: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: GNav(
+                haptic: true,
+                backgroundColor: Colors.white,
+                tabBackgroundColor: Colors.white,
+                tabActiveBorder: Border.all(color: Colors.grey.shade700),
+                tabBorderRadius: 30,
+                padding: EdgeInsets.all(12),
+                duration: Duration(milliseconds: 300),
+                gap: 10,
+                tabs: [
+                  GButton(
+                    icon: Icons.home,
+                    text: "Home",
+                  ),
+                  GButton(
+                    icon: Icons.contact_emergency,
+                    text: "Contacts",
+                  ),
+                  GButton(
+                    icon: Icons.person_pin_rounded,
+                    text: "Profile",
+                  ),
+                  GButton(
+                    icon: Icons.settings,
+                    text: "Settings",
+                  )
+                ],
+                selectedIndex: _selectedIndex,
+                onTabChange: (index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                },
+              ),
             ),
           ),
-        ),
-        backgroundColor: Colors.transparent,
-        body: Center(
-          child: _NavScreens.elementAt(_selectedIndex),
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: _NavScreens.elementAt(_selectedIndex),
+          ),
         ),
       ),
     );

@@ -419,7 +419,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                               controller: _surnameController,
                                                               cursorColor: Colors.grey.shade600,
                                                               decoration: const InputDecoration(
-                                                                contentPadding: EdgeInsets.all(10),
+                                                                contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                                 labelText: 'Surname',
                                                                 labelStyle: TextStyle(
                                                                   color: Colors.black,
@@ -467,7 +467,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                               controller: _firstNameController,
                                                               cursorColor: Colors.grey.shade600,
                                                               decoration: const InputDecoration(
-                                                                contentPadding: EdgeInsets.all(10),
+                                                                contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                                 labelText: 'First Name',
                                                                 labelStyle: TextStyle(
                                                                   color: Colors.black,
@@ -515,7 +515,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                               controller: _midInitController,
                                                               cursorColor: Colors.grey.shade600,
                                                               decoration: const InputDecoration(
-                                                                contentPadding: EdgeInsets.all(10),
+                                                                contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                                 labelText: 'M.I',
                                                                 labelStyle: TextStyle(
                                                                   color: Colors.black,
@@ -567,7 +567,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                         controller: _contactNumberController,
                                                         cursorColor: Colors.grey.shade600,
                                                         decoration: InputDecoration(
-                                                          contentPadding: EdgeInsets.all(10),
+                                                          contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                           labelText: 'Contact Number',
                                                           labelStyle: TextStyle(
                                                             color: Colors.black,
@@ -629,7 +629,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                                   autofocus: false,
                                                                   controller: _birthdateController,
                                                                   decoration: InputDecoration(
-                                                                    contentPadding: EdgeInsets.all(10),
+                                                                    contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                                     labelText: "Birthdate",
                                                                     labelStyle: TextStyle(
                                                                       color: Colors.black,
@@ -718,7 +718,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                         },
                                                         value: _sexSelected,
                                                         decoration: InputDecoration(
-                                                          contentPadding: EdgeInsets.all(10),
+                                                          contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                           labelText: "Sex",
                                                           labelStyle: TextStyle(
                                                             color: Colors.black,
@@ -788,7 +788,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                         },
                                                         value: _bloodtypeSelected,
                                                         decoration: InputDecoration(
-                                                          contentPadding: EdgeInsets.all(10),
+                                                          contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                           labelText: "Bloodtype",
                                                           labelStyle: TextStyle(
                                                             color: Colors.black,
@@ -859,7 +859,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                         controller: _permanentAddressController,
                                                         cursorColor: Colors.grey.shade600,
                                                         decoration: InputDecoration(
-                                                          contentPadding: EdgeInsets.all(10),
+                                                          contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                           labelText: 'Permanent Address',
                                                           labelStyle: TextStyle(
                                                             color: Colors.black,
@@ -913,7 +913,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                         controller: _homeAddressController,
                                                         cursorColor: Colors.grey.shade600,
                                                         decoration: InputDecoration(
-                                                          contentPadding: EdgeInsets.all(10),
+                                                          contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                           labelText: 'Home Address',
                                                           labelStyle: TextStyle(
                                                             color: Colors.black,
@@ -1245,7 +1245,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                         initialValue: '$_firstName $_midInit. $_surname',
                                                         cursorColor: Colors.grey.shade600,
                                                         decoration: InputDecoration(
-                                                          contentPadding: EdgeInsets.all(10),
+                                                          contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                           labelText: 'Full Name',
                                                           labelStyle: TextStyle(
                                                             color: _fullNameFieldSelected ? Colors.red : Colors.black,
@@ -1280,7 +1280,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                       initialValue: _emailAddress,
                                                       cursorColor: Colors.grey.shade600,
                                                       decoration: const InputDecoration(
-                                                        contentPadding: EdgeInsets.all(10),
+                                                        contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                         labelText: 'Email Address',
                                                         labelStyle: TextStyle(
                                                           color: Colors.black,
@@ -1323,7 +1323,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                         initialValue: _contactNumber,
                                                         cursorColor: Colors.grey.shade600,
                                                         decoration: InputDecoration(
-                                                          contentPadding: EdgeInsets.all(10),
+                                                          contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                           labelText: 'Contact Number',
                                                           labelStyle: TextStyle(
                                                             color: _contactNumberFieldSelected ? Colors.red : Colors.black,
@@ -1375,7 +1375,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                               initialValue: _birthdate,
                                                               cursorColor: Colors.grey.shade600,
                                                               decoration: InputDecoration(
-                                                                contentPadding: EdgeInsets.all(10),
+                                                                contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                                 labelText: 'Birthdate',
                                                                 labelStyle: TextStyle(
                                                                   color: _birthdateFieldSelected ? Colors.red : Colors.black,
@@ -1505,7 +1505,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                               initialValue: _bloodtype,
                                                               cursorColor: Colors.grey.shade600,
                                                               decoration: InputDecoration(
-                                                                contentPadding: EdgeInsets.all(10),
+                                                                contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                                 labelText: 'Bloodtype',
                                                                 labelStyle: TextStyle(
                                                                   color: _bloodtypeFieldSelected ? Colors.red : Colors.black,
@@ -1556,7 +1556,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                         initialValue: _permanentAddress,
                                                         cursorColor: Colors.grey.shade600,
                                                         decoration: InputDecoration(
-                                                          contentPadding: EdgeInsets.all(10),
+                                                          contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                           labelText: 'Permanent Address',
                                                           labelStyle: TextStyle(
                                                             color: _permanentAddressFieldSelected ? Colors.red : Colors.black,
@@ -1604,7 +1604,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                         initialValue: _homeAddress,
                                                         cursorColor: Colors.grey.shade600,
                                                         decoration: InputDecoration(
-                                                          contentPadding: EdgeInsets.all(10),
+                                                          contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                           labelText: 'Home Address',
                                                           labelStyle: TextStyle(
                                                             color: _homeAddressFieldSelected ? Colors.red : Colors.black,
