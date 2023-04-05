@@ -20,6 +20,7 @@ class CivContactsPage extends StatefulWidget {
 }
 
 class _CivContactsPageState extends State<CivContactsPage> {
+  @override
   void initState() {
     getConnectivity();
     getUserData();
@@ -36,7 +37,6 @@ class _CivContactsPageState extends State<CivContactsPage> {
     _relationshipController.dispose();
     _emailController.dispose();
     _contactNumberController.dispose();
-
     subscription.cancel();
     super.dispose();
   }
@@ -85,14 +85,27 @@ class _CivContactsPageState extends State<CivContactsPage> {
   );
 
   // FUNCTIONS
-  void getConnectivity() {
+  ConnectivityResult result = ConnectivityResult.none;
+  void getConnectivity() async {
+    _hasInternet = await InternetConnectionChecker().hasConnection;
+    if (result != ConnectivityResult.none) {
+      setState(() {
+        _hasInternet = true;
+      });
+    }
     subscription = Connectivity().onConnectivityChanged.listen(
       (ConnectivityResult result) async {
+        result = await Connectivity().checkConnectivity();
         _hasInternet = await InternetConnectionChecker().hasConnection;
+
         if (!_hasInternet) {
-          print("No internet");
+          setState(() {
+            _hasInternet = false;
+          });
         } else {
-          print("Connected");
+          setState(() {
+            _hasInternet = true;
+          });
         }
       },
     );
@@ -143,9 +156,7 @@ class _CivContactsPageState extends State<CivContactsPage> {
     });
   }
 
-  //Sign up
   Future RegisterContact() async {
-    //Add user details
     registerNewContactDetails(
       _nameController.text.trim(),
       _relationshipController.text.trim(),
@@ -158,6 +169,30 @@ class _CivContactsPageState extends State<CivContactsPage> {
     _formKey.currentState!.reset();
     quickAlert(QuickAlertType.success, "Register Successful!", "New emergency contact added", "Okay", Colors.green);
   }
+
+  // Future editContactDetails(String fullname, String relationship, String contactNumber, String emailAddress, String selectedFullname) async {
+  //   await FirebaseFirestore.instance.collection('users').doc(_emailAddress.toLowerCase()).collection('contact numbers').doc(selectedFullname).update({
+  //     'Full Name': fullname,
+  //     'Relationship': relationship,
+  //     'Contact Number': contactNumber,
+  //     'Email Address': emailAddress,
+  //   });
+  // }
+
+  // Future EditContact(String selectedFullname) async {
+  //   editContactDetails(
+  //     _nameController.text.trim(),
+  //     _relationshipController.text.trim(),
+  //     _contactNumberController.text.trim(),
+  //     _emailController.text.trim(),
+  //     selectedFullname,
+  //   );
+  //   print("Updated contact deets to firestone");
+
+  //   Navigator.of(context).pop();
+  //   _formKey.currentState!.reset();
+  //   quickAlert(QuickAlertType.success, "Edit Successful!", "Emergency contact updated", "Okay", Colors.green);
+  // }
 
   void addContact(BuildContext context) {
     showDialog(
@@ -226,7 +261,7 @@ class _CivContactsPageState extends State<CivContactsPage> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: Container(
-                              child: const Text(
+                              child: Text(
                                 "New contact",
                                 textAlign: TextAlign.left,
                                 style: TextStyle(color: Colors.black, fontSize: 35, fontWeight: FontWeight.bold),
@@ -467,7 +502,6 @@ class _CivContactsPageState extends State<CivContactsPage> {
                               ),
                             ),
                           ),
-                          //Submit button
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color.fromRGBO(252, 58, 72, 32),
@@ -533,6 +567,380 @@ class _CivContactsPageState extends State<CivContactsPage> {
       ),
     );
   }
+
+  // void ModifContact(BuildContext context, String selectedFullname) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => StatefulBuilder(
+  //       builder: (context, setState) {
+  //         return WillPopScope(
+  //           onWillPop: () {
+  //             return Future.value(true);
+  //           },
+  //           child: Center(
+  //             child: Scaffold(
+  //               backgroundColor: Colors.black.withOpacity(0.3),
+  //               body: Center(
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.symmetric(horizontal: 20),
+  //                   child: Container(
+  //                     decoration: BoxDecoration(
+  //                       color: Colors.grey.shade200,
+  //                       borderRadius: BorderRadius.only(
+  //                         topLeft: Radius.circular(30),
+  //                         bottomRight: Radius.circular(30),
+  //                       ),
+  //                       boxShadow: [
+  //                         BoxShadow(
+  //                           color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+  //                           spreadRadius: 7,
+  //                           blurRadius: 10,
+  //                           offset: Offset(0, 0),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     height: 600.h,
+  //                     width: MediaQuery.of(context).size.width,
+  //                     child: Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         SizedBox(height: 20.h),
+  //                         Container(
+  //                           width: MediaQuery.of(context).size.width,
+  //                           child: Stack(
+  //                             children: [
+  //                               Positioned(
+  //                                 right: 20,
+  //                                 child: IconButton(
+  //                                   onPressed: () {
+  //                                     Navigator.of(context).pop();
+  //                                   },
+  //                                   icon: Icon(Icons.close),
+  //                                 ),
+  //                               ),
+  //                               Padding(
+  //                                 padding: const EdgeInsets.symmetric(horizontal: 30),
+  //                                 child: Container(
+  //                                   child: Icon(
+  //                                     Icons.edit_note,
+  //                                     size: 60,
+  //                                     color: Colors.redAccent,
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ),
+  //                         SizedBox(height: 10.h),
+  //                         Padding(
+  //                           padding: const EdgeInsets.symmetric(horizontal: 30),
+  //                           child: Container(
+  //                             child: Text(
+  //                               "Edit Contact",
+  //                               textAlign: TextAlign.left,
+  //                               style: TextStyle(color: Colors.black, fontSize: 35, fontWeight: FontWeight.bold),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                         SizedBox(height: 20.h),
+  //                         Expanded(
+  //                           child: Container(
+  //                             child: RawScrollbar(
+  //                               thickness: 7.5,
+  //                               thumbColor: Colors.redAccent,
+  //                               thumbVisibility: true,
+  //                               child: ScrollConfiguration(
+  //                                 behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+  //                                 child: SingleChildScrollView(
+  //                                   child: Column(
+  //                                     children: [
+  //                                       Form(
+  //                                         key: _formKey,
+  //                                         child: Container(
+  //                                           decoration: BoxDecoration(
+  //                                             color: Colors.transparent,
+  //                                           ),
+  //                                           child: Column(
+  //                                             children: [
+  //                                               SizedBox(height: 20.h),
+  //                                               //Full Name Text Field
+  //                                               Padding(
+  //                                                 padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 7.h),
+  //                                                 child: Container(
+  //                                                   child: TextFormField(
+  //                                                     validator: (String? val) {
+  //                                                       if (val == null || val.isEmpty) {
+  //                                                         return 'Please enter a valid name';
+  //                                                       }
+  //                                                       return null;
+  //                                                     },
+  //                                                     keyboardType: TextInputType.text,
+  //                                                     textCapitalization: TextCapitalization.words,
+  //                                                     textInputAction: TextInputAction.next,
+  //                                                     autofocus: false,
+  //                                                     controller: _nameController,
+  //                                                     cursorColor: Colors.grey.shade600,
+  //                                                     decoration: InputDecoration(
+  //                                                       contentPadding: EdgeInsets.all(10),
+  //                                                       labelText: 'Full Name',
+  //                                                       labelStyle: TextStyle(
+  //                                                         color: Colors.black,
+  //                                                         fontSize: 15,
+  //                                                       ),
+  //                                                       prefixIcon: const Icon(
+  //                                                         Icons.person,
+  //                                                         color: Color.fromRGBO(252, 58, 72, 32),
+  //                                                       ),
+  //                                                       enabledBorder: OutlineInputBorder(
+  //                                                         borderRadius: BorderRadius.all(
+  //                                                           Radius.circular(10.0),
+  //                                                         ),
+  //                                                         borderSide: BorderSide(color: Color.fromRGBO(82, 82, 82, 1), width: 1),
+  //                                                       ),
+  //                                                       focusedBorder: OutlineInputBorder(
+  //                                                         borderRadius: BorderRadius.all(
+  //                                                           Radius.circular(10.0),
+  //                                                         ),
+  //                                                         borderSide: BorderSide(color: Color.fromRGBO(82, 82, 82, 1), width: 1),
+  //                                                       ),
+  //                                                       errorBorder: OutlineInputBorder(
+  //                                                         borderRadius: BorderRadius.all(
+  //                                                           Radius.circular(10.0),
+  //                                                         ),
+  //                                                         borderSide: BorderSide(color: Colors.red),
+  //                                                       ),
+  //                                                     ),
+  //                                                   ),
+  //                                                 ),
+  //                                               ),
+
+  //                                               //Relationship Text Field
+  //                                               Padding(
+  //                                                 padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 7.h),
+  //                                                 child: Container(
+  //                                                   child: TextFormField(
+  //                                                     validator: (String? val) {
+  //                                                       if (val == null || val.isEmpty) {
+  //                                                         return 'Please enter a valid relationship';
+  //                                                       }
+  //                                                       return null;
+  //                                                     },
+  //                                                     keyboardType: TextInputType.text,
+  //                                                     textCapitalization: TextCapitalization.words,
+  //                                                     textInputAction: TextInputAction.next,
+  //                                                     autofocus: false,
+  //                                                     controller: _relationshipController,
+  //                                                     cursorColor: Colors.grey.shade600,
+  //                                                     decoration: InputDecoration(
+  //                                                       contentPadding: EdgeInsets.all(10),
+  //                                                       labelText: 'Relationship',
+  //                                                       labelStyle: TextStyle(
+  //                                                         color: Colors.black,
+  //                                                         fontSize: 15,
+  //                                                       ),
+  //                                                       prefixIcon: const Icon(
+  //                                                         Icons.person,
+  //                                                         color: Color.fromRGBO(252, 58, 72, 32),
+  //                                                       ),
+  //                                                       enabledBorder: OutlineInputBorder(
+  //                                                         borderRadius: BorderRadius.all(
+  //                                                           Radius.circular(10.0),
+  //                                                         ),
+  //                                                         borderSide: BorderSide(color: Color.fromRGBO(82, 82, 82, 1), width: 1),
+  //                                                       ),
+  //                                                       focusedBorder: OutlineInputBorder(
+  //                                                         borderRadius: BorderRadius.all(
+  //                                                           Radius.circular(10.0),
+  //                                                         ),
+  //                                                         borderSide: BorderSide(color: Color.fromRGBO(82, 82, 82, 1), width: 1),
+  //                                                       ),
+  //                                                       errorBorder: OutlineInputBorder(
+  //                                                         borderRadius: BorderRadius.all(
+  //                                                           Radius.circular(10.0),
+  //                                                         ),
+  //                                                         borderSide: BorderSide(color: Colors.red),
+  //                                                       ),
+  //                                                     ),
+  //                                                   ),
+  //                                                 ),
+  //                                               ),
+
+  //                                               //Contact Number Text Field
+  //                                               Padding(
+  //                                                 padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 7.h),
+  //                                                 child: Container(
+  //                                                   child: TextFormField(
+  //                                                     validator: (String? val) {
+  //                                                       if (val == null || val.isEmpty) {
+  //                                                         return 'Please enter a valid contact number';
+  //                                                       }
+  //                                                       return null;
+  //                                                     },
+  //                                                     keyboardType: TextInputType.phone,
+  //                                                     textInputAction: TextInputAction.next,
+  //                                                     autofocus: false,
+  //                                                     controller: _contactNumberController,
+  //                                                     cursorColor: Colors.grey.shade600,
+  //                                                     decoration: InputDecoration(
+  //                                                       contentPadding: EdgeInsets.all(10),
+  //                                                       labelText: 'Contact Number',
+  //                                                       labelStyle: TextStyle(
+  //                                                         color: Colors.black,
+  //                                                         fontSize: 15,
+  //                                                       ),
+  //                                                       prefixIcon: const Icon(
+  //                                                         Icons.phone_android_outlined,
+  //                                                         color: Color.fromRGBO(252, 58, 72, 32),
+  //                                                       ),
+  //                                                       enabledBorder: OutlineInputBorder(
+  //                                                         borderRadius: BorderRadius.all(
+  //                                                           Radius.circular(10.0),
+  //                                                         ),
+  //                                                         borderSide: BorderSide(color: Color.fromRGBO(82, 82, 82, 1), width: 1),
+  //                                                       ),
+  //                                                       focusedBorder: OutlineInputBorder(
+  //                                                         borderRadius: BorderRadius.all(
+  //                                                           Radius.circular(10.0),
+  //                                                         ),
+  //                                                         borderSide: BorderSide(color: Color.fromRGBO(82, 82, 82, 1), width: 1),
+  //                                                       ),
+  //                                                       errorBorder: OutlineInputBorder(
+  //                                                         borderRadius: BorderRadius.all(
+  //                                                           Radius.circular(10.0),
+  //                                                         ),
+  //                                                         borderSide: BorderSide(color: Colors.red),
+  //                                                       ),
+  //                                                     ),
+  //                                                   ),
+  //                                                 ),
+  //                                               ),
+
+  //                                               //Email Address Text Field
+  //                                               Padding(
+  //                                                 padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 6.h),
+  //                                                 child: Container(
+  //                                                   child: TextFormField(
+  //                                                     validator: (String? val) {
+  //                                                       if (val == null || val.isEmpty || !_validEmail.hasMatch(val)) {
+  //                                                         return 'Please enter a valid email';
+  //                                                       }
+  //                                                       return null;
+  //                                                     },
+  //                                                     keyboardType: TextInputType.emailAddress,
+  //                                                     textInputAction: TextInputAction.next,
+  //                                                     autofocus: false,
+  //                                                     controller: _emailController,
+  //                                                     cursorColor: Colors.grey.shade600,
+  //                                                     decoration: const InputDecoration(
+  //                                                       contentPadding: EdgeInsets.all(10),
+  //                                                       labelText: 'Email Address',
+  //                                                       labelStyle: TextStyle(
+  //                                                         color: Colors.black,
+  //                                                         fontSize: 15,
+  //                                                       ),
+  //                                                       prefixIcon: Icon(
+  //                                                         Icons.email_outlined,
+  //                                                         color: Color.fromRGBO(252, 58, 72, 32),
+  //                                                       ),
+  //                                                       enabledBorder: OutlineInputBorder(
+  //                                                         borderRadius: BorderRadius.all(
+  //                                                           Radius.circular(10.0),
+  //                                                         ),
+  //                                                         borderSide: BorderSide(color: Color.fromRGBO(82, 82, 82, 1), width: 1),
+  //                                                       ),
+  //                                                       focusedBorder: OutlineInputBorder(
+  //                                                         borderRadius: BorderRadius.all(
+  //                                                           Radius.circular(10.0),
+  //                                                         ),
+  //                                                         borderSide: BorderSide(color: Color.fromRGBO(82, 82, 82, 1), width: 1),
+  //                                                       ),
+  //                                                       errorBorder: OutlineInputBorder(
+  //                                                         borderRadius: BorderRadius.all(
+  //                                                           Radius.circular(10.0),
+  //                                                         ),
+  //                                                         borderSide: BorderSide(color: Colors.red),
+  //                                                       ),
+  //                                                     ),
+  //                                                   ),
+  //                                                 ),
+  //                                               ),
+  //                                               SizedBox(height: 20.h),
+  //                                             ],
+  //                                           ),
+  //                                         ),
+  //                                       ),
+  //                                     ],
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                         ElevatedButton(
+  //                           style: ElevatedButton.styleFrom(
+  //                             backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+  //                             shape: RoundedRectangleBorder(
+  //                               borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+  //                             ),
+  //                             padding: EdgeInsets.all(12),
+  //                           ),
+  //                           onPressed: () async {
+  //                             bool _isValid = _formKey.currentState!.validate();
+
+  //                             if (!_isValid) {
+  //                               ScaffoldMessenger.of(context).showSnackBar(incompleteFieldSnackbar);
+  //                             }
+
+  //                             if (_isValid) {
+  //                               EditContact(selectedFullname);
+  //                             }
+  //                           },
+  //                           child: Container(
+  //                             width: double.infinity,
+  //                             height: 40.h,
+  //                             child: Stack(
+  //                               children: [
+  //                                 Center(
+  //                                   child: Row(
+  //                                     mainAxisAlignment: MainAxisAlignment.center,
+  //                                     children: [
+  //                                       Text(
+  //                                         "Update Contact",
+  //                                         style: TextStyle(
+  //                                           color: Colors.white,
+  //                                           fontSize: 20.sp,
+  //                                         ),
+  //                                         textAlign: TextAlign.center,
+  //                                       ),
+  //                                     ],
+  //                                   ),
+  //                                 ),
+  //                                 Positioned(
+  //                                   right: 20,
+  //                                   top: 0,
+  //                                   bottom: 0,
+  //                                   child: Icon(
+  //                                     Icons.add,
+  //                                     color: Colors.white,
+  //                                     size: 30,
+  //                                   ),
+  //                                 )
+  //                               ],
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -769,7 +1177,10 @@ class _CivContactsPageState extends State<CivContactsPage> {
                                                               //   top: 10,
                                                               //   right: 35,
                                                               //   child: IconButton(
-                                                              //     onPressed: () {},
+                                                              //     onPressed: () {
+                                                              //       print("SELECTED SHT" + snap[index].toString());
+                                                              //       ModifContact(context, snap[index].toString());
+                                                              //     },
                                                               //     icon: Icon(
                                                               //       Icons.edit,
                                                               //       color: Colors.black,

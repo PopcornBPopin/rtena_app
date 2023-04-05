@@ -18,6 +18,7 @@ class CivProfilePage extends StatefulWidget {
 }
 
 class _CivProfilePageState extends State<CivProfilePage> {
+  @override
   void initState() {
     getConnectivity();
     getUserData();
@@ -154,14 +155,27 @@ class _CivProfilePageState extends State<CivProfilePage> {
   );
 
   // FUNCTIONS
-  void getConnectivity() {
+  ConnectivityResult result = ConnectivityResult.none;
+  void getConnectivity() async {
+    _hasInternet = await InternetConnectionChecker().hasConnection;
+    if (result != ConnectivityResult.none) {
+      setState(() {
+        _hasInternet = true;
+      });
+    }
     subscription = Connectivity().onConnectivityChanged.listen(
       (ConnectivityResult result) async {
+        result = await Connectivity().checkConnectivity();
         _hasInternet = await InternetConnectionChecker().hasConnection;
+
         if (!_hasInternet) {
-          print("No internet");
+          setState(() {
+            _hasInternet = false;
+          });
         } else {
-          print("Connected");
+          setState(() {
+            _hasInternet = true;
+          });
         }
       },
     );

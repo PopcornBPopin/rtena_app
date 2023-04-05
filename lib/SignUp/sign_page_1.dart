@@ -326,8 +326,6 @@ class _Sign1PageState extends State<Sign1Page> {
     ]);
   }
 
-  ConnectivityResult result = ConnectivityResult.none;
-
   File? _validID;
 
   var _sexSelected;
@@ -494,9 +492,17 @@ class _Sign1PageState extends State<Sign1Page> {
 
   //FUNCTIONS
   //Internet Connectivity checker
-  void getConnectivity() {
+  ConnectivityResult result = ConnectivityResult.none;
+  void getConnectivity() async {
+    _hasInternet = await InternetConnectionChecker().hasConnection;
+    if (result != ConnectivityResult.none) {
+      setState(() {
+        _hasInternet = true;
+      });
+    }
     subscription = Connectivity().onConnectivityChanged.listen(
       (ConnectivityResult result) async {
+        result = await Connectivity().checkConnectivity();
         _hasInternet = await InternetConnectionChecker().hasConnection;
         if (!_hasInternet) {
           print("No internet");

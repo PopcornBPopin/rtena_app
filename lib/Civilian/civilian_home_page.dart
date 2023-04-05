@@ -19,6 +19,7 @@ class CivHomePage extends StatefulWidget {
 }
 
 class _CivHomePageState extends State<CivHomePage> {
+  @override
   void initState() {
     getConnectivity();
     getUserData();
@@ -31,6 +32,7 @@ class _CivHomePageState extends State<CivHomePage> {
     // ]);
   }
 
+  @override
   void dispose() {
     super.dispose();
     subscription.cancel();
@@ -55,14 +57,27 @@ class _CivHomePageState extends State<CivHomePage> {
   late String _emailAddress = "";
 
   // FUNCTIONS
-  void getConnectivity() {
+  ConnectivityResult result = ConnectivityResult.none;
+  void getConnectivity() async {
+    _hasInternet = await InternetConnectionChecker().hasConnection;
+    if (result != ConnectivityResult.none) {
+      setState(() {
+        _hasInternet = true;
+      });
+    }
     subscription = Connectivity().onConnectivityChanged.listen(
       (ConnectivityResult result) async {
+        result = await Connectivity().checkConnectivity();
         _hasInternet = await InternetConnectionChecker().hasConnection;
+
         if (!_hasInternet) {
-          print("No internet");
+          setState(() {
+            _hasInternet = false;
+          });
         } else {
-          print("Connected");
+          setState(() {
+            _hasInternet = true;
+          });
         }
       },
     );
@@ -196,35 +211,30 @@ class _CivHomePageState extends State<CivHomePage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(height: 75.h),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Get.to(Sign1Page());
-                                      },
-                                      child: StreamBuilder<DocumentSnapshot>(
-                                        stream: FirebaseFirestore.instance.collection('users').doc(_emailAddress).snapshots(),
-                                        builder: (context, snapshot) {
-                                          if (!snapshot.hasData) {
-                                            return Text(
-                                              'Hello!',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 37.sp,
-                                              ),
-                                            );
-                                          }
-                                          final userData = snapshot.data!.data() as Map<String, dynamic>;
-                                          _firstName = userData['First Name'];
+                                    StreamBuilder<DocumentSnapshot>(
+                                      stream: FirebaseFirestore.instance.collection('users').doc(_emailAddress).snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
                                           return Text(
-                                            'Hello! $_firstName',
+                                            'Hello!',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 37.sp,
                                             ),
                                           );
-                                        },
-                                      ),
+                                        }
+                                        final userData = snapshot.data!.data() as Map<String, dynamic>;
+                                        _firstName = userData['First Name'];
+                                        return Text(
+                                          'Hello! $_firstName',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 37.sp,
+                                          ),
+                                        );
+                                      },
                                     ),
                                     SizedBox(height: 10.h),
                                     //Substring

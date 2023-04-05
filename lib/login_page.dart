@@ -139,9 +139,17 @@ class _LoginPageState extends State<LoginPage> {
     quickForgotAlert(QuickAlertType.success, "Reset Successful!", "Password reset link sent, please check your email", Colors.green);
   }
 
-  void getConnectivity() {
+  ConnectivityResult result = ConnectivityResult.none;
+  void getConnectivity() async {
+    _hasInternet = await InternetConnectionChecker().hasConnection;
+    if (result != ConnectivityResult.none) {
+      setState(() {
+        _hasInternet = true;
+      });
+    }
     subscription = Connectivity().onConnectivityChanged.listen(
       (ConnectivityResult result) async {
+        result = await Connectivity().checkConnectivity();
         _hasInternet = await InternetConnectionChecker().hasConnection;
         if (!_hasInternet) {
           print("No internet");
@@ -432,6 +440,7 @@ class _LoginPageState extends State<LoginPage> {
     _emailController.dispose();
     _forgotemailController.dispose();
     _passwordController.dispose();
+    subscription.cancel();
     super.dispose();
   }
 

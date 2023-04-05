@@ -18,6 +18,7 @@ class CivStartPage extends StatefulWidget {
 }
 
 class _CivStartPageState extends State<CivStartPage> {
+  @override
   void initState() {
     getConnectivity();
     super.initState();
@@ -29,9 +30,9 @@ class _CivStartPageState extends State<CivStartPage> {
     // ]);
   }
 
+  @override
   void dispose() {
     super.dispose();
-    subscription.cancel();
   }
 
   bool _hasInternet = false;
@@ -100,9 +101,17 @@ class _CivStartPageState extends State<CivStartPage> {
   );
 
   // FUNCTIONS
-  void getConnectivity() {
+  ConnectivityResult result = ConnectivityResult.none;
+  void getConnectivity() async {
+    _hasInternet = await InternetConnectionChecker().hasConnection;
+    if (result != ConnectivityResult.none) {
+      setState(() {
+        _hasInternet = true;
+      });
+    }
     subscription = Connectivity().onConnectivityChanged.listen(
       (ConnectivityResult result) async {
+        result = await Connectivity().checkConnectivity();
         _hasInternet = await InternetConnectionChecker().hasConnection;
         if (!_hasInternet) {
           print("No internet");
