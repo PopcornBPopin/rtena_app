@@ -41,65 +41,6 @@ class _CivStartPageState extends State<CivStartPage> {
 
   //Text Controllers
 
-  //Snackbar
-  final notConnectedSnackbar = SnackBar(
-    content: Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.wifi_off,
-            size: 25,
-            color: Colors.white,
-          ),
-          Expanded(
-            child: Center(
-              child: Text(
-                'No Internet Connection',
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-    backgroundColor: Colors.black,
-    duration: Duration(seconds: 2),
-    behavior: SnackBarBehavior.fixed,
-    elevation: 1,
-  );
-
-  final connectedSnackbar = SnackBar(
-    content: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.wifi_outlined,
-          size: 25,
-          color: Colors.green,
-        ),
-        Expanded(
-          child: Center(
-            child: Text(
-              'Connection Restored',
-              style: TextStyle(
-                fontSize: 18.sp,
-                color: Colors.green,
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-    backgroundColor: Colors.black,
-    duration: Duration(seconds: 2),
-    behavior: SnackBarBehavior.fixed,
-    elevation: 1,
-  );
-
   // FUNCTIONS
   ConnectivityResult result = ConnectivityResult.none;
   void getConnectivity() async {
@@ -115,14 +56,8 @@ class _CivStartPageState extends State<CivStartPage> {
         _hasInternet = await InternetConnectionChecker().hasConnection;
         if (!_hasInternet) {
           print("No internet");
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(notConnectedSnackbar);
         } else {
           print("Connected");
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(connectedSnackbar);
         }
       },
     );

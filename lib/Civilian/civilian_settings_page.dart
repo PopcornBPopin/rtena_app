@@ -170,15 +170,7 @@ class _CivSettingsPageState extends State<CivSettingsPage> {
         color: color,
       ),
       onConfirmBtnTap: () {
-        if (animtype == QuickAlertType.success)
-          Get.to(
-            () => const CivStartPage(),
-            transition: Transition.fadeIn,
-            duration: Duration(milliseconds: 300),
-          );
-        else {
-          Navigator.of(context).pop();
-        }
+        Navigator.of(context).pop();
       },
     );
   }
