@@ -609,134 +609,136 @@ class _CivContactsPageState extends State<CivContactsPage> {
           child: Column(
             children: [
               Expanded(
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
-                  child: SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
-                    child: Column(
+                child: Column(
+                  children: [
+                    Stack(
                       children: [
-                        Stack(
-                          children: [
-                            Positioned(
-                              top: 30,
-                              right: -10,
-                              child: Opacity(
-                                opacity: 0.15,
-                                child: Container(
-                                  child: Image.asset(
-                                    'assets/RLOGO.png',
-                                    scale: 2.5,
-                                  ),
-                                ),
+                        Positioned(
+                          top: 30,
+                          right: -10,
+                          child: Opacity(
+                            opacity: 0.15,
+                            child: Container(
+                              child: Image.asset(
+                                'assets/RLOGO.png',
+                                scale: 2.5,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 30),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(height: 75.h),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Get.to(CivStartPage());
-                                      },
-                                      child: Text(
-                                        'Emergency Contacts',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 37.sp,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 10.h),
-                                    //Substring
-                                    Text(
-                                      'Who do you want to call?',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 18.sp,
-                                      ),
-                                    ),
-                                    SizedBox(height: 30.h),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                        Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(40),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 75.h),
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.to(CivStartPage());
+                                  },
+                                  child: Text(
+                                    'Emergency Contacts',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 37.sp,
+                                    ),
                                   ),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
-                                      spreadRadius: 7,
-                                      blurRadius: 10,
-                                      offset: Offset(0, 0),
-                                    )
-                                  ]),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: 40.h),
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                                ),
+                                SizedBox(height: 10.h),
+                                //Substring
+                                Text(
+                                  'Who do you want to call?',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 18.sp,
+                                  ),
+                                ),
+                                SizedBox(height: 30.h),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(40),
+                              ),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
+                                  spreadRadius: 7,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 0),
+                                )
+                              ]),
+                          child: Column(
+                            children: [
+                              SizedBox(height: 40.h),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                                  child: Text(
+                                    "Tap the button that corresponds to the person you want to call",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18.sp,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 30.h),
+                              Container(
+                                height: 420.h,
+                                child: StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance.collection('users').doc(_emailAddress).collection('contact numbers').snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return Container(
+                                        color: Colors.white,
+                                        child: Center(
+                                          child: Text("Fetching your contacts"),
+                                        ),
+                                      );
+                                    }
+                                    final snap = snapshot.data!.docs;
+                                    if (snap.length == 0) {
+                                      return Center(
                                         child: Text(
-                                          "Tap the button that corresponds to the person you want to call",
-                                          textAlign: TextAlign.center,
+                                          "Tap the + button to add new contacts",
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 17.sp,
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 30.h),
-                                    Container(
-                                      height: 420.h,
-                                      child: StreamBuilder<QuerySnapshot>(
-                                        stream: FirebaseFirestore.instance.collection('users').doc(_emailAddress).collection('contact numbers').snapshots(),
-                                        builder: (context, snapshot) {
-                                          if (!snapshot.hasData) {
-                                            return Container(
-                                              color: Colors.white,
-                                              child: Center(
-                                                child: Text("Fetching your contacts"),
-                                              ),
-                                            );
-                                          }
-                                          final snap = snapshot.data!.docs;
-                                          if (snap.length == 0) {
-                                            return Center(
-                                              child: Text(
-                                                "Tap the + button to add new contacts",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 17.sp,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                          return ListView.builder(
-                                            itemCount: snap.length,
-                                            itemBuilder: (context, index) {
-                                              return Column(
-                                                children: [
-                                                  Column(
+                                      );
+                                    }
+                                    return ScrollConfiguration(
+                                      behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+                                      child: RawScrollbar(
+                                        thickness: 7,
+                                        thumbColor: Colors.redAccent,
+                                        thumbVisibility: true,
+                                        child: ListView.builder(
+                                          itemCount: snap.length,
+                                          itemBuilder: (context, index) {
+                                            return Column(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                                  child: Column(
                                                     children: [
                                                       ElevatedButton(
                                                         style: ElevatedButton.styleFrom(
@@ -862,23 +864,23 @@ class _CivContactsPageState extends State<CivContactsPage> {
                                                       SizedBox(height: 20.h),
                                                     ],
                                                   ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(height: 100.h),
-                                  ],
+                                    );
+                                  },
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(height: 80.h),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
               ),
             ],
