@@ -455,79 +455,121 @@ class _CivSettingsPageState extends State<CivSettingsPage> {
                           child: Container(
                             child: ScrollConfiguration(
                               behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
-                              child: SingleChildScrollView(
-                                controller: _scrollController,
-                                child: Column(
-                                  children: [
-                                    RawScrollbar(
-                                      thickness: 7.5,
-                                      thumbColor: Colors.redAccent,
-                                      thumbVisibility: true,
-                                      child: SingleChildScrollView(
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 30),
-                                              child: Container(
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    const Text(
-                                                      "I. Introduction",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                                    ),
-                                                    const Text(
-                                                      "   This is a seniors' project of the developers and a partial compliance to their course's final requirement. The mobile application's, and its other components', intention is to create an accessible and convenient means of communicating with responders of your current situation. That being sais, the mobile application requires your permission with your mobile device's: \n\nFinal State (Location, Mobile Date, WiFi, Phone) \n\nInitiation State (Camera, Library or Files Manager)\n\n",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                                    ),
-                                                    const Text(
-                                                      "II. Permissions Terms",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                                    ),
-                                                    const Text(
-                                                      "   Location - It is to determine your mobile device's accurate location, should an incident happen to you and you accessed our mobile app. WiFi/Mobile Data - It is to override your internet connection if you (a) are not connected to the internet, or (b) have a slow internet connection through WiFi. Your internet connection is needed to update our database with your current location, if it would be done online. Phone - It is to update our database with your current location, if it would be done offline. We are using GSM technologies to cater offline means of communicating. Camera - It is to take a picture of your valid ID.Library/Files Manager - It is if, instead, you want to find your valid ID in your files\n\n",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                                    ),
-                                                    const Text(
-                                                      "III. Privacy Terms",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                                    ),
-                                                    const Text(
-                                                      "   We collect your personal information for the sole purpose of relaying that information to a responder, should you encounter an incident that requires it. Your personal information will only be read-and-write accessible (editable) by the servers and developers of the mobile application and its components. Your personal information is also to ensure liability and accountability of your actions.\n\n",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                                    ),
-                                                    const Text(
-                                                      "IV. Agreement",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                                    ),
-                                                    const Text(
-                                                      "   By ticking the two boxes below, you agree with allowing access permissions on your mobile phone and collecting your data\n",
-                                                      textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                                    ),
-                                                    SizedBox(height: 20.h),
-                                                  ],
-                                                ),
+                              child: RawScrollbar(
+                                thickness: 7.5,
+                                thumbColor: Colors.redAccent,
+                                thumbVisibility: true,
+                                child: SingleChildScrollView(
+                                  controller: _scrollController,
+                                  child: Column(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                                            child: Container(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  const Text(
+                                                    "I. Introduction",
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                  ),
+                                                  const Text(
+                                                    "   This is a seniors' project of the developers and a partial compliance to their course's final requirement. The mobile application's, and its other components', intention is to create an accessible and convenient means of communicating with responders of your current situation. That being sais, the mobile application requires your permission with your mobile device's: \n\nFinal State (Location, Mobile Date, WiFi, Phone) \n\nInitiation State (Camera, Library or Files Manager)\n\n",
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                                  ),
+                                                  const Text(
+                                                    "II. Permissions Terms",
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                  ),
+                                                  const Text(
+                                                    "   Location - It is to determine your mobile device's accurate location, should an incident happen to you and you accessed our mobile app. WiFi/Mobile Data - It is to override your internet connection if you (a) are not connected to the internet, or (b) have a slow internet connection through WiFi. Your internet connection is needed to update our database with your current location, if it would be done online. Phone - It is to update our database with your current location, if it would be done offline. We are using GSM technologies to cater offline means of communicating. Camera - It is to take a picture of your valid ID.Library/Files Manager - It is if, instead, you want to find your valid ID in your files\n\n",
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                                  ),
+                                                  const Text(
+                                                    "III. Privacy Terms",
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                  ),
+                                                  const Text(
+                                                    "   We collect your personal information for the sole purpose of relaying that information to a responder, should you encounter an incident that requires it. Your personal information will only be read-and-write accessible (editable) by the servers and developers of the mobile application and its components. Your personal information is also to ensure liability and accountability of your actions.\n\n",
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                                  ),
+                                                  const Text(
+                                                    "IV. Agreement",
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                  ),
+                                                  const Text(
+                                                    "   By ticking the two boxes below, you agree with allowing access permissions on your mobile phone and collecting your data\n",
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                                  ),
+                                                  SizedBox(height: 20.h),
+                                                ],
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(height: 50.h),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                            ),
+                            padding: EdgeInsets.all(12),
+                          ),
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: 40.h,
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Okay",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20.sp,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 20,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Icon(
+                                    Icons.next_plan,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -661,7 +703,51 @@ class _CivSettingsPageState extends State<CivSettingsPage> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 50.h),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                            ),
+                            padding: EdgeInsets.all(12),
+                          ),
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: 40.h,
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Okay",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20.sp,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 20,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Icon(
+                                    Icons.next_plan,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -705,7 +791,7 @@ class _CivSettingsPageState extends State<CivSettingsPage> {
                         ),
                       ],
                     ),
-                    height: 300.h,
+                    height: 330.h,
                     width: MediaQuery.of(context).size.width,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -748,49 +834,43 @@ class _CivSettingsPageState extends State<CivSettingsPage> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 50.h),
+                        SizedBox(height: 30.h),
                         Expanded(
                           child: Container(
                             child: ScrollConfiguration(
                               behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
                               child: SingleChildScrollView(
+                                physics: NeverScrollableScrollPhysics(),
                                 controller: _scrollController,
                                 child: Column(
                                   children: [
-                                    RawScrollbar(
-                                      thickness: 7.5,
-                                      thumbColor: Colors.redAccent,
-                                      thumbVisibility: true,
-                                      child: SingleChildScrollView(
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 30),
-                                              child: Container(
-                                                child: Center(
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      const Text(
-                                                        "Nothing to see here\n",
-                                                        textAlign: TextAlign.justify,
-                                                        style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
-                                                      ),
-                                                      const Text(
-                                                        "You're on your own :>",
-                                                        textAlign: TextAlign.justify,
-                                                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                                      ),
-                                                      SizedBox(height: 20.h),
-                                                    ],
+                                    Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                                          child: Container(
+                                            child: Center(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  const Text(
+                                                    "Nothing to see here\n",
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
                                                   ),
-                                                ),
+                                                  const Text(
+                                                    "You're on your own :>",
+                                                    textAlign: TextAlign.justify,
+                                                    style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                                  ),
+                                                  SizedBox(height: 20.h),
+                                                ],
                                               ),
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -798,7 +878,51 @@ class _CivSettingsPageState extends State<CivSettingsPage> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 50.h),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                            ),
+                            padding: EdgeInsets.all(12),
+                          ),
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: 40.h,
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Okay",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20.sp,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 20,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Icon(
+                                    Icons.next_plan,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
