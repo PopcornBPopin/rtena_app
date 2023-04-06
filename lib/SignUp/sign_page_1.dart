@@ -592,7 +592,7 @@ class _Sign1PageState extends State<Sign1Page> {
   void choosePicture(BuildContext context) {
     showModalBottomSheet(
       elevation: 10,
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.white,
       context: context,
       builder: (context) => Container(
         width: MediaQuery.of(context).size.width,
@@ -603,16 +603,21 @@ class _Sign1PageState extends State<Sign1Page> {
           children: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                    color: Color.fromRGBO(82, 82, 82, 1),
+                    width: 1,
+                  ),
                 ),
-                padding: EdgeInsets.all(12),
-                backgroundColor: Colors.white,
+                elevation: 3,
               ),
               child: Container(
                 alignment: Alignment.center,
-                height: 60.h,
-                width: 130.w,
+                height: 90.h,
+                width: 150.w,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -629,20 +634,26 @@ class _Sign1PageState extends State<Sign1Page> {
               ),
               onPressed: () async {
                 grabPhoto(ImageSource.camera);
+                Navigator.of(context).pop();
               },
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                    color: Color.fromRGBO(82, 82, 82, 1),
+                    width: 1,
+                  ),
                 ),
-                padding: EdgeInsets.all(12),
-                backgroundColor: Colors.white,
+                elevation: 3,
               ),
               child: Container(
                 alignment: Alignment.center,
-                height: 60.h,
-                width: 130.w,
+                height: 90.h,
+                width: 150.w,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -659,6 +670,7 @@ class _Sign1PageState extends State<Sign1Page> {
               ),
               onPressed: () async {
                 grabPhoto(ImageSource.gallery);
+                Navigator.of(context).pop();
               },
             )
           ],
