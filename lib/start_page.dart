@@ -90,7 +90,7 @@ class _StartPageState extends State<StartPage> {
 
                     Column(
                       children: [
-                        SizedBox(
+                        Container(
                           height: 530.h,
                           child: ScrollConfiguration(
                             behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
@@ -183,7 +183,6 @@ class _StartPageState extends State<StartPage> {
                         ),
                       ),
                     )
-                    //Login Button
                   ],
                 ),
               ],

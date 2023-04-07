@@ -6,11 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rtena_app/SignUp/sign_page_1.dart';
 
 class CivHomePage extends StatefulWidget {
   const CivHomePage({Key? key}) : super(key: key);
@@ -25,6 +23,10 @@ class _CivHomePageState extends State<CivHomePage> {
     getConnectivity();
     getUserData();
     super.initState();
+    getCurrentLocation().then((value) {
+      _latitude = '${value.latitude}';
+      _longitude = '${value.longitude}';
+    });
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -222,7 +224,7 @@ class _CivHomePageState extends State<CivHomePage> {
     if (permission == LocationPermission.deniedForever) {
       quickAlert(QuickAlertType.error, "Pemission Denied!", "Location permissions are permanently denied, we cannot request permissions", Colors.green);
     }
-    return await Geolocator.getCurrentPosition();
+    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
 
   @override

@@ -39,7 +39,6 @@ class Page2 extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20.h),
             ],
           ),
         ),
