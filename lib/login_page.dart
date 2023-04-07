@@ -395,6 +395,7 @@ class _LoginPageState extends State<LoginPage> {
     QuickAlert.show(
       backgroundColor: Colors.grey.shade200,
       context: context,
+      barrierDismissible: false,
       type: animtype,
       title: title,
       text: text,

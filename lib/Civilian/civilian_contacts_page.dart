@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -119,8 +120,9 @@ class _CivContactsPageState extends State<CivContactsPage> {
 
   void quickAlert(QuickAlertType animtype, String title, String text, String confirmText, Color color) {
     QuickAlert.show(
-      backgroundColor: Colors.grey.shade200,
       context: context,
+      barrierDismissible: false,
+      backgroundColor: Colors.grey.shade200,
       type: animtype,
       title: title,
       text: text,
@@ -753,7 +755,10 @@ class _CivContactsPageState extends State<CivContactsPage> {
                                                           ),
                                                           elevation: 3,
                                                         ),
-                                                        onPressed: () {},
+                                                        onPressed: () {
+                                                          //Call the number by index
+                                                          FlutterPhoneDirectCaller.callNumber(snap[index]['Contact Number']);
+                                                        },
                                                         child: SizedBox(
                                                           height: 120.h,
                                                           width: MediaQuery.of(context).size.width,
@@ -773,6 +778,7 @@ class _CivContactsPageState extends State<CivContactsPage> {
                                                                         QuickAlert.show(
                                                                           backgroundColor: Colors.grey.shade200,
                                                                           context: context,
+                                                                          barrierDismissible: false,
                                                                           type: QuickAlertType.confirm,
                                                                           title: "Delete Confirmation",
                                                                           text: "Are you sure you want to remove ${snap[index]['Full Name']} from your contacts?",

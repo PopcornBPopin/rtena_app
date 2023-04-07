@@ -566,6 +566,7 @@ class _Sign1PageState extends State<Sign1Page> {
     QuickAlert.show(
       backgroundColor: Colors.grey.shade200,
       context: context,
+      barrierDismissible: false,
       type: animtype,
       title: title,
       text: text,

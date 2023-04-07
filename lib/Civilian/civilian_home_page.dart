@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
@@ -55,6 +56,8 @@ class _CivHomePageState extends State<CivHomePage> {
   late StreamSubscription subscription;
   late String _firstName = "";
   late String _emailAddress = "";
+  late String _latitude = "";
+  late String _longitude = "";
 
   // FUNCTIONS
   ConnectivityResult result = ConnectivityResult.none;
@@ -95,6 +98,7 @@ class _CivHomePageState extends State<CivHomePage> {
     QuickAlert.show(
       backgroundColor: Colors.grey.shade200,
       context: context,
+      barrierDismissible: false,
       type: animtype,
       title: title,
       text: text,
@@ -104,15 +108,7 @@ class _CivHomePageState extends State<CivHomePage> {
         color: color,
       ),
       onConfirmBtnTap: () {
-        if (animtype == QuickAlertType.success)
-          Get.to(
-            () => const CivHomePage(),
-            transition: Transition.fadeIn,
-            duration: Duration(milliseconds: 300),
-          );
-        else {
-          Navigator.of(context).pop();
-        }
+        Navigator.of(context).pop();
       },
     );
   }
@@ -139,16 +135,17 @@ class _CivHomePageState extends State<CivHomePage> {
   int seconds = maxSeconds;
   Timer? timer;
   //Countdown timer
-  void startTimer() {
+  void startTimer(String emergencyType, String latitude, String longitude) {
     setState(() {
       timer = Timer.periodic(Duration(seconds: 1), (_) {
         if (seconds > 0) {
           setState(() {
             _timerRunning = true;
-            _emergencySelected = true;
             --seconds;
           });
         } else {
+          timer?.cancel();
+          SendEmergency(emergencyType, 'Ongoing', latitude, longitude);
           stopTimer();
         }
       });
@@ -160,8 +157,72 @@ class _CivHomePageState extends State<CivHomePage> {
       timer?.cancel();
       _timerRunning = false;
       _emergencySelected = false;
+      _fireEmergencySelected = false;
+      _healthEmergencySelected = false;
+      _murderEmergencySelected = false;
+      _assaultEmergencySelected = false;
+      _floodEmergencySelected = false;
+      _equakeEmergencySelected = false;
+      _kidnapEmergencySelected = false;
+      _robberyEmergencySelected = false;
+      _alertEmergencySelected = false;
       seconds = maxSeconds;
     });
+  }
+
+  //Writing emergency deets to Firestone DB
+  Future sendEmergencyDetails(
+    String type,
+    String status,
+    String latitude,
+    String longitude,
+  ) async {
+    await FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress.toLowerCase()).set({
+      'Type': type,
+      'Status': status,
+      'latitude': latitude,
+      'longitude': longitude,
+    });
+  }
+
+  Future SendEmergency(String type, String status, String latitude, String longitude) async {
+    sendEmergencyDetails(
+      type,
+      status,
+      latitude,
+      longitude,
+    );
+    print("Added emergency deets to firestone");
+    quickAlert(QuickAlertType.loading, "Emergency Selected!", "Waiting for confirmation of the responders near you. Please hang tight", Colors.green);
+
+    var collection = FirebaseFirestore.instance.collection('emergencies');
+    var docReference = collection.doc(_emailAddress);
+
+    docReference.snapshots().listen((docSnapshot) {
+      if (docSnapshot.exists) {
+        Map<String, dynamic>? data = docSnapshot.data();
+        var status = data?['Status'];
+        if (status == 'Confirmed') {
+          Navigator.of(context).pop();
+          quickAlert(QuickAlertType.success, "Alert Acknowledged!", "Responders are on their way. Godspeed!", Colors.green);
+        }
+      }
+    });
+  }
+
+  //Get the user location
+  Future<Position> getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        quickAlert(QuickAlertType.error, "Pemission Denied!", "Location permissions are denied", Colors.green);
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      quickAlert(QuickAlertType.error, "Pemission Denied!", "Location permissions are permanently denied, we cannot request permissions", Colors.green);
+    }
+    return await Geolocator.getCurrentPosition();
   }
 
   @override
@@ -324,21 +385,19 @@ class _CivHomePageState extends State<CivHomePage> {
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
-                                                _fireEmergencySelected = true;
-                                                _emergencySelected = true;
-                                                startTimer();
-                                                Future.delayed(const Duration(seconds: 6), () {
-                                                  setState(() {
-                                                    _fireEmergencySelected = false;
-                                                    _emergencySelected = false;
-                                                  });
+                                                setState(() {
+                                                  _fireEmergencySelected = true;
+                                                  _emergencySelected = true;
                                                 });
+                                                getCurrentLocation().then((value) {
+                                                  _latitude = '${value.latitude}';
+                                                  _longitude = '${value.longitude}';
+                                                });
+                                                startTimer("Fire Emergency", _latitude, _longitude);
                                               }
                                               if (_timerRunning && _fireEmergencySelected) {
-                                                stopTimer();
                                                 setState(() {
-                                                  _fireEmergencySelected = false;
-                                                  _emergencySelected = false;
+                                                  stopTimer();
                                                 });
                                               }
                                             },
@@ -414,21 +473,16 @@ class _CivHomePageState extends State<CivHomePage> {
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
-                                                _healthEmergencySelected = true;
-                                                _emergencySelected = true;
-                                                startTimer();
-                                                Future.delayed(const Duration(seconds: 6), () {
-                                                  setState(() {
-                                                    _healthEmergencySelected = false;
-                                                    _emergencySelected = false;
-                                                  });
+                                                print("Pressed");
+                                                setState(() {
+                                                  _healthEmergencySelected = true;
+                                                  _emergencySelected = true;
                                                 });
+                                                // startTimer("Health Emergency");
                                               }
                                               if (_timerRunning && _healthEmergencySelected) {
-                                                stopTimer();
                                                 setState(() {
-                                                  _healthEmergencySelected = false;
-                                                  _emergencySelected = false;
+                                                  stopTimer();
                                                 });
                                               }
                                             },
@@ -511,21 +565,16 @@ class _CivHomePageState extends State<CivHomePage> {
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
-                                                _murderEmergencySelected = true;
-                                                _emergencySelected = true;
-                                                startTimer();
-                                                Future.delayed(const Duration(seconds: 6), () {
-                                                  setState(() {
-                                                    _murderEmergencySelected = false;
-                                                    _emergencySelected = false;
-                                                  });
+                                                print("Pressed");
+                                                setState(() {
+                                                  _murderEmergencySelected = true;
+                                                  _emergencySelected = true;
                                                 });
+                                                // startTimer("Murder Emergency");
                                               }
                                               if (_timerRunning && _murderEmergencySelected) {
-                                                stopTimer();
                                                 setState(() {
-                                                  _murderEmergencySelected = false;
-                                                  _emergencySelected = false;
+                                                  stopTimer();
                                                 });
                                               }
                                             },
@@ -601,21 +650,16 @@ class _CivHomePageState extends State<CivHomePage> {
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
-                                                _assaultEmergencySelected = true;
-                                                _emergencySelected = true;
-                                                startTimer();
-                                                Future.delayed(const Duration(seconds: 6), () {
-                                                  setState(() {
-                                                    _assaultEmergencySelected = false;
-                                                    _emergencySelected = false;
-                                                  });
+                                                print("Pressed");
+                                                setState(() {
+                                                  _assaultEmergencySelected = true;
+                                                  _emergencySelected = true;
                                                 });
+                                                // startTimer("Assault Emergency");
                                               }
                                               if (_timerRunning && _assaultEmergencySelected) {
-                                                stopTimer();
                                                 setState(() {
-                                                  _assaultEmergencySelected = false;
-                                                  _emergencySelected = false;
+                                                  stopTimer();
                                                 });
                                               }
                                             },
@@ -698,21 +742,16 @@ class _CivHomePageState extends State<CivHomePage> {
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
-                                                _floodEmergencySelected = true;
-                                                _emergencySelected = true;
-                                                startTimer();
-                                                Future.delayed(const Duration(seconds: 6), () {
-                                                  setState(() {
-                                                    _floodEmergencySelected = false;
-                                                    _emergencySelected = false;
-                                                  });
+                                                print("Pressed");
+                                                setState(() {
+                                                  _floodEmergencySelected = true;
+                                                  _emergencySelected = true;
                                                 });
+                                                // startTimer("Flood Emergency");
                                               }
                                               if (_timerRunning && _floodEmergencySelected) {
-                                                stopTimer();
                                                 setState(() {
-                                                  _floodEmergencySelected = false;
-                                                  _emergencySelected = false;
+                                                  stopTimer();
                                                 });
                                               }
                                             },
@@ -788,21 +827,16 @@ class _CivHomePageState extends State<CivHomePage> {
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
-                                                _equakeEmergencySelected = true;
-                                                _emergencySelected = true;
-                                                startTimer();
-                                                Future.delayed(const Duration(seconds: 6), () {
-                                                  setState(() {
-                                                    _equakeEmergencySelected = false;
-                                                    _emergencySelected = false;
-                                                  });
+                                                print("Pressed");
+                                                setState(() {
+                                                  _equakeEmergencySelected = true;
+                                                  _emergencySelected = true;
                                                 });
+                                                // startTimer("Earthquake Emergency");
                                               }
                                               if (_timerRunning && _equakeEmergencySelected) {
-                                                stopTimer();
                                                 setState(() {
-                                                  _equakeEmergencySelected = false;
-                                                  _emergencySelected = false;
+                                                  stopTimer();
                                                 });
                                               }
                                             },
@@ -885,21 +919,16 @@ class _CivHomePageState extends State<CivHomePage> {
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
-                                                _kidnapEmergencySelected = true;
-                                                _emergencySelected = true;
-                                                startTimer();
-                                                Future.delayed(const Duration(seconds: 6), () {
-                                                  setState(() {
-                                                    _kidnapEmergencySelected = false;
-                                                    _emergencySelected = false;
-                                                  });
+                                                print("Pressed");
+                                                setState(() {
+                                                  _kidnapEmergencySelected = true;
+                                                  _emergencySelected = true;
                                                 });
+                                                // startTimer("Kidnap Emergency");
                                               }
                                               if (_timerRunning && _kidnapEmergencySelected) {
-                                                stopTimer();
                                                 setState(() {
-                                                  _kidnapEmergencySelected = false;
-                                                  _emergencySelected = false;
+                                                  stopTimer();
                                                 });
                                               }
                                             },
@@ -975,21 +1004,16 @@ class _CivHomePageState extends State<CivHomePage> {
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
-                                                _robberyEmergencySelected = true;
-                                                _emergencySelected = true;
-                                                startTimer();
-                                                Future.delayed(const Duration(seconds: 6), () {
-                                                  setState(() {
-                                                    _robberyEmergencySelected = false;
-                                                    _emergencySelected = false;
-                                                  });
+                                                print("Pressed");
+                                                setState(() {
+                                                  _robberyEmergencySelected = true;
+                                                  _emergencySelected = true;
                                                 });
+                                                // startTimer("Robbery Emergency");
                                               }
                                               if (_timerRunning && _robberyEmergencySelected) {
-                                                stopTimer();
                                                 setState(() {
-                                                  _robberyEmergencySelected = false;
-                                                  _emergencySelected = false;
+                                                  stopTimer();
                                                 });
                                               }
                                             },
@@ -1099,21 +1123,16 @@ class _CivHomePageState extends State<CivHomePage> {
                                         ),
                                         onPressed: () {
                                           if (!_timerRunning && !_emergencySelected) {
-                                            _alertEmergencySelected = true;
-                                            _emergencySelected = true;
-                                            startTimer();
-                                            Future.delayed(const Duration(seconds: 6), () {
-                                              setState(() {
-                                                _alertEmergencySelected = false;
-                                                _emergencySelected = false;
-                                              });
+                                            print("Pressed");
+                                            setState(() {
+                                              _alertEmergencySelected = true;
+                                              _emergencySelected = true;
                                             });
+                                            // startTimer("Alert Emergency");
                                           }
                                           if (_timerRunning && _alertEmergencySelected) {
-                                            stopTimer();
                                             setState(() {
-                                              _alertEmergencySelected = false;
-                                              _emergencySelected = false;
+                                              stopTimer();
                                             });
                                           }
                                         },

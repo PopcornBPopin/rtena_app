@@ -161,6 +161,7 @@ class _CivSettingsPageState extends State<CivSettingsPage> {
     QuickAlert.show(
       backgroundColor: Colors.grey.shade200,
       context: context,
+      barrierDismissible: false,
       type: animtype,
       title: title,
       text: text,
