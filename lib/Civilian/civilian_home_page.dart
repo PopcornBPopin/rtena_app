@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
@@ -23,10 +24,7 @@ class _CivHomePageState extends State<CivHomePage> {
     getConnectivity();
     getUserData();
     super.initState();
-    getCurrentLocation().then((value) {
-      _latitude = '${value.latitude}';
-      _longitude = '${value.longitude}';
-    });
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -58,8 +56,10 @@ class _CivHomePageState extends State<CivHomePage> {
   late StreamSubscription subscription;
   late String _firstName = "";
   late String _emailAddress = "";
-  late String _latitude = "";
-  late String _longitude = "";
+  late String _address = "";
+  late String _type = "";
+  late String _userCoordinates = "";
+  late String _userLocation = "";
 
   // FUNCTIONS
   ConnectivityResult result = ConnectivityResult.none;
@@ -115,31 +115,13 @@ class _CivHomePageState extends State<CivHomePage> {
     );
   }
 
-  void quickForgotAlert(QuickAlertType animtype, String title, String text, Color color) {
-    QuickAlert.show(
-      backgroundColor: Colors.grey.shade200,
-      context: context,
-      type: animtype,
-      title: title,
-      text: text,
-      confirmBtnColor: Colors.white,
-      confirmBtnTextStyle: TextStyle(
-        fontWeight: FontWeight.bold,
-        color: color,
-      ),
-      onConfirmBtnTap: () {
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
   static const maxSeconds = 5;
   int seconds = maxSeconds;
   Timer? timer;
   //Countdown timer
-  void startTimer(String emergencyType, String latitude, String longitude) {
+  void startTimer(String emergencyType) {
     setState(() {
-      timer = Timer.periodic(Duration(seconds: 1), (_) {
+      timer = Timer.periodic(Duration(seconds: 1), (_) async {
         if (seconds > 0) {
           setState(() {
             _timerRunning = true;
@@ -147,7 +129,10 @@ class _CivHomePageState extends State<CivHomePage> {
           });
         } else {
           timer?.cancel();
-          SendEmergency(emergencyType, 'Ongoing', latitude, longitude);
+          quickAlert(QuickAlertType.loading, "Emergency Selected!", "Waiting for confirmation of the responders near you. Please hang tight", Colors.green);
+          await getCurrentLocation();
+          await convertCoordsToAddress(_coordinates!);
+          SendEmergency(emergencyType, 'Ongoing', _coordinates.toString(), _address);
           stopTimer();
         }
       });
@@ -176,26 +161,33 @@ class _CivHomePageState extends State<CivHomePage> {
   Future sendEmergencyDetails(
     String type,
     String status,
-    String latitude,
-    String longitude,
+    String coordinates,
+    String address,
   ) async {
     await FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress.toLowerCase()).set({
       'Type': type,
       'Status': status,
-      'latitude': latitude,
-      'longitude': longitude,
+      'Coordinates': coordinates,
+      'Address': address,
     });
   }
 
-  Future SendEmergency(String type, String status, String latitude, String longitude) async {
+  Future updateEmergencyDetails(
+    String status,
+  ) async {
+    await FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress.toLowerCase()).update({
+      'Status': status,
+    });
+  }
+
+  Future SendEmergency(String type, String status, String coordinates, String address) async {
     sendEmergencyDetails(
       type,
       status,
-      latitude,
-      longitude,
+      coordinates,
+      address,
     );
     print("Added emergency deets to firestone");
-    quickAlert(QuickAlertType.loading, "Emergency Selected!", "Waiting for confirmation of the responders near you. Please hang tight", Colors.green);
 
     var collection = FirebaseFirestore.instance.collection('emergencies');
     var docReference = collection.doc(_emailAddress);
@@ -206,14 +198,22 @@ class _CivHomePageState extends State<CivHomePage> {
         var status = data?['Status'];
         if (status == 'Confirmed') {
           Navigator.of(context).pop();
-          quickAlert(QuickAlertType.success, "Alert Acknowledged!", "Responders are on their way. Godspeed!", Colors.green);
+          showEmergencyDetails(context);
         }
       }
     });
   }
 
   //Get the user location
-  Future<Position> getCurrentLocation() async {
+  Position? _coordinates;
+  Future<void> getCurrentLocation() async {
+    Position position = await determinePosition();
+    setState(() {
+      _coordinates = position;
+    });
+  }
+
+  Future<Position> determinePosition() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -224,7 +224,314 @@ class _CivHomePageState extends State<CivHomePage> {
     if (permission == LocationPermission.deniedForever) {
       quickAlert(QuickAlertType.error, "Pemission Denied!", "Location permissions are permanently denied, we cannot request permissions", Colors.green);
     }
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future<void> convertCoordsToAddress(Position position) async {
+    List<Placemark> placemark = await placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark place = placemark[0];
+    setState(() {
+      _address = '${place.name} ${place.administrativeArea} ${place.subAdministrativeArea} ${place.locality} ${place.subLocality} ${place.subThoroughfare}';
+    });
+  }
+
+  void resolveEmergency() async {
+    QuickAlert.show(
+      backgroundColor: Colors.grey.shade200,
+      context: context,
+      type: QuickAlertType.confirm,
+      title: "Resolved?",
+      text: "Are you sure you want to mark this emergency as resolved?",
+      confirmBtnText: "Yes",
+      confirmBtnColor: Colors.white,
+      confirmBtnTextStyle: TextStyle(
+        fontSize: 18.sp,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+      cancelBtnTextStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.red,
+      ),
+      onConfirmBtnTap: () async {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        final emergency = FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress);
+        emergency.delete();
+      },
+      onCancelBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  void showEmergencyDetails(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(builder: (context, setState) {
+        return WillPopScope(
+          onWillPop: () {
+            return Future.value(false);
+          },
+          child: Center(
+            child: Scaffold(
+              backgroundColor: Colors.black.withOpacity(0.3),
+              body: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+                          spreadRadius: 7,
+                          blurRadius: 10,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                    height: 600.h,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 20.h),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Stack(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 30),
+                                child: Container(
+                                  child: Icon(
+                                    Icons.emergency,
+                                    size: 60,
+                                    color: Colors.redAccent,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Container(
+                            child: const Text(
+                              "Alert Acknowledged!",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20.h),
+                        Expanded(
+                          child: Container(
+                            height: 100.h,
+                            child: ScrollConfiguration(
+                              behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    SingleChildScrollView(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              "Dear ${_firstName}, we understand that the current situation may be causing concern and anxiety.\n\nThe responders are now on their way to address the issue and ensure your safety. \n",
+                                              textAlign: TextAlign.justify,
+                                              style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                            ),
+                                            Container(
+                                              height: 200.h,
+                                              child: StreamBuilder<DocumentSnapshot>(
+                                                stream: FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress).snapshots(),
+                                                builder: (context, snapshot) {
+                                                  if (!snapshot.hasData) {
+                                                    return Container(
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Text("Fetching the Emergency Details"),
+                                                      ),
+                                                    );
+                                                  }
+                                                  try {
+                                                    final userData = snapshot.data!.data() as Map<String, dynamic>;
+                                                    _type = userData['Type'];
+                                                    _userCoordinates = userData['Coordinates'];
+                                                    _userLocation = userData['Address'];
+                                                  } catch (e) {
+                                                    print(e.toString());
+                                                    return Container();
+                                                  }
+                                                  return Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            'Emergency Details:',
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 17,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 20.h),
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            'Emergency Type:\t\t\t',
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 17.sp,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            _type,
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 17.sp,
+                                                              fontWeight: FontWeight.normal,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10.h),
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            'Coordinates:\t\t\t',
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 17.sp,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
+                                                              _userCoordinates,
+                                                              textAlign: TextAlign.left,
+                                                              style: TextStyle(
+                                                                fontSize: 17.sp,
+                                                                fontWeight: FontWeight.normal,
+                                                                color: Colors.black,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10.h),
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            'Your Location:\t\t\t',
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 17.sp,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
+                                                              _userLocation,
+                                                              textAlign: TextAlign.left,
+                                                              style: TextStyle(
+                                                                fontSize: 17.sp,
+                                                                fontWeight: FontWeight.normal,
+                                                                color: Colors.black,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                            ),
+                            padding: EdgeInsets.all(12),
+                          ),
+                          onPressed: () async {
+                            resolveEmergency();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: 40.h,
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Resolved",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20.sp,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 20,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Icon(
+                                    Icons.next_plan,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
   }
 
   @override
@@ -391,11 +698,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                   _fireEmergencySelected = true;
                                                   _emergencySelected = true;
                                                 });
-                                                getCurrentLocation().then((value) {
-                                                  _latitude = '${value.latitude}';
-                                                  _longitude = '${value.longitude}';
-                                                });
-                                                startTimer("Fire Emergency", _latitude, _longitude);
+                                                startTimer("Fire Emergency");
                                               }
                                               if (_timerRunning && _fireEmergencySelected) {
                                                 setState(() {
@@ -475,12 +778,11 @@ class _CivHomePageState extends State<CivHomePage> {
                                             ),
                                             onPressed: () {
                                               if (!_timerRunning && !_emergencySelected) {
-                                                print("Pressed");
                                                 setState(() {
                                                   _healthEmergencySelected = true;
                                                   _emergencySelected = true;
                                                 });
-                                                // startTimer("Health Emergency");
+                                                startTimer("Health Emergency");
                                               }
                                               if (_timerRunning && _healthEmergencySelected) {
                                                 setState(() {
@@ -566,13 +868,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                               elevation: _timerRunning && !_murderEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
-                                              if (!_timerRunning && !_emergencySelected) {
-                                                print("Pressed");
+                                              if (!_timerRunning && !_murderEmergencySelected) {
                                                 setState(() {
                                                   _murderEmergencySelected = true;
                                                   _emergencySelected = true;
                                                 });
-                                                // startTimer("Murder Emergency");
+                                                startTimer("Murder Emergency");
                                               }
                                               if (_timerRunning && _murderEmergencySelected) {
                                                 setState(() {
@@ -651,13 +952,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                               elevation: _timerRunning && !_assaultEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
-                                              if (!_timerRunning && !_emergencySelected) {
-                                                print("Pressed");
+                                              if (!_timerRunning && !_assaultEmergencySelected) {
                                                 setState(() {
                                                   _assaultEmergencySelected = true;
                                                   _emergencySelected = true;
                                                 });
-                                                // startTimer("Assault Emergency");
+                                                startTimer("Assault Emergency");
                                               }
                                               if (_timerRunning && _assaultEmergencySelected) {
                                                 setState(() {
@@ -743,13 +1043,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                               elevation: _timerRunning && !_floodEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
-                                              if (!_timerRunning && !_emergencySelected) {
-                                                print("Pressed");
+                                              if (!_timerRunning && !_floodEmergencySelected) {
                                                 setState(() {
                                                   _floodEmergencySelected = true;
                                                   _emergencySelected = true;
                                                 });
-                                                // startTimer("Flood Emergency");
+                                                startTimer("Flood Emergency");
                                               }
                                               if (_timerRunning && _floodEmergencySelected) {
                                                 setState(() {
@@ -828,13 +1127,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                               elevation: _timerRunning && !_equakeEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
-                                              if (!_timerRunning && !_emergencySelected) {
-                                                print("Pressed");
+                                              if (!_timerRunning && !_equakeEmergencySelected) {
                                                 setState(() {
                                                   _equakeEmergencySelected = true;
                                                   _emergencySelected = true;
                                                 });
-                                                // startTimer("Earthquake Emergency");
+                                                startTimer("Earthquake Emergency");
                                               }
                                               if (_timerRunning && _equakeEmergencySelected) {
                                                 setState(() {
@@ -920,13 +1218,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                               elevation: _timerRunning && !_kidnapEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
-                                              if (!_timerRunning && !_emergencySelected) {
-                                                print("Pressed");
+                                              if (!_timerRunning && !_kidnapEmergencySelected) {
                                                 setState(() {
                                                   _kidnapEmergencySelected = true;
                                                   _emergencySelected = true;
                                                 });
-                                                // startTimer("Kidnap Emergency");
+                                                startTimer("Kidnapping Emergency");
                                               }
                                               if (_timerRunning && _kidnapEmergencySelected) {
                                                 setState(() {
@@ -1005,13 +1302,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                               elevation: _timerRunning && !_robberyEmergencySelected ? 1 : 3,
                                             ),
                                             onPressed: () {
-                                              if (!_timerRunning && !_emergencySelected) {
-                                                print("Pressed");
+                                              if (!_timerRunning && !_robberyEmergencySelected) {
                                                 setState(() {
                                                   _robberyEmergencySelected = true;
                                                   _emergencySelected = true;
                                                 });
-                                                // startTimer("Robbery Emergency");
+                                                startTimer("Robbery Emergency");
                                               }
                                               if (_timerRunning && _robberyEmergencySelected) {
                                                 setState(() {
@@ -1124,13 +1420,12 @@ class _CivHomePageState extends State<CivHomePage> {
                                           elevation: _timerRunning && !_alertEmergencySelected ? 1 : 3,
                                         ),
                                         onPressed: () {
-                                          if (!_timerRunning && !_emergencySelected) {
-                                            print("Pressed");
+                                          if (!_timerRunning && !_alertEmergencySelected) {
                                             setState(() {
                                               _alertEmergencySelected = true;
                                               _emergencySelected = true;
                                             });
-                                            // startTimer("Alert Emergency");
+                                            startTimer("Alert Emergency");
                                           }
                                           if (_timerRunning && _alertEmergencySelected) {
                                             setState(() {
