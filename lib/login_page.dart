@@ -9,6 +9,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:rtena_app/Civilian/civilian_home_page.dart';
 import 'package:rtena_app/Civilian/civilian_start_page.dart';
+import 'package:rtena_app/checker_page.dart';
 import 'package:rtena_app/start_page.dart';
 import 'package:rtena_app/SignUp/sign_page_1.dart';
 
@@ -120,11 +121,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     Navigator.of(context).pop();
-    Get.to(
-      () => const CivStartPage(),
-      transition: Transition.fadeIn,
-      duration: Duration(milliseconds: 300),
-    );
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CheckerPage()));
   }
 
   Future forgotUseEmailPassword() async {

@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:rtena_app/Civilian/civilian_start_page.dart';
+import 'package:rtena_app/Responder/responder_start_page.dart';
 import 'package:rtena_app/login_page.dart';
 import 'package:rtena_app/start_page.dart';
 
@@ -576,13 +577,21 @@ class _Sign1PageState extends State<Sign1Page> {
         color: color,
       ),
       onConfirmBtnTap: () {
-        if (animtype == QuickAlertType.success)
-          Get.to(
-            () => const CivStartPage(),
-            transition: Transition.fadeIn,
-            duration: Duration(milliseconds: 300),
-          );
-        else {
+        if (animtype == QuickAlertType.success) {
+          if (_roleController.text == 'Civilian') {
+            Get.to(
+              () => const CivStartPage(),
+              transition: Transition.fadeIn,
+              duration: Duration(milliseconds: 300),
+            );
+          } else if (_roleController.text == 'Responder') {
+            Get.to(
+              () => const ResStartPage(),
+              transition: Transition.fadeIn,
+              duration: Duration(milliseconds: 300),
+            );
+          }
+        } else {
           Navigator.of(context).pop();
         }
       },
