@@ -666,225 +666,230 @@ class _CivContactsPageState extends State<CivContactsPage> {
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(40),
-                              ),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
-                                  spreadRadius: 7,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 0),
-                                )
-                              ]),
-                          child: Column(
-                            children: [
-                              SizedBox(height: 40.h),
-                              Align(
-                                alignment: Alignment.center,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                                  child: Text(
-                                    "Tap the button that corresponds to the person you want to call",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 18.sp,
+                    Expanded(
+                      child: SingleChildScrollView(
+                        physics: NeverScrollableScrollPhysics(),
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(40),
+                                  ),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
+                                      spreadRadius: 7,
+                                      blurRadius: 10,
+                                      offset: Offset(0, 0),
+                                    )
+                                  ]),
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 40.h),
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                                      child: Text(
+                                        "Tap the button that corresponds to the person you want to call",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 18.sp,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              SizedBox(height: 30.h),
-                              Container(
-                                height: 420.h,
-                                child: StreamBuilder<QuerySnapshot>(
-                                  stream: FirebaseFirestore.instance.collection('users').doc(_emailAddress).collection('contact numbers').snapshots(),
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return Container(
-                                        color: Colors.white,
-                                        child: Center(
-                                          child: Text("Fetching your contacts"),
-                                        ),
-                                      );
-                                    }
-                                    final snap = snapshot.data!.docs;
-                                    if (snap.length == 0) {
-                                      return Center(
-                                        child: Text(
-                                          "Tap the + button to add new contacts",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 17.sp,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                    return ScrollConfiguration(
-                                      behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
-                                      child: RawScrollbar(
-                                        thickness: 7,
-                                        thumbColor: Colors.redAccent,
-                                        thumbVisibility: true,
-                                        child: ListView.builder(
-                                          itemCount: snap.length,
-                                          itemBuilder: (context, index) {
-                                            return Column(
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                                                  child: Column(
-                                                    children: [
-                                                      ElevatedButton(
-                                                        style: ElevatedButton.styleFrom(
-                                                          backgroundColor: Colors.white,
-                                                          padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                                          shape: RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(20),
-                                                            side: BorderSide(
-                                                              color: Color.fromRGBO(82, 82, 82, 1),
-                                                              width: 1,
+                                  SizedBox(height: 30.h),
+                                  Container(
+                                    height: 420.h,
+                                    child: StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance.collection('users').doc(_emailAddress).collection('contact numbers').snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return Container(
+                                            color: Colors.white,
+                                            child: Center(
+                                              child: Text("Fetching your contacts"),
+                                            ),
+                                          );
+                                        }
+                                        final snap = snapshot.data!.docs;
+                                        if (snap.length == 0) {
+                                          return Center(
+                                            child: Text(
+                                              "Tap the + button to add new contacts",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 17.sp,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return ScrollConfiguration(
+                                          behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+                                          child: RawScrollbar(
+                                            thickness: 7,
+                                            thumbColor: Colors.redAccent,
+                                            thumbVisibility: true,
+                                            child: ListView.builder(
+                                              itemCount: snap.length,
+                                              itemBuilder: (context, index) {
+                                                return Column(
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                                                      child: Column(
+                                                        children: [
+                                                          ElevatedButton(
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: Colors.white,
+                                                              padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(20),
+                                                                side: BorderSide(
+                                                                  color: Color.fromRGBO(82, 82, 82, 1),
+                                                                  width: 1,
+                                                                ),
+                                                              ),
+                                                              elevation: 3,
                                                             ),
-                                                          ),
-                                                          elevation: 3,
-                                                        ),
-                                                        onPressed: () {
-                                                          //Call the number by index
-                                                          FlutterPhoneDirectCaller.callNumber(snap[index]['Contact Number']);
-                                                        },
-                                                        child: SizedBox(
-                                                          height: 120.h,
-                                                          width: MediaQuery.of(context).size.width,
-                                                          child: Stack(
-                                                            children: [
-                                                              Positioned(
-                                                                top: 10,
-                                                                right: 0,
-                                                                child: IconButton(
-                                                                  icon: Icon(
-                                                                    Icons.delete,
-                                                                    color: Colors.red,
-                                                                  ),
-                                                                  onPressed: () {
-                                                                    setState(
-                                                                      () {
-                                                                        QuickAlert.show(
-                                                                          backgroundColor: Colors.grey.shade200,
-                                                                          context: context,
-                                                                          barrierDismissible: false,
-                                                                          type: QuickAlertType.confirm,
-                                                                          title: "Delete Confirmation",
-                                                                          text: "Are you sure you want to remove ${snap[index]['Full Name']} from your contacts?",
-                                                                          confirmBtnText: "Yes",
-                                                                          confirmBtnColor: Colors.white,
-                                                                          confirmBtnTextStyle: TextStyle(
-                                                                            fontSize: 18.sp,
-                                                                            fontWeight: FontWeight.bold,
-                                                                            color: Colors.black,
-                                                                          ),
-                                                                          cancelBtnTextStyle: TextStyle(
-                                                                            fontWeight: FontWeight.bold,
-                                                                            color: Colors.red,
-                                                                          ),
-                                                                          onConfirmBtnTap: () {
-                                                                            var contactNumbers = FirebaseFirestore.instance.collection('users').doc(_emailAddress).collection('contact numbers');
-                                                                            contactNumbers.doc(snap[index]['Full Name'].toString()).delete();
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                          onCancelBtnTap: () {
-                                                                            Navigator.of(context).pop();
+                                                            onPressed: () {
+                                                              //Call the number by index
+                                                              FlutterPhoneDirectCaller.callNumber(snap[index]['Contact Number']);
+                                                            },
+                                                            child: SizedBox(
+                                                              height: 120.h,
+                                                              width: MediaQuery.of(context).size.width,
+                                                              child: Stack(
+                                                                children: [
+                                                                  Positioned(
+                                                                    top: 10,
+                                                                    right: 0,
+                                                                    child: IconButton(
+                                                                      icon: Icon(
+                                                                        Icons.delete,
+                                                                        color: Colors.red,
+                                                                      ),
+                                                                      onPressed: () {
+                                                                        setState(
+                                                                          () {
+                                                                            QuickAlert.show(
+                                                                              backgroundColor: Colors.grey.shade200,
+                                                                              context: context,
+                                                                              barrierDismissible: false,
+                                                                              type: QuickAlertType.confirm,
+                                                                              title: "Delete Confirmation",
+                                                                              text: "Are you sure you want to remove ${snap[index]['Full Name']} from your contacts?",
+                                                                              confirmBtnText: "Yes",
+                                                                              confirmBtnColor: Colors.white,
+                                                                              confirmBtnTextStyle: TextStyle(
+                                                                                fontSize: 18.sp,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: Colors.black,
+                                                                              ),
+                                                                              cancelBtnTextStyle: TextStyle(
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: Colors.red,
+                                                                              ),
+                                                                              onConfirmBtnTap: () {
+                                                                                var contactNumbers = FirebaseFirestore.instance.collection('users').doc(_emailAddress).collection('contact numbers');
+                                                                                contactNumbers.doc(snap[index]['Full Name'].toString()).delete();
+                                                                                Navigator.of(context).pop();
+                                                                              },
+                                                                              onCancelBtnTap: () {
+                                                                                Navigator.of(context).pop();
+                                                                              },
+                                                                            );
                                                                           },
                                                                         );
                                                                       },
-                                                                    );
-                                                                  },
-                                                                ),
+                                                                    ),
+                                                                  ),
+                                                                  // Positioned(
+                                                                  //   top: 10,
+                                                                  //   right: 35,
+                                                                  //   child: IconButton(
+                                                                  //     onPressed: () {
+                                                                  //       print("SELECTED SHT" + snap[index].toString());
+                                                                  //       ModifContact(context, snap[index].toString());
+                                                                  //     },
+                                                                  //     icon: Icon(
+                                                                  //       Icons.edit,
+                                                                  //       color: Colors.black,
+                                                                  //     ),
+                                                                  //   ),
+                                                                  // ),
+                                                                  Padding(
+                                                                    padding: EdgeInsets.only(left: 20),
+                                                                    child: Column(
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Text(
+                                                                          snap[index]['Full Name'],
+                                                                          style: TextStyle(
+                                                                            fontSize: 20.sp,
+                                                                            fontWeight: FontWeight.w400,
+                                                                            color: Colors.black,
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(height: 5.h),
+                                                                        Text(
+                                                                          'Relationship:\t\t\t\t\t\t\t\t\t' + snap[index]['Relationship'],
+                                                                          style: TextStyle(
+                                                                            fontSize: 16.sp,
+                                                                            fontWeight: FontWeight.normal,
+                                                                            color: Colors.black,
+                                                                          ),
+                                                                        ),
+                                                                        Text(
+                                                                          'Contact Number:\t ' + snap[index]['Contact Number'],
+                                                                          style: TextStyle(
+                                                                            fontSize: 16.sp,
+                                                                            fontWeight: FontWeight.normal,
+                                                                            color: Colors.black,
+                                                                          ),
+                                                                        ),
+                                                                        Text(
+                                                                          'Email Address:\t\t\t\t\t' + snap[index]['Email Address'],
+                                                                          style: TextStyle(
+                                                                            fontSize: 16.sp,
+                                                                            fontWeight: FontWeight.normal,
+                                                                            color: Colors.black,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                              // Positioned(
-                                                              //   top: 10,
-                                                              //   right: 35,
-                                                              //   child: IconButton(
-                                                              //     onPressed: () {
-                                                              //       print("SELECTED SHT" + snap[index].toString());
-                                                              //       ModifContact(context, snap[index].toString());
-                                                              //     },
-                                                              //     icon: Icon(
-                                                              //       Icons.edit,
-                                                              //       color: Colors.black,
-                                                              //     ),
-                                                              //   ),
-                                                              // ),
-                                                              Padding(
-                                                                padding: EdgeInsets.only(left: 20),
-                                                                child: Column(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    Text(
-                                                                      snap[index]['Full Name'],
-                                                                      style: TextStyle(
-                                                                        fontSize: 20.sp,
-                                                                        fontWeight: FontWeight.w400,
-                                                                        color: Colors.black,
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(height: 5.h),
-                                                                    Text(
-                                                                      'Relationship:\t\t\t\t\t\t\t\t\t' + snap[index]['Relationship'],
-                                                                      style: TextStyle(
-                                                                        fontSize: 16.sp,
-                                                                        fontWeight: FontWeight.normal,
-                                                                        color: Colors.black,
-                                                                      ),
-                                                                    ),
-                                                                    Text(
-                                                                      'Contact Number:\t ' + snap[index]['Contact Number'],
-                                                                      style: TextStyle(
-                                                                        fontSize: 16.sp,
-                                                                        fontWeight: FontWeight.normal,
-                                                                        color: Colors.black,
-                                                                      ),
-                                                                    ),
-                                                                    Text(
-                                                                      'Email Address:\t\t\t\t\t' + snap[index]['Email Address'],
-                                                                      style: TextStyle(
-                                                                        fontSize: 16.sp,
-                                                                        fontWeight: FontWeight.normal,
-                                                                        color: Colors.black,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
+                                                            ),
                                                           ),
-                                                        ),
+                                                          SizedBox(height: 20.h),
+                                                        ],
                                                       ),
-                                                      SizedBox(height: 20.h),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(height: 200.h),
+                                ],
                               ),
-                              SizedBox(height: 80.h),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),

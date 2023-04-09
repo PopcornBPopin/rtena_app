@@ -1556,6 +1556,9 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                         enabled: false,
                                                         initialValue: _permanentAddress,
                                                         cursorColor: Colors.grey.shade600,
+                                                        style: TextStyle(
+                                                          overflow: TextOverflow.ellipsis,
+                                                        ),
                                                         decoration: InputDecoration(
                                                           contentPadding: EdgeInsets.symmetric(vertical: 10),
                                                           labelText: 'Permanent Address',
@@ -1630,7 +1633,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                     ),
                                                   ),
                                                 ),
-                                                SizedBox(height: 80.h),
+                                                SizedBox(height: 50.h),
                                               ],
                                             );
                                           },
