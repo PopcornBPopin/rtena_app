@@ -700,7 +700,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                                   return Column(
                                                     children: [
                                                       Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                                                        padding: const EdgeInsets.symmetric(horizontal: 10),
                                                         child: Column(
                                                           children: [
                                                             ElevatedButton(
@@ -716,93 +716,115 @@ class _ResHomePageState extends State<ResHomePage> {
                                                                 ),
                                                                 elevation: 3,
                                                               ),
-                                                              onPressed: () {},
+                                                              onPressed: () async {
+                                                                var emergencies = FirebaseFirestore.instance.collection('emergencies');
+                                                                print(snap[index]['Status']);
+                                                                var querySnapshots = await emergencies.get();
+                                                                for (var doc in querySnapshots.docs) {
+                                                                  await doc.reference.update({
+                                                                    'Status': 'Confirmed',
+                                                                  });
+                                                                }
+                                                              },
                                                               child: SizedBox(
-                                                                height: 120.h,
+                                                                height: 200.h,
                                                                 width: MediaQuery.of(context).size.width,
                                                                 child: Stack(
                                                                   children: [
-                                                                    Positioned(
-                                                                      top: 10,
-                                                                      right: 0,
-                                                                      child: IconButton(
-                                                                        icon: Icon(
-                                                                          Icons.delete,
-                                                                          color: Colors.red,
-                                                                        ),
-                                                                        onPressed: () {
-                                                                          setState(
-                                                                            () {
-                                                                              // QuickAlert.show(
-                                                                              //   backgroundColor: Colors.grey.shade200,
-                                                                              //   context: context,
-                                                                              //   barrierDismissible: false,
-                                                                              //   type: QuickAlertType.confirm,
-                                                                              //   title: "Delete Confirmation",
-                                                                              //   text: "Are you sure you want to remove ${snap[index]['Full Name']} from your contacts?",
-                                                                              //   confirmBtnText: "Yes",
-                                                                              //   confirmBtnColor: Colors.white,
-                                                                              //   confirmBtnTextStyle: TextStyle(
-                                                                              //     fontSize: 18.sp,
-                                                                              //     fontWeight: FontWeight.bold,
-                                                                              //     color: Colors.black,
-                                                                              //   ),
-                                                                              //   cancelBtnTextStyle: TextStyle(
-                                                                              //     fontWeight: FontWeight.bold,
-                                                                              //     color: Colors.red,
-                                                                              //   ),
-                                                                              //   onConfirmBtnTap: () {
-                                                                              //     var contactNumbers = FirebaseFirestore.instance.collection('users').doc(_emailAddress).collection('contact numbers');
-                                                                              //     contactNumbers.doc(snap[index]['Full Name'].toString()).delete();
-                                                                              //     Navigator.of(context).pop();
-                                                                              //   },
-                                                                              //   onCancelBtnTap: () {
-                                                                              //     Navigator.of(context).pop();
-                                                                              //   },
-                                                                              // );
-                                                                            },
-                                                                          );
-                                                                        },
-                                                                      ),
-                                                                    ),
                                                                     Padding(
                                                                       padding: EdgeInsets.only(left: 20),
                                                                       child: Column(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                                         children: [
-                                                                          Text(
-                                                                            snap[index]['Full Name'],
-                                                                            style: TextStyle(
-                                                                              fontSize: 20.sp,
-                                                                              fontWeight: FontWeight.w400,
-                                                                              color: Colors.black,
-                                                                            ),
+                                                                          Row(
+                                                                            children: [
+                                                                              Text(
+                                                                                snap[index]['Civilian'],
+                                                                                textAlign: TextAlign.left,
+                                                                                style: TextStyle(
+                                                                                  fontSize: 20,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                  color: Colors.black,
+                                                                                ),
+                                                                              ),
+                                                                            ],
                                                                           ),
-                                                                          SizedBox(height: 5.h),
-                                                                          Text(
-                                                                            'Relationship:\t\t\t\t\t\t\t\t\t' + snap[index]['Relationship'],
-                                                                            style: TextStyle(
-                                                                              fontSize: 16.sp,
-                                                                              fontWeight: FontWeight.normal,
-                                                                              color: Colors.black,
-                                                                            ),
+                                                                          SizedBox(height: 20.h),
+                                                                          Row(
+                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              Text(
+                                                                                'Type:\t\t\t',
+                                                                                textAlign: TextAlign.left,
+                                                                                style: TextStyle(
+                                                                                  fontSize: 17.sp,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  color: Colors.black,
+                                                                                ),
+                                                                              ),
+                                                                              Text(
+                                                                                snap[index]['Type'],
+                                                                                textAlign: TextAlign.left,
+                                                                                style: TextStyle(
+                                                                                  fontSize: 17.sp,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                  color: Colors.black,
+                                                                                ),
+                                                                              ),
+                                                                            ],
                                                                           ),
-                                                                          Text(
-                                                                            'Contact Number:\t ' + snap[index]['Contact Number'],
-                                                                            style: TextStyle(
-                                                                              fontSize: 16.sp,
-                                                                              fontWeight: FontWeight.normal,
-                                                                              color: Colors.black,
-                                                                            ),
+                                                                          SizedBox(height: 10.h),
+                                                                          Row(
+                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              Text(
+                                                                                'Coordinates:\t\t\t',
+                                                                                textAlign: TextAlign.left,
+                                                                                style: TextStyle(
+                                                                                  fontSize: 17.sp,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  color: Colors.black,
+                                                                                ),
+                                                                              ),
+                                                                              Expanded(
+                                                                                child: Text(
+                                                                                  snap[index]['Coordinates'],
+                                                                                  textAlign: TextAlign.left,
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 17.sp,
+                                                                                    fontWeight: FontWeight.normal,
+                                                                                    color: Colors.black,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
                                                                           ),
-                                                                          Text(
-                                                                            'Email Address:\t\t\t\t\t' + snap[index]['Email Address'],
-                                                                            style: TextStyle(
-                                                                              fontSize: 16.sp,
-                                                                              fontWeight: FontWeight.normal,
-                                                                              color: Colors.black,
-                                                                            ),
+                                                                          SizedBox(height: 10.h),
+                                                                          Row(
+                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              Text(
+                                                                                'Location:\t\t\t',
+                                                                                textAlign: TextAlign.left,
+                                                                                style: TextStyle(
+                                                                                  fontSize: 17.sp,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  color: Colors.black,
+                                                                                ),
+                                                                              ),
+                                                                              Expanded(
+                                                                                child: Text(
+                                                                                  snap[index]['Address'],
+                                                                                  textAlign: TextAlign.left,
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 17.sp,
+                                                                                    fontWeight: FontWeight.normal,
+                                                                                    color: Colors.black,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
                                                                           ),
                                                                         ],
                                                                       ),
