@@ -61,6 +61,7 @@ class _CivHomePageState extends State<CivHomePage> {
   late String _type = "";
   late String _userCoordinates = "";
   late String _userLocation = "";
+  late String _responderName = "";
 
   // FUNCTIONS
   ConnectivityResult result = ConnectivityResult.none;
@@ -297,7 +298,7 @@ class _CivHomePageState extends State<CivHomePage> {
                         ),
                       ],
                     ),
-                    height: 600.h,
+                    height: 680.h,
                     width: MediaQuery.of(context).size.width,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -352,121 +353,177 @@ class _CivHomePageState extends State<CivHomePage> {
                                             ),
                                             Container(
                                               height: 200.h,
-                                              child: StreamBuilder<DocumentSnapshot>(
-                                                stream: FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress).snapshots(),
-                                                builder: (context, snapshot) {
-                                                  if (!snapshot.hasData) {
-                                                    return Container(
-                                                      color: Colors.white,
-                                                      child: Center(
-                                                        child: Text("Fetching the Emergency Details"),
-                                                      ),
-                                                    );
-                                                  }
-                                                  try {
-                                                    final userData = snapshot.data!.data() as Map<String, dynamic>;
-                                                    _type = userData['Type'];
-                                                    _userCoordinates = userData['Coordinates'];
-                                                    _userLocation = userData['Address'];
-                                                  } catch (e) {
-                                                    print(e.toString());
-                                                    return Container();
-                                                  }
-                                                  return Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          Text(
-                                                            'Emergency Details:',
-                                                            textAlign: TextAlign.left,
-                                                            style: TextStyle(
-                                                              fontSize: 17,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.black,
-                                                            ),
+                                              child: ScrollConfiguration(
+                                                behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+                                                child: RawScrollbar(
+                                                  thickness: 7.5,
+                                                  thumbColor: Colors.redAccent,
+                                                  thumbVisibility: true,
+                                                  child: SingleChildScrollView(
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          height: 200.h,
+                                                          child: StreamBuilder<DocumentSnapshot>(
+                                                            stream: FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress).snapshots(),
+                                                            builder: (context, snapshot) {
+                                                              if (!snapshot.hasData) {
+                                                                return Container(
+                                                                  color: Colors.white,
+                                                                  child: Center(
+                                                                    child: Text("Fetching the Emergency Details"),
+                                                                  ),
+                                                                );
+                                                              }
+                                                              try {
+                                                                final userData = snapshot.data!.data() as Map<String, dynamic>;
+                                                                _type = userData['Type'];
+                                                                _userCoordinates = userData['Coordinates'];
+                                                                _userLocation = userData['Address'];
+                                                                _responderName = userData['Responder'];
+                                                              } catch (e) {
+                                                                print(e.toString());
+                                                                return Container();
+                                                              }
+                                                              return Column(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                children: [
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        'Emergency Details:',
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  SizedBox(height: 20.h),
+                                                                  Row(
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      Text(
+                                                                        'Emergency Type:\t\t\t',
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        _type,
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  SizedBox(height: 10.h),
+                                                                  Row(
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      Text(
+                                                                        'Coordinates:\t\t\t',
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                      Expanded(
+                                                                        child: Text(
+                                                                          _userCoordinates,
+                                                                          textAlign: TextAlign.left,
+                                                                          style: TextStyle(
+                                                                            fontSize: 17.sp,
+                                                                            fontWeight: FontWeight.normal,
+                                                                            color: Colors.black,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  SizedBox(height: 10.h),
+                                                                  Row(
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      Text(
+                                                                        'Your Location:\t\t\t',
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                      Expanded(
+                                                                        child: Text(
+                                                                          _userLocation,
+                                                                          textAlign: TextAlign.left,
+                                                                          style: TextStyle(
+                                                                            fontSize: 17.sp,
+                                                                            fontWeight: FontWeight.normal,
+                                                                            color: Colors.black,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        'Responder Details:',
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Row(
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      Text(
+                                                                        'Responder:\t\t\t',
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                      Expanded(
+                                                                        child: Text(
+                                                                          _responderName,
+                                                                          textAlign: TextAlign.left,
+                                                                          style: TextStyle(
+                                                                            fontSize: 17.sp,
+                                                                            fontWeight: FontWeight.normal,
+                                                                            color: Colors.black,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
                                                           ),
-                                                        ],
-                                                      ),
-                                                      SizedBox(height: 20.h),
-                                                      Row(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Text(
-                                                            'Emergency Type:\t\t\t',
-                                                            textAlign: TextAlign.left,
-                                                            style: TextStyle(
-                                                              fontSize: 17.sp,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.black,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            _type,
-                                                            textAlign: TextAlign.left,
-                                                            style: TextStyle(
-                                                              fontSize: 17.sp,
-                                                              fontWeight: FontWeight.normal,
-                                                              color: Colors.black,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      SizedBox(height: 10.h),
-                                                      Row(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Text(
-                                                            'Coordinates:\t\t\t',
-                                                            textAlign: TextAlign.left,
-                                                            style: TextStyle(
-                                                              fontSize: 17.sp,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.black,
-                                                            ),
-                                                          ),
-                                                          Expanded(
-                                                            child: Text(
-                                                              _userCoordinates,
-                                                              textAlign: TextAlign.left,
-                                                              style: TextStyle(
-                                                                fontSize: 17.sp,
-                                                                fontWeight: FontWeight.normal,
-                                                                color: Colors.black,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      SizedBox(height: 10.h),
-                                                      Row(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Text(
-                                                            'Your Location:\t\t\t',
-                                                            textAlign: TextAlign.left,
-                                                            style: TextStyle(
-                                                              fontSize: 17.sp,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.black,
-                                                            ),
-                                                          ),
-                                                          Expanded(
-                                                            child: Text(
-                                                              _userLocation,
-                                                              textAlign: TextAlign.left,
-                                                              style: TextStyle(
-                                                                fontSize: 17.sp,
-                                                                fontWeight: FontWeight.normal,
-                                                                color: Colors.black,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ],

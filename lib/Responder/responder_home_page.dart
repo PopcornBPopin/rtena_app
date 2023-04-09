@@ -55,6 +55,7 @@ class _ResHomePageState extends State<ResHomePage> {
 
   late StreamSubscription subscription;
   late String _firstName = "";
+  late String _fullName = "";
   late String _emailAddress = "";
   late String _address = "";
   late String _type = "";
@@ -596,6 +597,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                         }
                                         final userData = snapshot.data!.data() as Map<String, dynamic>;
                                         _firstName = userData['First Name'];
+                                        _fullName = '${userData['First Name']} ${userData['M.I']}. ${userData['Surname']}';
                                         return Text(
                                           'Hello! $_firstName',
                                           style: TextStyle(
@@ -718,11 +720,11 @@ class _ResHomePageState extends State<ResHomePage> {
                                                               ),
                                                               onPressed: () async {
                                                                 var emergencies = FirebaseFirestore.instance.collection('emergencies');
-                                                                print(snap[index]['Status']);
                                                                 var querySnapshots = await emergencies.get();
                                                                 for (var doc in querySnapshots.docs) {
                                                                   await doc.reference.update({
                                                                     'Status': 'Confirmed',
+                                                                    'Responder': _fullName,
                                                                   });
                                                                 }
                                                               },
