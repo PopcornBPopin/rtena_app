@@ -13,7 +13,7 @@ class Page3 extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 260.h),
+              SizedBox(height: 250.h),
               Container(
                 width: 300.w,
                 child: Text(

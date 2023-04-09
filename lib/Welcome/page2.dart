@@ -13,7 +13,7 @@ class Page2 extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              SizedBox(height: 210.h),
+              SizedBox(height: 200.h),
               Container(
                 child: Text(
                   'Easily report emergencies to others in your community',

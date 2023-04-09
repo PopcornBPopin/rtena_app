@@ -1633,7 +1633,7 @@ class _CivProfilePageState extends State<CivProfilePage> {
                                                     ),
                                                   ),
                                                 ),
-                                                SizedBox(height: 50.h),
+                                                SizedBox(height: 75.h),
                                               ],
                                             );
                                           },
