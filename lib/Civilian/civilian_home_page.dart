@@ -54,6 +54,7 @@ class _CivHomePageState extends State<CivHomePage> {
   bool _alertEmergencySelected = false;
 
   late StreamSubscription subscription;
+  late String _fullName = "";
   late String _firstName = "";
   late String _emailAddress = "";
   late String _address = "";
@@ -165,6 +166,7 @@ class _CivHomePageState extends State<CivHomePage> {
     String address,
   ) async {
     await FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress.toLowerCase()).set({
+      'Civilian': _fullName,
       'Type': type,
       'Status': status,
       'Coordinates': coordinates,
@@ -596,6 +598,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                         }
                                         final userData = snapshot.data!.data() as Map<String, dynamic>;
                                         _firstName = userData['First Name'];
+                                        _fullName = '${userData['First Name']} ${userData['M.I']}. ${userData['Surname']}';
                                         return Text(
                                           'Hello! $_firstName',
                                           style: TextStyle(

@@ -172,30 +172,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
     quickAlert(QuickAlertType.success, "Register Successful!", "New emergency contact added", "Okay", Colors.green);
   }
 
-  // Future editContactDetails(String fullname, String relationship, String contactNumber, String emailAddress, String selectedFullname) async {
-  //   await FirebaseFirestore.instance.collection('users').doc(_emailAddress.toLowerCase()).collection('contact numbers').doc(selectedFullname).update({
-  //     'Full Name': fullname,
-  //     'Relationship': relationship,
-  //     'Contact Number': contactNumber,
-  //     'Email Address': emailAddress,
-  //   });
-  // }
-
-  // Future EditContact(String selectedFullname) async {
-  //   editContactDetails(
-  //     _nameController.text.trim(),
-  //     _relationshipController.text.trim(),
-  //     _contactNumberController.text.trim(),
-  //     _emailController.text.trim(),
-  //     selectedFullname,
-  //   );
-  //   print("Updated contact deets to firestone");
-
-  //   Navigator.of(context).pop();
-  //   _formKey.currentState!.reset();
-  //   quickAlert(QuickAlertType.success, "Edit Successful!", "Emergency contact updated", "Okay", Colors.green);
-  // }
-
   void addContact(BuildContext context) {
     showDialog(
       context: context,
@@ -810,20 +786,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                       },
                                                                     ),
                                                                   ),
-                                                                  // Positioned(
-                                                                  //   top: 10,
-                                                                  //   right: 35,
-                                                                  //   child: IconButton(
-                                                                  //     onPressed: () {
-                                                                  //       print("SELECTED SHT" + snap[index].toString());
-                                                                  //       ModifContact(context, snap[index].toString());
-                                                                  //     },
-                                                                  //     icon: Icon(
-                                                                  //       Icons.edit,
-                                                                  //       color: Colors.black,
-                                                                  //     ),
-                                                                  //   ),
-                                                                  // ),
                                                                   Padding(
                                                                     padding: EdgeInsets.only(left: 20),
                                                                     child: Column(
