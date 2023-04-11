@@ -381,7 +381,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                             coordinate,
                                                           );
                                                         },
-                                                      ),
+                                                      ),//val was here
                                                     ),
                                                   ),
                                                 ),
