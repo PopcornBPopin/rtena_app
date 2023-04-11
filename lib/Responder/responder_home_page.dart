@@ -39,17 +39,6 @@ class _ResHomePageState extends State<ResHomePage> {
   }
 
   bool _hasInternet = false;
-  bool _timerRunning = false;
-  bool _emergencySelected = false;
-  bool _fireEmergencySelected = false;
-  bool _healthEmergencySelected = false;
-  bool _murderEmergencySelected = false;
-  bool _assaultEmergencySelected = false;
-  bool _floodEmergencySelected = false;
-  bool _equakeEmergencySelected = false;
-  bool _kidnapEmergencySelected = false;
-  bool _robberyEmergencySelected = false;
-  bool _alertEmergencySelected = false;
 
   late StreamSubscription subscription;
   late String _firstName = "";

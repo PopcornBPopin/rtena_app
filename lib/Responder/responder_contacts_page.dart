@@ -338,7 +338,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                           onMapCreated: _onMapCreated,
                                                           initialCameraPosition: CameraPosition(
                                                             target: LatLng(_averageLatitude, _averageLongitude),
-                                                            zoom: 10.0,
+                                                            zoom: 10,
                                                           ),
                                                           markers: Set.from(
                                                             coordinatesList.map(
@@ -390,6 +390,15 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                                         width: MediaQuery.of(context).size.width,
                                                                                         child: Stack(
                                                                                           children: [
+                                                                                            Positioned(
+                                                                                              right: 20,
+                                                                                              child: IconButton(
+                                                                                                onPressed: () {
+                                                                                                  Navigator.of(context).pop();
+                                                                                                },
+                                                                                                icon: Icon(Icons.close),
+                                                                                              ),
+                                                                                            ),
                                                                                             Padding(
                                                                                               padding: const EdgeInsets.symmetric(horizontal: 30),
                                                                                               child: Container(
