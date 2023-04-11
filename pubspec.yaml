@@ -58,6 +58,7 @@ dependencies:
   geolocator: ^9.0.2
   geocoding: ^2.1.0
   google_maps_flutter: ^2.2.5
+  custom_info_window: ^1.0.1
   # geocoding: ^2.1.0
 
 dev_dependencies:

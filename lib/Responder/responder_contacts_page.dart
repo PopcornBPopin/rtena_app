@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:custom_info_window/custom_info_window.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
     _relationshipController.dispose();
     _emailController.dispose();
     _contactNumberController.dispose();
+    _customInfoWindowController.dispose();
     subscription.cancel();
     super.dispose();
   }
@@ -64,8 +66,10 @@ class _ResContactsPageState extends State<ResContactsPage> {
   final _emailController = TextEditingController();
   final _relationshipController = TextEditingController();
 
+  CustomInfoWindowController _customInfoWindowController = CustomInfoWindowController();
+
   void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+    _customInfoWindowController.googleMapController = controller;
   }
 
   //SNACKBAR
@@ -312,16 +316,81 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                           borderRadius: BorderRadius.only(topLeft: Radius.circular(40)),
                                           child: Container(
                                             height: 500.h,
-                                            child: GoogleMap(
-                                              mapType: MapType.normal,
-                                              initialCameraPosition: CameraPosition(
-                                                target: LatLng(_averageLatitude, _averageLongitude),
-                                                zoom: 12.0,
-                                              ),
-                                              markers: Set.from(coordinatesList.map((coordinate) => Marker(
-                                                    markerId: MarkerId(coordinate.toString()),
-                                                    position: coordinate,
-                                                  ))),
+                                            child: Stack(
+                                              children: [
+                                                GoogleMap(
+                                                  mapType: MapType.normal,
+                                                  mapToolbarEnabled: false,
+                                                  zoomControlsEnabled: false,
+                                                  onMapCreated: _onMapCreated,
+                                                  initialCameraPosition: CameraPosition(
+                                                    target: LatLng(_averageLatitude, _averageLongitude),
+                                                    zoom: 15.0,
+                                                  ),
+                                                  markers: Set.from(
+                                                    coordinatesList.map(
+                                                      (coordinate) => Marker(
+                                                        markerId: MarkerId(coordinate.toString()),
+                                                        position: coordinate,
+                                                        onTap: () {
+                                                          print("OPEN GAGO");
+                                                          _customInfoWindowController.addInfoWindow!(
+                                                            Container(
+                                                              height: 100,
+                                                              width: 300,
+                                                              color: Colors.white,
+                                                              child: ListView.builder(
+                                                                physics: NeverScrollableScrollPhysics(),
+                                                                itemCount: snap.length,
+                                                                itemBuilder: (context, index) {
+                                                                  Column(
+                                                                    children: [
+                                                                      Text(
+                                                                        snap[index]['Civilian'],
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 20,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        snap[index]['Civilian'],
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 20,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        snap[index]['Civilian'],
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 20,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                  return Container();
+                                                                },
+                                                              ),
+                                                            ),
+                                                            coordinate,
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                CustomInfoWindow(
+                                                  controller: _customInfoWindowController,
+                                                  height: 100,
+                                                  width: 300,
+                                                )
+                                              ],
                                             ),
                                           ),
                                         );
