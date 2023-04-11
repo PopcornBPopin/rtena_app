@@ -279,396 +279,394 @@ class _CivHomePageState extends State<CivHomePage> {
           onWillPop: () {
             return Future.value(false);
           },
-          child: Center(
-            child: Scaffold(
-              backgroundColor: Colors.black.withOpacity(0.3),
-              body: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        bottomRight: Radius.circular(30),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
-                          spreadRadius: 7,
-                          blurRadius: 10,
-                          offset: Offset(0, 0),
-                        ),
-                      ],
+          child: Scaffold(
+            backgroundColor: Colors.black.withOpacity(0.3),
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
                     ),
-                    height: 700.h,
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 20.h),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          child: Stack(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 30),
-                                child: Container(
-                                  child: Icon(
-                                    Icons.emergency,
-                                    size: 60,
-                                    color: Colors.redAccent,
-                                  ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+                        spreadRadius: 7,
+                        blurRadius: 10,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  height: 700.h,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20.h),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 30),
+                              child: Container(
+                                child: Icon(
+                                  Icons.emergency,
+                                  size: 60,
+                                  color: Colors.redAccent,
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          child: Container(
-                            child: const Text(
-                              "Alert Acknowledged!",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
                             ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Container(
+                          child: const Text(
+                            "Alert Acknowledged!",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(height: 20.h),
-                        Expanded(
-                          child: Container(
-                            height: 100.h,
-                            child: ScrollConfiguration(
-                              behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    SingleChildScrollView(
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                                            child: Text(
-                                              "Dear ${_firstName}, we understand that the current situation may be causing concern and anxiety.\n\nThe responders are now on their way to address the issue and ensure your safety. \n",
-                                              textAlign: TextAlign.justify,
-                                              style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
-                                            ),
+                      ),
+                      SizedBox(height: 20.h),
+                      Expanded(
+                        child: Container(
+                          height: 100.h,
+                          child: ScrollConfiguration(
+                            behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                                          child: Text(
+                                            "Dear ${_firstName}, we understand that the current situation may be causing concern and anxiety.\n\nThe responders are now on their way to address the issue and ensure your safety. \n",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
                                           ),
-                                          Container(
-                                            height: 320.h,
-                                            width: MediaQuery.of(context).size.width,
-                                            child: ScrollConfiguration(
-                                              behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
-                                              child: RawScrollbar(
-                                                thickness: 7.5,
-                                                thumbColor: Colors.redAccent,
-                                                thumbVisibility: true,
-                                                child: SingleChildScrollView(
-                                                  child: Column(
-                                                    children: [
-                                                      Container(
-                                                        child: StreamBuilder<DocumentSnapshot>(
-                                                          stream: FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress).snapshots(),
-                                                          builder: (context, snapshot) {
-                                                            if (!snapshot.hasData) {
-                                                              return Container(
-                                                                color: Colors.white,
-                                                                child: Center(
-                                                                  child: Text("Fetching the Emergency Details"),
-                                                                ),
-                                                              );
-                                                            }
-                                                            try {
-                                                              final userData = snapshot.data!.data() as Map<String, dynamic>;
-                                                              _type = userData['Type'];
-                                                              _userCoordinates = userData['Coordinates'];
-                                                              _userLocation = userData['Address'];
-                                                              _responderName = userData['Responder'];
-                                                              _responderOccupation = userData['Responder Occupation'];
-                                                              _responderContactNumber = userData['Responder Contact Number'];
-                                                              _responderEmployer = userData['Responder Employer'];
-                                                            } catch (e) {
-                                                              print(e.toString());
-                                                              return Container();
-                                                            }
-                                                            return Padding(
-                                                              padding: const EdgeInsets.symmetric(horizontal: 30),
-                                                              child: Column(
-                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                children: [
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        'Emergency Details:',
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 17,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 20.h),
-                                                                  Row(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      Text(
-                                                                        'Emergency Type:\t\t\t',
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 17.sp,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        _type,
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 17.sp,
-                                                                          fontWeight: FontWeight.normal,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 10.h),
-                                                                  Row(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      Text(
-                                                                        'Coordinates:\t\t\t',
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 17.sp,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child: Text(
-                                                                          _userCoordinates,
-                                                                          textAlign: TextAlign.left,
-                                                                          style: TextStyle(
-                                                                            fontSize: 17.sp,
-                                                                            fontWeight: FontWeight.normal,
-                                                                            color: Colors.black,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 10.h),
-                                                                  Row(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      Text(
-                                                                        'Your Location:\t\t\t',
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 17.sp,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child: Text(
-                                                                          _userLocation,
-                                                                          textAlign: TextAlign.left,
-                                                                          style: TextStyle(
-                                                                            fontSize: 17.sp,
-                                                                            fontWeight: FontWeight.normal,
-                                                                            color: Colors.black,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 20.h),
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        'Responder Details:',
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 17,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 20.h),
-                                                                  Row(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      Text(
-                                                                        'Responder:\t\t\t',
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 17.sp,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child: Text(
-                                                                          _responderName,
-                                                                          textAlign: TextAlign.left,
-                                                                          style: TextStyle(
-                                                                            fontSize: 17.sp,
-                                                                            fontWeight: FontWeight.normal,
-                                                                            color: Colors.black,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 10),
-                                                                  Row(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      Text(
-                                                                        'Occupation:\t\t\t',
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 17.sp,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        _responderOccupation,
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 17.sp,
-                                                                          fontWeight: FontWeight.normal,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 10.h),
-                                                                  Row(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      Text(
-                                                                        'Contact Number:\t\t\t',
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 17.sp,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        _responderContactNumber,
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 17.sp,
-                                                                          fontWeight: FontWeight.normal,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 10.h),
-                                                                  Row(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      Text(
-                                                                        'Employer:\t\t\t',
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 17.sp,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child: Text(
-                                                                          _responderEmployer,
-                                                                          textAlign: TextAlign.left,
-                                                                          style: TextStyle(
-                                                                            fontSize: 17.sp,
-                                                                            fontWeight: FontWeight.normal,
-                                                                            color: Colors.black,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(height: 50.h),
-                                                                ],
+                                        ),
+                                        Container(
+                                          height: 320.h,
+                                          width: MediaQuery.of(context).size.width,
+                                          child: ScrollConfiguration(
+                                            behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+                                            child: RawScrollbar(
+                                              thickness: 7.5,
+                                              thumbColor: Colors.redAccent,
+                                              thumbVisibility: true,
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      child: StreamBuilder<DocumentSnapshot>(
+                                                        stream: FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress).snapshots(),
+                                                        builder: (context, snapshot) {
+                                                          if (!snapshot.hasData) {
+                                                            return Container(
+                                                              color: Colors.white,
+                                                              child: Center(
+                                                                child: Text("Fetching the Emergency Details"),
                                                               ),
                                                             );
-                                                          },
-                                                        ),
+                                                          }
+                                                          try {
+                                                            final userData = snapshot.data!.data() as Map<String, dynamic>;
+                                                            _type = userData['Type'];
+                                                            _userCoordinates = userData['Coordinates'];
+                                                            _userLocation = userData['Address'];
+                                                            _responderName = userData['Responder'];
+                                                            _responderOccupation = userData['Responder Occupation'];
+                                                            _responderContactNumber = userData['Responder Contact Number'];
+                                                            _responderEmployer = userData['Responder Employer'];
+                                                          } catch (e) {
+                                                            print(e.toString());
+                                                            return Container();
+                                                          }
+                                                          return Padding(
+                                                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      'Emergency Details:',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 20.h),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Emergency Type:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      _type,
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.normal,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 10.h),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Coordinates:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                        _userCoordinates,
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 10.h),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Your Location:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                        _userLocation,
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 20.h),
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      'Responder Details:',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 20.h),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Responder:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                        _responderName,
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 10),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Occupation:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      _responderOccupation,
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.normal,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 10.h),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Contact Number:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      _responderContactNumber,
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.normal,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 10.h),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Employer:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                        _responderEmployer,
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 50.h),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        },
                                                       ),
-                                                    ],
-                                                  ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(252, 58, 72, 32),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
-                            ),
-                            padding: EdgeInsets.all(12),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
                           ),
-                          onPressed: () async {
-                            resolveEmergency();
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            height: 40.h,
-                            child: Stack(
-                              children: [
-                                Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Resolved",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20.sp,
-                                        ),
-                                        textAlign: TextAlign.center,
+                          padding: EdgeInsets.all(12),
+                        ),
+                        onPressed: () async {
+                          resolveEmergency();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 40.h,
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Resolved",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20.sp,
                                       ),
-                                    ],
-                                  ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
                                 ),
-                                Positioned(
-                                  right: 20,
-                                  top: 0,
-                                  bottom: 0,
-                                  child: Icon(
-                                    Icons.next_plan,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
-                                )
-                              ],
-                            ),
+                              ),
+                              Positioned(
+                                right: 20,
+                                top: 0,
+                                bottom: 0,
+                                child: Icon(
+                                  Icons.next_plan,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                              )
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

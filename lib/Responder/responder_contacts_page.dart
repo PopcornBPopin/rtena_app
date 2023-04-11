@@ -1,15 +1,11 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -57,6 +53,18 @@ class _ResContactsPageState extends State<ResContactsPage> {
   late double _totalLongitude = 0.0;
   late double _averageLatitude = 0.0;
   late double _averageLongitude = 0.0;
+  late int _markerSelected = 0;
+
+  late String _fullName = "";
+  late String _firstName = "";
+  late String _address = "";
+  late String _type = "";
+  late String _userCoordinates = "";
+  late String _userLocation = "";
+  late String _responderName = "";
+  late String _responderOccupation = "";
+  late String _responderContactNumber = "";
+  late String _responderEmployer = "";
 
   late GoogleMapController mapController;
 
@@ -268,136 +276,326 @@ class _ResContactsPageState extends State<ResContactsPage> {
                         child: Column(
                           children: [
                             Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(40),
-                                  ),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
-                                      spreadRadius: 7,
-                                      blurRadius: 10,
-                                      offset: Offset(0, 0),
-                                    )
-                                  ]),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 700.h,
-                                    child: StreamBuilder<QuerySnapshot>(
-                                      stream: FirebaseFirestore.instance.collection('emergencies').snapshots(),
-                                      builder: (context, snapshot) {
-                                        if (!snapshot.hasData) {
-                                          return Container(
-                                            color: Colors.white,
-                                            child: Center(
-                                              child: Text("Fetching ongoing emergencies"),
-                                            ),
-                                          );
-                                        }
-                                        final snap = snapshot.data!.docs;
-                                        List<LatLng> coordinatesList = [];
-                                        for (var i = 0; i < snap.length; i++) {
-                                          _civCoordinates = snap[i]['Coordinates'];
-                                          _civLatitude = double.parse(_civCoordinates.split('Latitude: ')[1].split(',')[0]);
-                                          _civLongitude = double.parse(_civCoordinates.split('Longitude: ')[1]);
-                                          LatLng _coordinate = LatLng(_civLatitude, _civLongitude);
-                                          coordinatesList.add(_coordinate);
-                                        }
-                                        for (LatLng coordinates in coordinatesList) {
-                                          _totalLatitude += coordinates.latitude;
-                                          _totalLongitude += coordinates.longitude;
-                                        }
-                                        _averageLatitude = _totalLatitude / coordinatesList.length;
-                                        _averageLongitude = _totalLongitude / coordinatesList.length;
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.only(topLeft: Radius.circular(40)),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(40),
+                                      ),
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
+                                          spreadRadius: 7,
+                                          blurRadius: 10,
+                                          offset: Offset(0, 0),
+                                        )
+                                      ]),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 700.h,
+                                        child: StreamBuilder<QuerySnapshot>(
+                                          stream: FirebaseFirestore.instance.collection('emergencies').snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (!snapshot.hasData) {
+                                              return Container(
+                                                color: Colors.white,
+                                                child: Center(
+                                                  child: Text("Fetching ongoing emergencies"),
+                                                ),
+                                              );
+                                            }
+                                            final snap = snapshot.data!.docs;
+                                            List<LatLng> coordinatesList = [];
+                                            for (var i = 0; i < snap.length; i++) {
+                                              _civCoordinates = snap[i]['Coordinates'];
+                                              _civLatitude = double.parse(_civCoordinates.split('Latitude: ')[1].split(',')[0]);
+                                              _civLongitude = double.parse(_civCoordinates.split('Longitude: ')[1]);
+                                              LatLng _coordinate = LatLng(_civLatitude, _civLongitude);
+                                              coordinatesList.add(_coordinate);
+                                            }
+                                            for (LatLng coordinates in coordinatesList) {
+                                              _totalLatitude += coordinates.latitude;
+                                              _totalLongitude += coordinates.longitude;
+                                            }
+                                            _averageLatitude = _totalLatitude / coordinatesList.length;
+                                            _averageLongitude = _totalLongitude / coordinatesList.length;
 
-                                        return ClipRRect(
-                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(40)),
-                                          child: Container(
-                                            height: 500.h,
-                                            child: Stack(
-                                              children: [
-                                                GoogleMap(
-                                                  mapType: MapType.normal,
-                                                  mapToolbarEnabled: false,
-                                                  zoomControlsEnabled: false,
-                                                  onMapCreated: _onMapCreated,
-                                                  initialCameraPosition: CameraPosition(
-                                                    target: LatLng(_averageLatitude, _averageLongitude),
-                                                    zoom: 15.0,
-                                                  ),
-                                                  markers: Set.from(
-                                                    coordinatesList.map(
-                                                      (coordinate) => Marker(
-                                                        markerId: MarkerId(coordinate.toString()),
-                                                        position: coordinate,
-                                                        onTap: () {
-                                                          print("OPEN GAGO");
-                                                          _customInfoWindowController.addInfoWindow!(
-                                                            Container(
-                                                              height: 100,
-                                                              width: 300,
-                                                              color: Colors.white,
-                                                              child: ListView.builder(
-                                                                physics: NeverScrollableScrollPhysics(),
-                                                                itemCount: snap.length,
-                                                                itemBuilder: (context, index) {
-                                                                  Column(
-                                                                    children: [
-                                                                      Text(
-                                                                        snap[index]['Civilian'],
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 20,
-                                                                          fontWeight: FontWeight.normal,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        snap[index]['Civilian'],
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 20,
-                                                                          fontWeight: FontWeight.normal,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        snap[index]['Civilian'],
-                                                                        textAlign: TextAlign.left,
-                                                                        style: TextStyle(
-                                                                          fontSize: 20,
-                                                                          fontWeight: FontWeight.normal,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                      ),
-                                                                    ],
+                                            return Container(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(13),
+                                                child: Stack(
+                                                  children: [
+                                                    ClipRRect(
+                                                      borderRadius: BorderRadius.only(topLeft: Radius.circular(30)),
+                                                      child: Container(
+                                                        child: GoogleMap(
+                                                          mapType: MapType.normal,
+                                                          mapToolbarEnabled: false,
+                                                          zoomControlsEnabled: false,
+                                                          onMapCreated: _onMapCreated,
+                                                          initialCameraPosition: CameraPosition(
+                                                            target: LatLng(_averageLatitude, _averageLongitude),
+                                                            zoom: 10.0,
+                                                          ),
+                                                          markers: Set.from(
+                                                            coordinatesList.map(
+                                                              (coordinate) => Marker(
+                                                                markerId: MarkerId(coordinate.toString()),
+                                                                position: coordinate,
+                                                                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose),
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    _markerSelected = coordinatesList.indexOf(coordinate);
+                                                                  });
+                                                                  print(_markerSelected);
+                                                                  showDialog(
+                                                                    context: context,
+                                                                    builder: (context) => StatefulBuilder(
+                                                                      builder: (context, setState) {
+                                                                        return WillPopScope(
+                                                                          onWillPop: () {
+                                                                            return Future.value(true);
+                                                                          },
+                                                                          child: Scaffold(
+                                                                            backgroundColor: Colors.black.withOpacity(0.3),
+                                                                            body: Center(
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                                                                child: Container(
+                                                                                  height: 420.h,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Colors.grey.shade200,
+                                                                                    borderRadius: BorderRadius.only(
+                                                                                      topLeft: Radius.circular(30),
+                                                                                      bottomRight: Radius.circular(30),
+                                                                                    ),
+                                                                                    boxShadow: [
+                                                                                      BoxShadow(
+                                                                                        color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+                                                                                        spreadRadius: 7,
+                                                                                        blurRadius: 10,
+                                                                                        offset: Offset(0, 0),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                  width: MediaQuery.of(context).size.width,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      SizedBox(height: 20.h),
+                                                                                      Container(
+                                                                                        width: MediaQuery.of(context).size.width,
+                                                                                        child: Stack(
+                                                                                          children: [
+                                                                                            Padding(
+                                                                                              padding: const EdgeInsets.symmetric(horizontal: 30),
+                                                                                              child: Container(
+                                                                                                child: Icon(
+                                                                                                  Icons.emergency,
+                                                                                                  size: 60,
+                                                                                                  color: Colors.redAccent,
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                      SizedBox(height: 10.h),
+                                                                                      Padding(
+                                                                                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                                                                                        child: Container(
+                                                                                          child: const Text(
+                                                                                            "Emergency Details",
+                                                                                            textAlign: TextAlign.left,
+                                                                                            style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                      SizedBox(height: 20.h),
+                                                                                      Expanded(
+                                                                                        child: Container(
+                                                                                          child: Expanded(
+                                                                                            child: Column(
+                                                                                              children: [
+                                                                                                Expanded(
+                                                                                                  child: RawScrollbar(
+                                                                                                    thickness: 7.5,
+                                                                                                    thumbColor: Colors.redAccent,
+                                                                                                    thumbVisibility: true,
+                                                                                                    child: ScrollConfiguration(
+                                                                                                      behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+                                                                                                      child: ListView.builder(
+                                                                                                        itemCount: 1,
+                                                                                                        itemBuilder: (context, index) {
+                                                                                                          return Padding(
+                                                                                                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                                                                                                            child: Column(
+                                                                                                              children: [
+                                                                                                                SizedBox(height: 20.h),
+                                                                                                                Row(
+                                                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                                  children: [
+                                                                                                                    Text(
+                                                                                                                      'Civilian:\t\t\t',
+                                                                                                                      textAlign: TextAlign.left,
+                                                                                                                      style: TextStyle(
+                                                                                                                        fontSize: 20.sp,
+                                                                                                                        fontWeight: FontWeight.bold,
+                                                                                                                        color: Colors.black,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                    Text(
+                                                                                                                      snap[_markerSelected]['Civilian'],
+                                                                                                                      textAlign: TextAlign.left,
+                                                                                                                      style: TextStyle(
+                                                                                                                        fontSize: 20.sp,
+                                                                                                                        fontWeight: FontWeight.normal,
+                                                                                                                        color: Colors.black,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ],
+                                                                                                                ),
+                                                                                                                SizedBox(height: 10.h),
+                                                                                                                Row(
+                                                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                                  children: [
+                                                                                                                    Text(
+                                                                                                                      'Emergency Type:\t\t\t',
+                                                                                                                      textAlign: TextAlign.left,
+                                                                                                                      style: TextStyle(
+                                                                                                                        fontSize: 20.sp,
+                                                                                                                        fontWeight: FontWeight.bold,
+                                                                                                                        color: Colors.black,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                    Expanded(
+                                                                                                                      child: Text(
+                                                                                                                        snap[_markerSelected]['Type'],
+                                                                                                                        textAlign: TextAlign.left,
+                                                                                                                        style: TextStyle(
+                                                                                                                          fontSize: 20.sp,
+                                                                                                                          fontWeight: FontWeight.normal,
+                                                                                                                          color: Colors.black,
+                                                                                                                        ),
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ],
+                                                                                                                ),
+                                                                                                                SizedBox(height: 10.h),
+                                                                                                                Row(
+                                                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                                  children: [
+                                                                                                                    Text(
+                                                                                                                      'Emergency Location:\t\t\t',
+                                                                                                                      textAlign: TextAlign.left,
+                                                                                                                      style: TextStyle(
+                                                                                                                        fontSize: 20.sp,
+                                                                                                                        fontWeight: FontWeight.bold,
+                                                                                                                        color: Colors.black,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                    Expanded(
+                                                                                                                      child: Text(
+                                                                                                                        snap[_markerSelected]['Address'],
+                                                                                                                        textAlign: TextAlign.left,
+                                                                                                                        style: TextStyle(
+                                                                                                                          fontSize: 20.sp,
+                                                                                                                          fontWeight: FontWeight.normal,
+                                                                                                                          color: Colors.black,
+                                                                                                                        ),
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ],
+                                                                                                                ),
+                                                                                                                SizedBox(height: 20.h),
+                                                                                                              ],
+                                                                                                            ),
+                                                                                                          );
+                                                                                                        },
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                      ElevatedButton(
+                                                                                        style: ElevatedButton.styleFrom(
+                                                                                          backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                                                                                          shape: RoundedRectangleBorder(
+                                                                                            borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                                                                                          ),
+                                                                                          padding: EdgeInsets.all(12),
+                                                                                        ),
+                                                                                        onPressed: () {
+                                                                                          Navigator.of(context).pop();
+                                                                                        },
+                                                                                        child: Container(
+                                                                                          width: double.infinity,
+                                                                                          height: 40.h,
+                                                                                          child: Stack(
+                                                                                            children: [
+                                                                                              Center(
+                                                                                                child: Row(
+                                                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                                                  children: [
+                                                                                                    Text(
+                                                                                                      "Respond",
+                                                                                                      style: TextStyle(
+                                                                                                        color: Colors.white,
+                                                                                                        fontSize: 20.sp,
+                                                                                                      ),
+                                                                                                      textAlign: TextAlign.center,
+                                                                                                    ),
+                                                                                                  ],
+                                                                                                ),
+                                                                                              ),
+                                                                                              Positioned(
+                                                                                                right: 20,
+                                                                                                top: 0,
+                                                                                                bottom: 0,
+                                                                                                child: Icon(
+                                                                                                  Icons.next_plan,
+                                                                                                  color: Colors.white,
+                                                                                                  size: 30,
+                                                                                                ),
+                                                                                              )
+                                                                                            ],
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    ),
                                                                   );
-                                                                  return Container();
                                                                 },
                                                               ),
                                                             ),
-                                                            coordinate,
-                                                          );
-                                                        },
-                                                      ),//val was here
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
+                                                  ],
                                                 ),
-                                                CustomInfoWindow(
-                                                  controller: _customInfoWindowController,
-                                                  height: 100,
-                                                  width: 300,
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
                           ],

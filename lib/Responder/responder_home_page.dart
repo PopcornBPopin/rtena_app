@@ -9,7 +9,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ResHomePage extends StatefulWidget {
   const ResHomePage({Key? key}) : super(key: key);
