@@ -51,6 +51,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
   late StreamSubscription subscription;
   late String _emailAddress = "";
   late String _civCoordinates = "";
+  late String _civEmergencyType = "";
   late double _civLatitude = 0.0;
   late double _civLongitude = 0.0;
   late double _totalLatitude = 0.0;
@@ -76,6 +77,20 @@ class _ResContactsPageState extends State<ResContactsPage> {
 
   late GoogleMapController mapController;
 
+  BitmapDescriptor _getMarkerIcon(String emergencyType) {
+    switch (emergencyType) {
+      case 'Flood Emergency':
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
+      case 'Earthquake Emergency':
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+      case 'Robbery Emergency':
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
+      // Add cases for other emergency types as needed.
+      default:
+        return BitmapDescriptor.defaultMarker;
+    }
+  }
+
   String mapTheme = "";
   //Text Controllers
   final _nameController = TextEditingController();
@@ -88,21 +103,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
   void _onMapCreated(GoogleMapController controller) {
     _customInfoWindowController.googleMapController = controller;
     controller.setMapStyle(mapTheme);
-  }
-
-  createMarker(context) {
-    var collection = FirebaseFirestore.instance.collection('emergencies');
-    var docReference = collection.doc(_emailAddress);
-
-    docReference.snapshots().listen((docSnapshot) {
-      if (docSnapshot.exists) {
-        Map<String, dynamic>? data = docSnapshot.data();
-        var type = data?['Type'];
-        if (type == 'Flood Emergency') {
-          print("test");
-        }
-      }
-    });
   }
 
   //SNACKBAR
@@ -350,13 +350,278 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                             }
                                             final snap = snapshot.data!.docs;
                                             List<LatLng> coordinatesList = [];
+                                            Set<Marker> _markers = {};
+
                                             for (var i = 0; i < snap.length; i++) {
+                                              _civEmergencyType = snap[i]['Type'];
                                               _civCoordinates = snap[i]['Coordinates'];
                                               _civLatitude = double.parse(_civCoordinates.split('Latitude: ')[1].split(',')[0]);
                                               _civLongitude = double.parse(_civCoordinates.split('Longitude: ')[1]);
                                               LatLng _coordinate = LatLng(_civLatitude, _civLongitude);
                                               coordinatesList.add(_coordinate);
+                                              Marker marker = Marker(
+                                                markerId: MarkerId(_coordinate.toString()),
+                                                position: _coordinate,
+                                                icon: _getMarkerIcon(_civEmergencyType),
+                                                onTap: () {
+                                                  setState(() {
+                                                    _markerSelected = i;
+                                                  });
+                                                  print(_markerSelected);
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) => StatefulBuilder(
+                                                      builder: (context, setState) {
+                                                        return WillPopScope(
+                                                          onWillPop: () {
+                                                            return Future.value(true);
+                                                          },
+                                                          child: Scaffold(
+                                                            backgroundColor: Colors.transparent,
+                                                            body: Center(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                                                                child: Container(
+                                                                  height: 420.h,
+                                                                  decoration: BoxDecoration(
+                                                                    color: Colors.grey.shade200,
+                                                                    borderRadius: BorderRadius.only(
+                                                                      topLeft: Radius.circular(30),
+                                                                      bottomRight: Radius.circular(30),
+                                                                    ),
+                                                                    boxShadow: [
+                                                                      BoxShadow(
+                                                                        color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+                                                                        spreadRadius: 7,
+                                                                        blurRadius: 10,
+                                                                        offset: Offset(0, 0),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  width: MediaQuery.of(context).size.width,
+                                                                  child: Column(
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      SizedBox(height: 20.h),
+                                                                      Container(
+                                                                        width: MediaQuery.of(context).size.width,
+                                                                        child: Stack(
+                                                                          children: [
+                                                                            Positioned(
+                                                                              right: 20,
+                                                                              child: IconButton(
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop();
+                                                                                },
+                                                                                icon: Icon(Icons.close),
+                                                                              ),
+                                                                            ),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 30),
+                                                                              child: Container(
+                                                                                child: Icon(
+                                                                                  {
+                                                                                        'Fire Emergency': FontAwesomeIcons.fire,
+                                                                                        'Health Emergency': Icons.health_and_safety,
+                                                                                        'Murder Emergency': FontAwesomeIcons.solidFaceDizzy,
+                                                                                        'Assault Emergency': FontAwesomeIcons.handFist,
+                                                                                        'Flood Emergency': FontAwesomeIcons.water,
+                                                                                        'Earthquake Emergency': FontAwesomeIcons.houseChimneyCrack,
+                                                                                        'Kidnap Emergency': FontAwesomeIcons.solidFaceSadCry,
+                                                                                        'Robbery Emergency': FontAwesomeIcons.userNinja,
+                                                                                        'Alert Emergency': Icons.notifications_active,
+                                                                                      }[snap[_markerSelected]['Type']] ??
+                                                                                      Icons.warning,
+                                                                                  size: 50,
+                                                                                  color: Colors.redAccent,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(height: 10.h),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                                                                        child: Container(
+                                                                          child: const Text(
+                                                                            "Emergency Details",
+                                                                            textAlign: TextAlign.left,
+                                                                            style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(height: 20.h),
+                                                                      Expanded(
+                                                                        child: Container(
+                                                                          child: Expanded(
+                                                                            child: Column(
+                                                                              children: [
+                                                                                Expanded(
+                                                                                  child: RawScrollbar(
+                                                                                    thickness: 7.5,
+                                                                                    thumbColor: Colors.redAccent,
+                                                                                    thumbVisibility: true,
+                                                                                    child: ScrollConfiguration(
+                                                                                      behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+                                                                                      child: ListView.builder(
+                                                                                        itemCount: 1,
+                                                                                        itemBuilder: (context, index) {
+                                                                                          return Padding(
+                                                                                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                                                                                            child: Column(
+                                                                                              children: [
+                                                                                                SizedBox(height: 20.h),
+                                                                                                Row(
+                                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                  children: [
+                                                                                                    Text(
+                                                                                                      'Civilian:\t\t\t',
+                                                                                                      textAlign: TextAlign.left,
+                                                                                                      style: TextStyle(
+                                                                                                        fontSize: 20.sp,
+                                                                                                        fontWeight: FontWeight.bold,
+                                                                                                        color: Colors.black,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    Text(
+                                                                                                      snap[_markerSelected]['Civilian'],
+                                                                                                      textAlign: TextAlign.left,
+                                                                                                      style: TextStyle(
+                                                                                                        fontSize: 20.sp,
+                                                                                                        fontWeight: FontWeight.normal,
+                                                                                                        color: Colors.black,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ],
+                                                                                                ),
+                                                                                                SizedBox(height: 10.h),
+                                                                                                Row(
+                                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                  children: [
+                                                                                                    Text(
+                                                                                                      'Emergency Type:\t\t\t',
+                                                                                                      textAlign: TextAlign.left,
+                                                                                                      style: TextStyle(
+                                                                                                        fontSize: 20.sp,
+                                                                                                        fontWeight: FontWeight.bold,
+                                                                                                        color: Colors.black,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    Expanded(
+                                                                                                      child: Text(
+                                                                                                        snap[_markerSelected]['Type'],
+                                                                                                        textAlign: TextAlign.left,
+                                                                                                        style: TextStyle(
+                                                                                                          fontSize: 20.sp,
+                                                                                                          fontWeight: FontWeight.normal,
+                                                                                                          color: Colors.black,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ],
+                                                                                                ),
+                                                                                                SizedBox(height: 10.h),
+                                                                                                Row(
+                                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                  children: [
+                                                                                                    Text(
+                                                                                                      'Emergency Location:\t\t\t',
+                                                                                                      textAlign: TextAlign.left,
+                                                                                                      style: TextStyle(
+                                                                                                        fontSize: 20.sp,
+                                                                                                        fontWeight: FontWeight.bold,
+                                                                                                        color: Colors.black,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    Expanded(
+                                                                                                      child: Text(
+                                                                                                        snap[_markerSelected]['Address'],
+                                                                                                        textAlign: TextAlign.left,
+                                                                                                        style: TextStyle(
+                                                                                                          fontSize: 20.sp,
+                                                                                                          fontWeight: FontWeight.normal,
+                                                                                                          color: Colors.black,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ],
+                                                                                                ),
+                                                                                                SizedBox(height: 20.h),
+                                                                                              ],
+                                                                                            ),
+                                                                                          );
+                                                                                        },
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      ElevatedButton(
+                                                                        style: ElevatedButton.styleFrom(
+                                                                          backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                                                                          shape: RoundedRectangleBorder(
+                                                                            borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                                                                          ),
+                                                                          padding: EdgeInsets.all(12),
+                                                                        ),
+                                                                        onPressed: () {
+                                                                          Navigator.of(context).pop();
+                                                                        },
+                                                                        child: Container(
+                                                                          width: double.infinity,
+                                                                          height: 40.h,
+                                                                          child: Stack(
+                                                                            children: [
+                                                                              Center(
+                                                                                child: Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                                  children: [
+                                                                                    Text(
+                                                                                      "Respond",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.white,
+                                                                                        fontSize: 20.sp,
+                                                                                      ),
+                                                                                      textAlign: TextAlign.center,
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              Positioned(
+                                                                                right: 20,
+                                                                                top: 0,
+                                                                                bottom: 0,
+                                                                                child: Icon(
+                                                                                  Icons.next_plan,
+                                                                                  color: Colors.white,
+                                                                                  size: 30,
+                                                                                ),
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  );
+                                                },
+                                                // add other marker options as needed
+                                              );
+                                              _markers.add(marker);
                                             }
+
                                             for (LatLng coordinates in coordinatesList) {
                                               _totalLatitude += coordinates.latitude;
                                               _totalLongitude += coordinates.longitude;
@@ -379,269 +644,16 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                           target: LatLng(_averageLatitude, _averageLongitude),
                                                           zoom: 10,
                                                         ),
-                                                        markers: Set.from(
-                                                          coordinatesList.map(
-                                                            (coordinate) => Marker(
-                                                              markerId: MarkerId(coordinate.toString()),
-                                                              position: coordinate,
-                                                              icon: BitmapDescriptor.defaultMarker,
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  _markerSelected = coordinatesList.indexOf(coordinate);
-                                                                });
-                                                                print(_markerSelected);
-                                                                showDialog(
-                                                                  context: context,
-                                                                  builder: (context) => StatefulBuilder(
-                                                                    builder: (context, setState) {
-                                                                      return WillPopScope(
-                                                                        onWillPop: () {
-                                                                          return Future.value(true);
-                                                                        },
-                                                                        child: Scaffold(
-                                                                          backgroundColor: Colors.transparent,
-                                                                          body: Center(
-                                                                            child: Padding(
-                                                                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                                                                              child: Container(
-                                                                                height: 420.h,
-                                                                                decoration: BoxDecoration(
-                                                                                  color: Colors.grey.shade200,
-                                                                                  borderRadius: BorderRadius.only(
-                                                                                    topLeft: Radius.circular(30),
-                                                                                    bottomRight: Radius.circular(30),
-                                                                                  ),
-                                                                                  boxShadow: [
-                                                                                    BoxShadow(
-                                                                                      color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
-                                                                                      spreadRadius: 7,
-                                                                                      blurRadius: 10,
-                                                                                      offset: Offset(0, 0),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                                width: MediaQuery.of(context).size.width,
-                                                                                child: Column(
-                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                  children: [
-                                                                                    SizedBox(height: 20.h),
-                                                                                    Container(
-                                                                                      width: MediaQuery.of(context).size.width,
-                                                                                      child: Stack(
-                                                                                        children: [
-                                                                                          Positioned(
-                                                                                            right: 20,
-                                                                                            child: IconButton(
-                                                                                              onPressed: () {
-                                                                                                Navigator.of(context).pop();
-                                                                                              },
-                                                                                              icon: Icon(Icons.close),
-                                                                                            ),
-                                                                                          ),
-                                                                                          Padding(
-                                                                                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                                                                                            child: Container(
-                                                                                              child: Icon(
-                                                                                                {
-                                                                                                      'Fire Emergency': FontAwesomeIcons.fire,
-                                                                                                      'Health Emergency': Icons.health_and_safety,
-                                                                                                      'Murder Emergency': FontAwesomeIcons.solidFaceDizzy,
-                                                                                                      'Assault Emergency': FontAwesomeIcons.handFist,
-                                                                                                      'Flood Emergency': FontAwesomeIcons.water,
-                                                                                                      'Earthquake Emergency': FontAwesomeIcons.houseChimneyCrack,
-                                                                                                      'Kidnap Emergency': FontAwesomeIcons.solidFaceSadCry,
-                                                                                                      'Robbery Emergency': FontAwesomeIcons.userNinja,
-                                                                                                      'Alert Emergency': Icons.notifications_active,
-                                                                                                    }[snap[_markerSelected]['Type']] ??
-                                                                                                    Icons.warning,
-                                                                                                size: 50,
-                                                                                                color: Colors.redAccent,
-                                                                                              ),
-                                                                                            ),
-                                                                                          ),
-                                                                                        ],
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(height: 10.h),
-                                                                                    Padding(
-                                                                                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                                                                                      child: Container(
-                                                                                        child: const Text(
-                                                                                          "Emergency Details",
-                                                                                          textAlign: TextAlign.left,
-                                                                                          style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(height: 20.h),
-                                                                                    Expanded(
-                                                                                      child: Container(
-                                                                                        child: Expanded(
-                                                                                          child: Column(
-                                                                                            children: [
-                                                                                              Expanded(
-                                                                                                child: RawScrollbar(
-                                                                                                  thickness: 7.5,
-                                                                                                  thumbColor: Colors.redAccent,
-                                                                                                  thumbVisibility: true,
-                                                                                                  child: ScrollConfiguration(
-                                                                                                    behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
-                                                                                                    child: ListView.builder(
-                                                                                                      itemCount: 1,
-                                                                                                      itemBuilder: (context, index) {
-                                                                                                        return Padding(
-                                                                                                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                                                                                                          child: Column(
-                                                                                                            children: [
-                                                                                                              SizedBox(height: 20.h),
-                                                                                                              Row(
-                                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                                children: [
-                                                                                                                  Text(
-                                                                                                                    'Civilian:\t\t\t',
-                                                                                                                    textAlign: TextAlign.left,
-                                                                                                                    style: TextStyle(
-                                                                                                                      fontSize: 20.sp,
-                                                                                                                      fontWeight: FontWeight.bold,
-                                                                                                                      color: Colors.black,
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                  Text(
-                                                                                                                    snap[_markerSelected]['Civilian'],
-                                                                                                                    textAlign: TextAlign.left,
-                                                                                                                    style: TextStyle(
-                                                                                                                      fontSize: 20.sp,
-                                                                                                                      fontWeight: FontWeight.normal,
-                                                                                                                      color: Colors.black,
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ],
-                                                                                                              ),
-                                                                                                              SizedBox(height: 10.h),
-                                                                                                              Row(
-                                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                                children: [
-                                                                                                                  Text(
-                                                                                                                    'Emergency Type:\t\t\t',
-                                                                                                                    textAlign: TextAlign.left,
-                                                                                                                    style: TextStyle(
-                                                                                                                      fontSize: 20.sp,
-                                                                                                                      fontWeight: FontWeight.bold,
-                                                                                                                      color: Colors.black,
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                  Expanded(
-                                                                                                                    child: Text(
-                                                                                                                      snap[_markerSelected]['Type'],
-                                                                                                                      textAlign: TextAlign.left,
-                                                                                                                      style: TextStyle(
-                                                                                                                        fontSize: 20.sp,
-                                                                                                                        fontWeight: FontWeight.normal,
-                                                                                                                        color: Colors.black,
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ],
-                                                                                                              ),
-                                                                                                              SizedBox(height: 10.h),
-                                                                                                              Row(
-                                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                                children: [
-                                                                                                                  Text(
-                                                                                                                    'Emergency Location:\t\t\t',
-                                                                                                                    textAlign: TextAlign.left,
-                                                                                                                    style: TextStyle(
-                                                                                                                      fontSize: 20.sp,
-                                                                                                                      fontWeight: FontWeight.bold,
-                                                                                                                      color: Colors.black,
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                  Expanded(
-                                                                                                                    child: Text(
-                                                                                                                      snap[_markerSelected]['Address'],
-                                                                                                                      textAlign: TextAlign.left,
-                                                                                                                      style: TextStyle(
-                                                                                                                        fontSize: 20.sp,
-                                                                                                                        fontWeight: FontWeight.normal,
-                                                                                                                        color: Colors.black,
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ],
-                                                                                                              ),
-                                                                                                              SizedBox(height: 20.h),
-                                                                                                            ],
-                                                                                                          ),
-                                                                                                        );
-                                                                                                      },
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                              ),
-                                                                                            ],
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    ElevatedButton(
-                                                                                      style: ElevatedButton.styleFrom(
-                                                                                        backgroundColor: Color.fromRGBO(252, 58, 72, 32),
-                                                                                        shape: RoundedRectangleBorder(
-                                                                                          borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
-                                                                                        ),
-                                                                                        padding: EdgeInsets.all(12),
-                                                                                      ),
-                                                                                      onPressed: () {
-                                                                                        Navigator.of(context).pop();
-                                                                                      },
-                                                                                      child: Container(
-                                                                                        width: double.infinity,
-                                                                                        height: 40.h,
-                                                                                        child: Stack(
-                                                                                          children: [
-                                                                                            Center(
-                                                                                              child: Row(
-                                                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                                                children: [
-                                                                                                  Text(
-                                                                                                    "Respond",
-                                                                                                    style: TextStyle(
-                                                                                                      color: Colors.white,
-                                                                                                      fontSize: 20.sp,
-                                                                                                    ),
-                                                                                                    textAlign: TextAlign.center,
-                                                                                                  ),
-                                                                                                ],
-                                                                                              ),
-                                                                                            ),
-                                                                                            Positioned(
-                                                                                              right: 20,
-                                                                                              top: 0,
-                                                                                              bottom: 0,
-                                                                                              child: Icon(
-                                                                                                Icons.next_plan,
-                                                                                                color: Colors.white,
-                                                                                                size: 30,
-                                                                                              ),
-                                                                                            )
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ),
+                                                        markers: _markers,
+                                                        // markers: Set.from(
+                                                        //   coordinatesList.map(
+                                                        //     (coordinate) => Marker(
+                                                        //       markerId: MarkerId(coordinate.toString()),
+                                                        //       position: coordinate,
+                                                        //       icon: _getMarkerIcon(emergencyType),
+                                                        //     ),
+                                                        //   ),
+                                                        // ),
                                                       ),
                                                     ),
                                                   ),
