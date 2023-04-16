@@ -82,14 +82,26 @@ class _ResContactsPageState extends State<ResContactsPage> {
       case 'Flood Emergency':
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
       case 'Earthquake Emergency':
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose);
       case 'Robbery Emergency':
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
-      // Add cases for other emergency types as needed.
       default:
         return BitmapDescriptor.defaultMarker;
     }
   }
+
+  // Future<BitmapDescriptor> _getMarkerIcon(String emergencyType) async {
+  //   switch (emergencyType) {
+  //     case 'Flood Emergency':
+  //       return await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/flood_icon.png');
+  //     case 'Earthquake Emergency':
+  //       return await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/earthquake_icon.png');
+  //     case 'Robbery Emergency':
+  //       return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
+  //     default:
+  //       return BitmapDescriptor.defaultMarker;
+  //   }
+  // }
 
   String mapTheme = "";
   //Text Controllers
@@ -617,7 +629,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                     ),
                                                   );
                                                 },
-                                                // add other marker options as needed
                                               );
                                               _markers.add(marker);
                                             }
@@ -645,15 +656,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                           zoom: 10,
                                                         ),
                                                         markers: _markers,
-                                                        // markers: Set.from(
-                                                        //   coordinatesList.map(
-                                                        //     (coordinate) => Marker(
-                                                        //       markerId: MarkerId(coordinate.toString()),
-                                                        //       position: coordinate,
-                                                        //       icon: _getMarkerIcon(emergencyType),
-                                                        //     ),
-                                                        //   ),
-                                                        // ),
                                                       ),
                                                     ),
                                                   ),
