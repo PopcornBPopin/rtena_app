@@ -321,7 +321,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                           behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
                                           child: RawScrollbar(
                                             thickness: 7,
-                                            thumbColor: Colors.redAccent,
+                                            thumbColor: Color.fromRGBO(70, 18, 32, 1),
                                             thumbVisibility: true,
                                             child: ListView.builder(
                                               itemCount: snap.length,

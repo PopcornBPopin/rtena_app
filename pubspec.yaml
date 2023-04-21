@@ -60,7 +60,6 @@ dependencies:
   google_maps_flutter: ^2.2.5
   custom_info_window: ^1.0.1
   custom_marker: ^1.0.0
-  # geocoding: ^2.1.0
 
 dev_dependencies:
   flutter_test:

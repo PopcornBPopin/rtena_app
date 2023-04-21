@@ -32,6 +32,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    setState(() {});
   }
 
   //Disposes controllers when not in used
@@ -47,6 +48,15 @@ class _ResContactsPageState extends State<ResContactsPage> {
   }
 
   bool _hasInternet = false;
+
+  bool _fireEmergencyFiltered = false;
+  bool _healthEmergencyFiltered = false;
+  bool _murderEmergencyFiltered = false;
+  bool _assaultEmergencyFiltered = false;
+  bool _floodEmergencyFiltered = false;
+  bool _earthquakeEmergencyFiltered = false;
+  bool _kidnappingEmergencyFiltered = false;
+  bool _robberyEmergencyFiltered = false;
 
   late StreamSubscription subscription;
   late String _emailAddress = "";
@@ -79,29 +89,26 @@ class _ResContactsPageState extends State<ResContactsPage> {
 
   BitmapDescriptor _getMarkerIcon(String emergencyType) {
     switch (emergencyType) {
+      case 'Fire Emergency':
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+      case 'Health Emergency':
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
+      case 'Murder Emergency':
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
+      case 'Assault Emergency':
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
       case 'Flood Emergency':
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta);
       case 'Earthquake Emergency':
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
+      case 'Kidnapping Emergency':
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose);
       case 'Robbery Emergency':
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
       default:
         return BitmapDescriptor.defaultMarker;
     }
   }
-
-  // Future<BitmapDescriptor> _getMarkerIcon(String emergencyType) async {
-  //   switch (emergencyType) {
-  //     case 'Flood Emergency':
-  //       return await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/flood_icon.png');
-  //     case 'Earthquake Emergency':
-  //       return await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/earthquake_icon.png');
-  //     case 'Robbery Emergency':
-  //       return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
-  //     default:
-  //       return BitmapDescriptor.defaultMarker;
-  //   }
-  // }
 
   String mapTheme = "";
   //Text Controllers
@@ -219,6 +226,442 @@ class _ResContactsPageState extends State<ResContactsPage> {
     });
   }
 
+  void resolveEmergency() async {
+    QuickAlert.show(
+      backgroundColor: Colors.grey.shade200,
+      context: context,
+      type: QuickAlertType.confirm,
+      title: "Resolved?",
+      text: "Are you sure you want to mark this emergency as resolved?",
+      confirmBtnText: "Yes",
+      confirmBtnColor: Colors.white,
+      confirmBtnTextStyle: TextStyle(
+        fontSize: 18.sp,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+      cancelBtnTextStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.red,
+      ),
+      onConfirmBtnTap: () async {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        final emergency = FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress);
+        emergency.delete();
+      },
+      onCancelBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  void showEmergencyDetails(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(builder: (context, setState) {
+        return WillPopScope(
+          onWillPop: () {
+            return Future.value(false);
+          },
+          child: Scaffold(
+            backgroundColor: Colors.black.withOpacity(0.3),
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+                        spreadRadius: 7,
+                        blurRadius: 10,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  height: 700.h,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20.h),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 30),
+                              child: Container(
+                                child: Icon(
+                                  Icons.emergency,
+                                  size: 60,
+                                  color: Colors.redAccent,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Container(
+                          child: const Text(
+                            "Alert Acknowledged!",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20.h),
+                      Expanded(
+                        child: Container(
+                          height: 100.h,
+                          child: ScrollConfiguration(
+                            behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                                          child: Text(
+                                            "Dear ${_firstName}, we understand that the current situation may be causing concern and anxiety.\n\nThe responders are now on their way to address the issue and ensure your safety. \n",
+                                            textAlign: TextAlign.justify,
+                                            style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 320.h,
+                                          width: MediaQuery.of(context).size.width,
+                                          child: ScrollConfiguration(
+                                            behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+                                            child: RawScrollbar(
+                                              thickness: 7.5,
+                                              thumbColor: Colors.redAccent,
+                                              thumbVisibility: true,
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      child: StreamBuilder<DocumentSnapshot>(
+                                                        stream: FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress).snapshots(),
+                                                        builder: (context, snapshot) {
+                                                          if (!snapshot.hasData) {
+                                                            return Container(
+                                                              color: Colors.white,
+                                                              child: Center(
+                                                                child: Text("Fetching the Emergency Details"),
+                                                              ),
+                                                            );
+                                                          }
+                                                          try {
+                                                            final userData = snapshot.data!.data() as Map<String, dynamic>;
+                                                            _type = userData['Type'];
+                                                            _userCoordinates = userData['Coordinates'];
+                                                            _userLocation = userData['Address'];
+                                                            _responderName = userData['Responder'];
+                                                            _responderOccupation = userData['Responder Occupation'];
+                                                            _responderContactNumber = userData['Responder Contact Number'];
+                                                            _responderEmployer = userData['Responder Employer'];
+                                                          } catch (e) {
+                                                            print(e.toString());
+                                                            return Container();
+                                                          }
+                                                          return Padding(
+                                                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      'Emergency Details:',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 20.h),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Emergency Type:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      _type,
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.normal,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 10.h),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Coordinates:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                        _userCoordinates,
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 10.h),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Your Location:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                        _userLocation,
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 20.h),
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      'Responder Details:',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 20.h),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Responder:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                        _responderName,
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 10),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Occupation:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      _responderOccupation,
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.normal,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 10.h),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Contact Number:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      _responderContactNumber,
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.normal,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 10.h),
+                                                                Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Employer:\t\t\t',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        fontSize: 17.sp,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.black,
+                                                                      ),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                        _responderEmployer,
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(height: 50.h),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                          ),
+                          padding: EdgeInsets.all(12),
+                        ),
+                        onPressed: () async {
+                          resolveEmergency();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 40.h,
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Resolved",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20.sp,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                right: 20,
+                                top: 0,
+                                bottom: 0,
+                                child: Icon(
+                                  Icons.next_plan,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
   Future RegisterContact() async {
     registerNewContactDetails(
       _nameController.text.trim(),
@@ -231,6 +674,309 @@ class _ResContactsPageState extends State<ResContactsPage> {
     Navigator.of(context).pop();
 
     quickAlert(QuickAlertType.success, "Register Successful!", "New emergency contact added", "Okay", Colors.green);
+  }
+
+  void showLegend(BuildContext context) {
+    showDialog(
+      barrierColor: Colors.transparent,
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          return WillPopScope(
+            onWillPop: () {
+              return Future.value(true);
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15, bottom: 150),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                  height: 350.h,
+                  width: 250.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Color.fromRGBO(82, 82, 82, 1),
+                      width: 1,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Tap on the emergency type you want to filter",
+                          style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
+                        ),
+                        SizedBox(height: 10.h),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _fireEmergencyFiltered = !_fireEmergencyFiltered;
+                            });
+                          },
+                          child: Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2),
+                              child: Row(
+                                children: [
+                                  _fireEmergencyFiltered
+                                      ? Icon(
+                                          Icons.check_circle,
+                                          color: Colors.red,
+                                        )
+                                      : Icon(
+                                          Icons.radio_button_checked,
+                                          color: Colors.red,
+                                        ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Text(
+                                    "Fire Emergency",
+                                    style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _healthEmergencyFiltered = !_healthEmergencyFiltered;
+                            });
+                          },
+                          child: Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2),
+                              child: Row(
+                                children: [
+                                  _healthEmergencyFiltered
+                                      ? Icon(
+                                          Icons.check_circle,
+                                          color: Color.fromRGBO(0, 127, 255, 1),
+                                        )
+                                      : Icon(
+                                          Icons.radio_button_checked,
+                                          color: Color.fromRGBO(0, 127, 255, 1),
+                                        ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Text(
+                                    "Health Emergency",
+                                    style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _murderEmergencyFiltered = !_murderEmergencyFiltered;
+                            });
+                          },
+                          child: Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2),
+                              child: Row(
+                                children: [
+                                  _murderEmergencyFiltered
+                                      ? Icon(
+                                          Icons.check_circle,
+                                          color: Colors.cyan,
+                                        )
+                                      : Icon(
+                                          Icons.radio_button_checked,
+                                          color: Colors.cyan,
+                                        ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Text(
+                                    "Murder Emergency",
+                                    style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _assaultEmergencyFiltered = !_assaultEmergencyFiltered;
+                            });
+                          },
+                          child: Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2),
+                              child: Row(
+                                children: [
+                                  _assaultEmergencyFiltered
+                                      ? Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green,
+                                        )
+                                      : Icon(
+                                          Icons.radio_button_checked,
+                                          color: Colors.green,
+                                        ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Text(
+                                    "Assault Emergency",
+                                    style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _floodEmergencyFiltered = !_floodEmergencyFiltered;
+                            });
+                          },
+                          child: Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2),
+                              child: Row(
+                                children: [
+                                  _floodEmergencyFiltered
+                                      ? Icon(
+                                          Icons.check_circle,
+                                          color: Color.fromRGBO(255, 0, 255, 1),
+                                        )
+                                      : Icon(
+                                          Icons.radio_button_checked,
+                                          color: Color.fromRGBO(255, 0, 255, 1),
+                                        ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Text(
+                                    "Flood Emergency",
+                                    style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _earthquakeEmergencyFiltered = !_earthquakeEmergencyFiltered;
+                            });
+                          },
+                          child: Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2),
+                              child: Row(
+                                children: [
+                                  _earthquakeEmergencyFiltered
+                                      ? Icon(
+                                          Icons.check_circle,
+                                          color: Colors.orange,
+                                        )
+                                      : Icon(
+                                          Icons.radio_button_checked,
+                                          color: Colors.orange,
+                                        ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Text(
+                                    "Earthquake Emergency",
+                                    style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _kidnappingEmergencyFiltered = !_kidnappingEmergencyFiltered;
+                            });
+                          },
+                          child: Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2),
+                              child: Row(
+                                children: [
+                                  _kidnappingEmergencyFiltered
+                                      ? Icon(
+                                          Icons.check_circle,
+                                          color: Color.fromRGBO(255, 0, 85, 1),
+                                        )
+                                      : Icon(
+                                          Icons.radio_button_checked,
+                                          color: Color.fromRGBO(255, 0, 85, 1),
+                                        ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Text(
+                                    "Kidnapping Emergency",
+                                    style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _robberyEmergencyFiltered = !_robberyEmergencyFiltered;
+                            });
+                          },
+                          child: Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2),
+                              child: Row(
+                                children: [
+                                  _robberyEmergencyFiltered
+                                      ? Icon(
+                                          Icons.check_circle,
+                                          color: Color.fromRGBO(138, 43, 226, 1),
+                                        )
+                                      : Icon(
+                                          Icons.radio_button_checked,
+                                          color: Color.fromRGBO(138, 43, 226, 1),
+                                        ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Text(
+                                    "Robbery Emergency",
+                                    style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -247,6 +993,28 @@ class _ResContactsPageState extends State<ResContactsPage> {
         ),
       ),
       child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showLegend(context);
+          },
+          backgroundColor: Colors.white,
+          child: Container(
+            height: 100.h,
+            width: 100.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              border: Border.all(
+                color: Color.fromRGBO(82, 82, 82, 1),
+                width: 1,
+              ),
+            ),
+            child: Icon(
+              Icons.menu,
+              color: Colors.black,
+            ),
+          ),
+        ),
         backgroundColor: Colors.transparent,
         body: SafeArea(
           child: Column(
@@ -374,7 +1142,9 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               Marker marker = Marker(
                                                 markerId: MarkerId(_coordinate.toString()),
                                                 position: _coordinate,
-                                                icon: _getMarkerIcon(_civEmergencyType),
+                                                icon: _getMarkerIcon(
+                                                  _civEmergencyType,
+                                                ),
                                                 onTap: () {
                                                   setState(() {
                                                     _markerSelected = i;
@@ -472,7 +1242,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                                 Expanded(
                                                                                   child: RawScrollbar(
                                                                                     thickness: 7.5,
-                                                                                    thumbColor: Colors.redAccent,
+                                                                                    thumbColor: Color.fromRGBO(70, 18, 32, 1),
                                                                                     thumbVisibility: true,
                                                                                     child: ScrollConfiguration(
                                                                                       behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
@@ -581,8 +1351,32 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                           ),
                                                                           padding: EdgeInsets.all(12),
                                                                         ),
-                                                                        onPressed: () {
-                                                                          Navigator.of(context).pop();
+                                                                        onPressed: () async {
+                                                                          var emergencies = FirebaseFirestore.instance.collection('emergencies');
+                                                                          var querySnapshots = await emergencies.get();
+                                                                          for (var doc in querySnapshots.docs) {
+                                                                            await doc.reference.update({
+                                                                              'Status': 'Confirmed',
+                                                                              'Responder': _fullName,
+                                                                              'Responder Contact Number': _contactNumber,
+                                                                              'Responder Occupation': _occupation,
+                                                                              'Responder Employer': _employer,
+                                                                            });
+                                                                          }
+                                                                          var collection = FirebaseFirestore.instance.collection('emergencies');
+                                                                          print(snap[_markerSelected]['Email Address']);
+                                                                          var docReference = collection.doc(snap[_markerSelected]['Email Address']);
+
+                                                                          docReference.snapshots().listen((docSnapshot) {
+                                                                            if (docSnapshot.exists) {
+                                                                              Map<String, dynamic>? data = docSnapshot.data();
+                                                                              var status = data?['Status'];
+                                                                              if (status == 'Confirmed') {
+                                                                                Navigator.of(context).pop();
+                                                                                showEmergencyDetails(context);
+                                                                              }
+                                                                            }
+                                                                          });
                                                                         },
                                                                         child: Container(
                                                                           width: double.infinity,

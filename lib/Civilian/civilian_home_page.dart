@@ -171,6 +171,7 @@ class _CivHomePageState extends State<CivHomePage> {
   ) async {
     await FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress.toLowerCase()).set({
       'Civilian': _fullName,
+      'Email Address': _emailAddress,
       'Type': type,
       'Status': status,
       'Coordinates': coordinates,
