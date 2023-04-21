@@ -423,13 +423,15 @@ class _CivHomePageState extends State<CivHomePage> {
                                                                         color: Colors.black,
                                                                       ),
                                                                     ),
-                                                                    Text(
-                                                                      _type,
-                                                                      textAlign: TextAlign.left,
-                                                                      style: TextStyle(
-                                                                        fontSize: 17.sp,
-                                                                        fontWeight: FontWeight.normal,
-                                                                        color: Colors.black,
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                        _type,
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ],
@@ -539,13 +541,15 @@ class _CivHomePageState extends State<CivHomePage> {
                                                                         color: Colors.black,
                                                                       ),
                                                                     ),
-                                                                    Text(
-                                                                      _responderOccupation,
-                                                                      textAlign: TextAlign.left,
-                                                                      style: TextStyle(
-                                                                        fontSize: 17.sp,
-                                                                        fontWeight: FontWeight.normal,
-                                                                        color: Colors.black,
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                        _responderOccupation,
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ],
@@ -563,13 +567,15 @@ class _CivHomePageState extends State<CivHomePage> {
                                                                         color: Colors.black,
                                                                       ),
                                                                     ),
-                                                                    Text(
-                                                                      _responderContactNumber,
-                                                                      textAlign: TextAlign.left,
-                                                                      style: TextStyle(
-                                                                        fontSize: 17.sp,
-                                                                        fontWeight: FontWeight.normal,
-                                                                        color: Colors.black,
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                        _responderContactNumber,
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          fontSize: 17.sp,
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.black,
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ],
@@ -600,13 +606,13 @@ class _CivHomePageState extends State<CivHomePage> {
                                                                     ),
                                                                   ],
                                                                 ),
-                                                                SizedBox(height: 50.h),
                                                               ],
                                                             ),
                                                           );
                                                         },
                                                       ),
                                                     ),
+                                                    SizedBox(height: 50.h),
                                                   ],
                                                 ),
                                               ),

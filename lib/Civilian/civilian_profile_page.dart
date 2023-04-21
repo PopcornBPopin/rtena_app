@@ -1048,7 +1048,6 @@ class _CivProfilePageState extends State<CivProfilePage> {
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
                   child: SingleChildScrollView(
-                    physics: _editButtonPressed ? ScrollPhysics() : NeverScrollableScrollPhysics(),
                     child: Column(
                       children: [
                         Stack(
