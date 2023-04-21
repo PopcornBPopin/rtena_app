@@ -60,6 +60,7 @@ class _CivHomePageState extends State<CivHomePage> {
   late String _address = "";
   late String _type = "";
   late String _userCoordinates = "";
+  late String _userContactNumber = "";
   late String _userLocation = "";
   late String _responderName = "";
   late String _responderOccupation = "";
@@ -176,6 +177,7 @@ class _CivHomePageState extends State<CivHomePage> {
       'Status': status,
       'Coordinates': coordinates,
       'Address': address,
+      'Civilian Contact Number': _userContactNumber,
     });
   }
 
@@ -747,6 +749,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                         final userData = snapshot.data!.data() as Map<String, dynamic>;
                                         _firstName = userData['First Name'];
                                         _fullName = '${userData['First Name']} ${userData['M.I']}. ${userData['Surname']}';
+                                        _userContactNumber = userData['Contact Number'];
                                         return Text(
                                           'Hello! $_firstName',
                                           style: TextStyle(

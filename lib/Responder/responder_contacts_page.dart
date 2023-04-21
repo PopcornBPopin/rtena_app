@@ -286,7 +286,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                         ),
                       ],
                     ),
-                    height: 550.h,
+                    height: 750.h,
                     width: MediaQuery.of(context).size.width,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -365,6 +365,26 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                               );
                                                             }
                                                             final snap = snapshot.data!.docs;
+                                                            _civCoordinates = snap[_markerSelected]['Coordinates'];
+                                                            _civLatitude = double.parse(_civCoordinates.split('Latitude: ')[1].split(',')[0]);
+                                                            _civLongitude = double.parse(_civCoordinates.split('Longitude: ')[1]);
+                                                            var collection = FirebaseFirestore.instance.collection('emergencies');
+
+                                                            var docReference = collection.doc(snap[_markerSelected]['Email Address']);
+
+                                                            docReference.snapshots().listen((docSnapshot) {
+                                                              Navigator.of(context).pop();
+                                                            });
+
+                                                            Marker civMarker = Marker(
+                                                              markerId: MarkerId(_civCoordinates),
+                                                              position: LatLng(_civLatitude, _civLongitude),
+                                                            );
+
+                                                            Set<Marker> markers = Set<Marker>.from([
+                                                              civMarker
+                                                            ]);
+
                                                             // return Text("TESTR");
                                                             return Container(
                                                               child: Column(
@@ -534,7 +554,26 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                       ],
                                                                     ),
                                                                   ),
-                                                                  SizedBox(height: 50.h),
+                                                                  SizedBox(height: 20.h),
+
+                                                                  // GO HERE BE
+                                                                  ClipRRect(
+                                                                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                                                                    child: Container(
+                                                                      height: 250.h,
+                                                                      child: GoogleMap(
+                                                                        mapType: MapType.normal,
+                                                                        mapToolbarEnabled: false,
+                                                                        zoomControlsEnabled: false,
+                                                                        onMapCreated: _onMapCreated,
+                                                                        initialCameraPosition: CameraPosition(
+                                                                          target: LatLng(_civLatitude, _civLongitude),
+                                                                          zoom: 13,
+                                                                        ),
+                                                                        markers: markers,
+                                                                      ),
+                                                                    ),
+                                                                  ),
                                                                 ],
                                                               ),
                                                             );
