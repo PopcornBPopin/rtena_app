@@ -1175,7 +1175,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color.fromRGBO(252, 58, 72, 1),
+            Color.fromRGBO(70, 18, 32, 1),
             Color.fromRGBO(70, 18, 32, 1),
           ],
         ),

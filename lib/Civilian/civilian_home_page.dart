@@ -130,8 +130,8 @@ class _CivHomePageState extends State<CivHomePage> {
       timer = Timer.periodic(Duration(seconds: 1), (_) async {
         if (seconds > 0) {
           setState(() {
-            _timerRunning = true;
             --seconds;
+            _timerRunning = true;
           });
         } else {
           timer?.cancel();

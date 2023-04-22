@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:custom_info_window/custom_info_window.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -25,6 +28,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
   void initState() {
     getConnectivity();
     getUserData();
+
     super.initState();
     DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then((value) => {
           mapTheme = value
@@ -32,7 +36,42 @@ class _ResContactsPageState extends State<ResContactsPage> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    setState(() {});
+    setState(() {
+      getCurrentLocation();
+    });
+  }
+
+  //Get the user location
+  Position? _coordinates;
+  Future<void> getCurrentLocation() async {
+    Position position = await determinePosition();
+    setState(() {
+      _coordinates = position;
+      _userLatitude = double.parse(_coordinates.toString().split('Latitude: ')[1].split(',')[0]);
+      _userLongitude = double.parse(_coordinates.toString().split('Longitude: ')[1]);
+    });
+  }
+
+  Future<Position> determinePosition() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        quickAlert(QuickAlertType.error, "Pemission Denied!", "Location permissions are denied", "", Colors.green);
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      quickAlert(QuickAlertType.error, "Pemission Denied!", "Location permissions are permanently denied, we cannot request permissions", "", Colors.green);
+    }
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future<void> convertCoordsToAddress(Position position) async {
+    List<Placemark> placemark = await placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark place = placemark[0];
+    setState(() {
+      _address = '${place.name} ${place.administrativeArea} ${place.subAdministrativeArea} ${place.locality} ${place.subLocality} ${place.subThoroughfare}';
+    });
   }
 
   //Disposes controllers when not in used
@@ -62,6 +101,8 @@ class _ResContactsPageState extends State<ResContactsPage> {
   late String _emailAddress = "";
   late String _civCoordinates = "";
   late String _civEmergencyType = "";
+  late double _userLatitude = 0.0;
+  late double _userLongitude = 0.0;
   late double _civLatitude = 0.0;
   late double _civLongitude = 0.0;
   late double _totalLatitude = 0.0;
@@ -86,6 +127,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
   late String _employer = "";
 
   late GoogleMapController mapController;
+  late BitmapDescriptor? userIcon;
 
   BitmapDescriptor _getMarkerIcon(String emergencyType) {
     switch (emergencyType) {
@@ -246,7 +288,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
       ),
       onConfirmBtnTap: () async {
         Navigator.of(context).pop();
-        Navigator.of(context).pop();
         final emergency = FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress);
         emergency.delete();
       },
@@ -338,255 +379,260 @@ class _ResContactsPageState extends State<ResContactsPage> {
                               child: SingleChildScrollView(
                                 child: Column(
                                   children: [
-                                    SingleChildScrollView(
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            width: MediaQuery.of(context).size.width,
-                                            child: ScrollConfiguration(
-                                              behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
-                                              child: RawScrollbar(
-                                                thickness: 7.5,
-                                                thumbColor: Color.fromRGBO(70, 18, 32, 1),
-                                                thumbVisibility: true,
-                                                child: SingleChildScrollView(
+                                    Container(
+                                      child: StreamBuilder<QuerySnapshot>(
+                                        stream: FirebaseFirestore.instance.collection('emergencies').snapshots(),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData) {
+                                            return Container(
+                                              color: Colors.white,
+                                              child: Center(
+                                                child: Text("Fetching ongoing emergencies"),
+                                              ),
+                                            );
+                                          }
+                                          final snap = snapshot.data!.docs;
+                                          _civCoordinates = snap[_markerSelected]['Coordinates'];
+                                          _civLatitude = double.parse(_civCoordinates.split('Latitude: ')[1].split(',')[0]);
+                                          _civLongitude = double.parse(_civCoordinates.split('Longitude: ')[1]);
+                                          var collection = FirebaseFirestore.instance.collection('emergencies');
+
+                                          var docReference = collection.doc(snap[_markerSelected]['Email Address']);
+
+                                          docReference.snapshots().listen((docSnapshot) {
+                                            if (!docSnapshot.exists) {
+                                              Navigator.of(context).pop();
+                                            }
+                                          });
+
+                                          Marker civMarker = Marker(
+                                            markerId: MarkerId(_civCoordinates),
+                                            position: LatLng(_civLatitude, _civLongitude),
+                                          );
+
+                                          Set<Marker> markers = Set<Marker>.from([
+                                            civMarker
+                                          ]);
+
+                                          // return Text("TESTR");
+                                          return Container(
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 30),
                                                   child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
                                                     children: [
-                                                      Container(
-                                                        child: StreamBuilder<QuerySnapshot>(
-                                                          stream: FirebaseFirestore.instance.collection('emergencies').snapshots(),
-                                                          builder: (context, snapshot) {
-                                                            if (!snapshot.hasData) {
-                                                              return Container(
-                                                                color: Colors.white,
-                                                                child: Center(
-                                                                  child: Text("Fetching ongoing emergencies"),
-                                                                ),
-                                                              );
-                                                            }
-                                                            final snap = snapshot.data!.docs;
-                                                            _civCoordinates = snap[_markerSelected]['Coordinates'];
-                                                            _civLatitude = double.parse(_civCoordinates.split('Latitude: ')[1].split(',')[0]);
-                                                            _civLongitude = double.parse(_civCoordinates.split('Longitude: ')[1]);
-                                                            var collection = FirebaseFirestore.instance.collection('emergencies');
-
-                                                            var docReference = collection.doc(snap[_markerSelected]['Email Address']);
-
-                                                            docReference.snapshots().listen((docSnapshot) {
-                                                              Navigator.of(context).pop();
-                                                            });
-
-                                                            Marker civMarker = Marker(
-                                                              markerId: MarkerId(_civCoordinates),
-                                                              position: LatLng(_civLatitude, _civLongitude),
-                                                            );
-
-                                                            Set<Marker> markers = Set<Marker>.from([
-                                                              civMarker
-                                                            ]);
-
-                                                            // return Text("TESTR");
-                                                            return Container(
-                                                              child: Column(
-                                                                children: [
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                                                                    child: Column(
-                                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                                      children: [
-                                                                        Row(
-                                                                          children: [
-                                                                            Text(
-                                                                              'Emergency Details:',
-                                                                              textAlign: TextAlign.left,
-                                                                              style: TextStyle(
-                                                                                fontSize: 17,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        SizedBox(height: 20.h),
-                                                                        Row(
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Text(
-                                                                              'Emergency Type:\t\t\t',
-                                                                              textAlign: TextAlign.left,
-                                                                              style: TextStyle(
-                                                                                fontSize: 18.sp,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                            ),
-                                                                            Expanded(
-                                                                              child: Text(
-                                                                                snap[_markerSelected]['Type'],
-                                                                                textAlign: TextAlign.left,
-                                                                                style: TextStyle(
-                                                                                  fontSize: 18.sp,
-                                                                                  fontWeight: FontWeight.normal,
-                                                                                  color: Colors.black,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        SizedBox(height: 10.h),
-                                                                        Row(
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Text(
-                                                                              'Coordinates:\t\t\t',
-                                                                              textAlign: TextAlign.left,
-                                                                              style: TextStyle(
-                                                                                fontSize: 18.sp,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                            ),
-                                                                            Expanded(
-                                                                              child: Text(
-                                                                                snap[_markerSelected]['Coordinates'],
-                                                                                textAlign: TextAlign.left,
-                                                                                style: TextStyle(
-                                                                                  fontSize: 18.sp,
-                                                                                  fontWeight: FontWeight.normal,
-                                                                                  color: Colors.black,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        SizedBox(height: 10.h),
-                                                                        Row(
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Text(
-                                                                              'Your Location:\t\t\t',
-                                                                              textAlign: TextAlign.left,
-                                                                              style: TextStyle(
-                                                                                fontSize: 18.sp,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                            ),
-                                                                            Expanded(
-                                                                              child: Text(
-                                                                                snap[_markerSelected]['Address'],
-                                                                                textAlign: TextAlign.left,
-                                                                                style: TextStyle(
-                                                                                  fontSize: 18.sp,
-                                                                                  fontWeight: FontWeight.normal,
-                                                                                  color: Colors.black,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        SizedBox(height: 20.h),
-                                                                        Row(
-                                                                          children: [
-                                                                            Text(
-                                                                              'Civilian Details:',
-                                                                              textAlign: TextAlign.left,
-                                                                              style: TextStyle(
-                                                                                fontSize: 17,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        SizedBox(height: 20.h),
-                                                                        Row(
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Text(
-                                                                              'Civilian:\t\t\t',
-                                                                              textAlign: TextAlign.left,
-                                                                              style: TextStyle(
-                                                                                fontSize: 18.sp,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                            ),
-                                                                            Expanded(
-                                                                              child: Text(
-                                                                                snap[_markerSelected]['Civilian'],
-                                                                                textAlign: TextAlign.left,
-                                                                                style: TextStyle(
-                                                                                  fontSize: 18.sp,
-                                                                                  fontWeight: FontWeight.normal,
-                                                                                  color: Colors.black,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        SizedBox(height: 10),
-                                                                        Row(
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Text(
-                                                                              'Email Address:\t\t\t',
-                                                                              textAlign: TextAlign.left,
-                                                                              style: TextStyle(
-                                                                                fontSize: 18.sp,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                            ),
-                                                                            Expanded(
-                                                                              child: Text(
-                                                                                snap[_markerSelected]['Email Address'],
-                                                                                textAlign: TextAlign.left,
-                                                                                style: TextStyle(
-                                                                                  fontSize: 18.sp,
-                                                                                  fontWeight: FontWeight.normal,
-                                                                                  color: Colors.black,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(height: 20.h),
-
-                                                                  // GO HERE BE
-                                                                  ClipRRect(
-                                                                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
-                                                                    child: Container(
-                                                                      height: 250.h,
-                                                                      child: GoogleMap(
-                                                                        mapType: MapType.normal,
-                                                                        mapToolbarEnabled: false,
-                                                                        zoomControlsEnabled: false,
-                                                                        onMapCreated: _onMapCreated,
-                                                                        initialCameraPosition: CameraPosition(
-                                                                          target: LatLng(_civLatitude, _civLongitude),
-                                                                          zoom: 13,
-                                                                        ),
-                                                                        markers: markers,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            'Emergency Details:',
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 17,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 20.h),
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            'Emergency Type:\t\t\t',
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 18.sp,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
+                                                              snap[_markerSelected]['Type'],
+                                                              textAlign: TextAlign.left,
+                                                              style: TextStyle(
+                                                                fontSize: 18.sp,
+                                                                fontWeight: FontWeight.normal,
+                                                                color: Colors.black,
                                                               ),
-                                                            );
-                                                          },
-                                                        ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10.h),
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            'Coordinates:\t\t\t',
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 18.sp,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
+                                                              snap[_markerSelected]['Coordinates'],
+                                                              textAlign: TextAlign.left,
+                                                              style: TextStyle(
+                                                                fontSize: 18.sp,
+                                                                fontWeight: FontWeight.normal,
+                                                                color: Colors.black,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10.h),
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            'Your Location:\t\t\t',
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 18.sp,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
+                                                              snap[_markerSelected]['Address'],
+                                                              textAlign: TextAlign.left,
+                                                              style: TextStyle(
+                                                                fontSize: 18.sp,
+                                                                fontWeight: FontWeight.normal,
+                                                                color: Colors.black,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 20.h),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            'Civilian Details:',
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 17,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 20.h),
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            'Civilian:\t\t\t',
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 18.sp,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
+                                                              snap[_markerSelected]['Civilian'],
+                                                              textAlign: TextAlign.left,
+                                                              style: TextStyle(
+                                                                fontSize: 18.sp,
+                                                                fontWeight: FontWeight.normal,
+                                                                color: Colors.black,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            'Contact Number:\t\t\t',
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 18.sp,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
+                                                              snap[_markerSelected]['Civilian Contact Number'],
+                                                              textAlign: TextAlign.left,
+                                                              style: TextStyle(
+                                                                fontSize: 18.sp,
+                                                                fontWeight: FontWeight.normal,
+                                                                color: Colors.black,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            'Email Address:\t\t\t',
+                                                            textAlign: TextAlign.left,
+                                                            style: TextStyle(
+                                                              fontSize: 18.sp,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
+                                                              snap[_markerSelected]['Email Address'],
+                                                              textAlign: TextAlign.left,
+                                                              style: TextStyle(
+                                                                fontSize: 18.sp,
+                                                                fontWeight: FontWeight.normal,
+                                                                color: Colors.black,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                              ),
+                                                SizedBox(height: 20.h),
+
+                                                // GO HERE BE
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                                                  child: Container(
+                                                    height: 250.h,
+                                                    child: GoogleMap(
+                                                      mapType: MapType.normal,
+                                                      mapToolbarEnabled: false,
+                                                      zoomControlsEnabled: false,
+                                                      onMapCreated: _onMapCreated,
+                                                      initialCameraPosition: CameraPosition(
+                                                        target: LatLng(_civLatitude, _civLongitude),
+                                                        zoom: 13,
+                                                      ),
+                                                      markers: markers,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
+                                          );
+                                        },
                                       ),
                                     ),
                                   ],
@@ -1119,6 +1165,22 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               );
                                             }
                                             final snap = snapshot.data!.docs;
+                                            if (_userLatitude == 0.0 || _userLongitude == 0.0) {
+                                              return Center(
+                                                child: Container(
+                                                  height: 100.h,
+                                                  child: Text(
+                                                    "Fetching ongoing emergencies",
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight: FontWeight.normal,
+                                                      fontSize: 17.sp,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }
+
                                             if (snap.length == 0) {
                                               return Center(
                                                 child: Container(
@@ -1134,6 +1196,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                 ),
                                               );
                                             }
+
                                             List<LatLng> coordinatesList = [];
                                             Set<Marker> _markers = {};
 
@@ -1142,11 +1205,20 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               _civCoordinates = snap[i]['Coordinates'];
                                               _civLatitude = double.parse(_civCoordinates.split('Latitude: ')[1].split(',')[0]);
                                               _civLongitude = double.parse(_civCoordinates.split('Longitude: ')[1]);
-                                              LatLng _coordinate = LatLng(_civLatitude, _civLongitude);
-                                              coordinatesList.add(_coordinate);
-                                              Marker marker = Marker(
-                                                markerId: MarkerId(_coordinate.toString()),
-                                                position: _coordinate,
+                                              LatLng _civCoordinate = LatLng(_civLatitude, _civLongitude);
+                                              LatLng _userCoordinate = LatLng(_userLatitude, _userLongitude);
+                                              coordinatesList.add(_civCoordinate);
+                                              coordinatesList.add(_userCoordinate);
+
+                                              Marker userMarker = Marker(
+                                                markerId: MarkerId(_userCoordinate.toString()),
+                                                position: _userCoordinate,
+                                                icon: BitmapDescriptor.defaultMarker,
+                                              );
+
+                                              Marker civMarker = Marker(
+                                                markerId: MarkerId(_civCoordinate.toString()),
+                                                position: _civCoordinate,
                                                 icon: _getMarkerIcon(
                                                   _civEmergencyType,
                                                 ),
@@ -1429,7 +1501,8 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                   );
                                                 },
                                               );
-                                              _markers.add(marker);
+                                              _markers.add(civMarker);
+                                              _markers.add(userMarker);
                                             }
 
                                             for (LatLng coordinates in coordinatesList) {
@@ -1451,7 +1524,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                         zoomControlsEnabled: false,
                                                         onMapCreated: _onMapCreated,
                                                         initialCameraPosition: CameraPosition(
-                                                          target: LatLng(_averageLatitude, _averageLongitude),
+                                                          target: LatLng(_userLatitude, _userLongitude),
                                                           zoom: 10,
                                                         ),
                                                         markers: _markers,
