@@ -25,6 +25,33 @@ class _CivHomePageState extends State<CivHomePage> {
     getUserData();
     super.initState();
 
+    var collection = FirebaseFirestore.instance.collection('emergencies');
+    var docReference = collection.doc(_emailAddress);
+
+    //Retains the status of reported emergency
+    docReference.snapshots().listen((docSnapshot) {
+      if (docSnapshot.exists) {
+        Map<String, dynamic>? data = docSnapshot.data();
+        var status = data?['Status'];
+        if (status == 'Ongoing') {
+          Future.delayed(Duration(milliseconds: 1000)).then((_) {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+            quickAlert(QuickAlertType.loading, "Emergency Selected!", "Waiting for confirmation of the responders near you. Please hang tight", Colors.green);
+          });
+          docReference.snapshots().listen((docSnapshot) {
+            if (status == 'Confirmed') {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+              showEmergencyDetails(context);
+            }
+          });
+        }
+        if (status == 'Confirmed') {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          showEmergencyDetails(context);
+        }
+      }
+    });
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -106,7 +133,7 @@ class _CivHomePageState extends State<CivHomePage> {
     QuickAlert.show(
       backgroundColor: Colors.grey.shade200,
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       type: animtype,
       title: title,
       text: text,
