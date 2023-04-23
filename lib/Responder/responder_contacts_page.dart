@@ -13,7 +13,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:http/http.dart' as http;
 
 class ResContactsPage extends StatefulWidget {
   const ResContactsPage({Key? key}) : super(key: key);
@@ -142,9 +141,9 @@ class _ResContactsPageState extends State<ResContactsPage> {
 
   final String apiKey = "AIzaSyAy5qAZpPfEk8QFs8BGXUvq8Gd1MFHKo0o";
 
-  void drawPolyline() async {
-    var response = http.post(Uri.parse('https://maps/googleapis.com/maps/api/directions/json?key="${apiKey}"&units=metric&origin="${_userLatitude},${_userLongitude}"&destination="${_civLatitude},${_civLongitude}"&mode=driving'));
-  }
+  // void drawPolyline() async {
+  //   var response = http.post(Uri.parse('https://maps/googleapis.com/maps/api/directions/json?key="${apiKey}"&units=metric&origin="${_userLatitude},${_userLongitude}"&destination="${_civLatitude},${_civLongitude}"&mode=driving'));
+  // }
 
   createMarker(context) {
     if (userIcon == BitmapDescriptor.defaultMarker) {
@@ -419,7 +418,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                             );
                                           }
 
-                                          drawPolyline();
                                           final snap = snapshot.data!.docs;
                                           _civCoordinates = snap[_markerSelected]['Coordinates'];
                                           _civLatitude = double.parse(_civCoordinates.split('Latitude: ')[1].split(',')[0]);
