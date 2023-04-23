@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:collection';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:custom_info_window/custom_info_window.dart';
@@ -10,11 +10,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:rtena_app/Civilian/civilian_start_page.dart';
+import 'package:http/http.dart' as http;
 
 class ResContactsPage extends StatefulWidget {
   const ResContactsPage({Key? key}) : super(key: key);
@@ -28,7 +27,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
   void initState() {
     getConnectivity();
     getUserData();
-
+    userIcon = BitmapDescriptor.defaultMarker;
     super.initState();
     DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then((value) => {
           mapTheme = value
@@ -127,7 +126,36 @@ class _ResContactsPageState extends State<ResContactsPage> {
   late String _employer = "";
 
   late GoogleMapController mapController;
-  late BitmapDescriptor? userIcon;
+  late BitmapDescriptor userIcon;
+
+  double calculateZoomLevel(double distance) {
+    if (distance <= 0.1) {
+      return 12.5;
+    } else if (distance <= 0.5) {
+      return 9.5;
+    } else if (distance <= 1.0) {
+      return 7.5;
+    } else {
+      return 5.5;
+    }
+  }
+
+  final String apiKey = "AIzaSyAy5qAZpPfEk8QFs8BGXUvq8Gd1MFHKo0o";
+
+  void drawPolyline() async {
+    var response = http.post(Uri.parse('https://maps/googleapis.com/maps/api/directions/json?key="${apiKey}"&units=metric&origin="${_userLatitude},${_userLongitude}"&destination="${_civLatitude},${_civLongitude}"&mode=driving'));
+  }
+
+  createMarker(context) {
+    if (userIcon == BitmapDescriptor.defaultMarker) {
+      ImageConfiguration configuration = createLocalImageConfiguration(context);
+      BitmapDescriptor.fromAssetImage(configuration, 'assets/user_icon.png').then(
+        (Icon) => setState(() {
+          userIcon = Icon;
+        }),
+      );
+    }
+  }
 
   BitmapDescriptor _getMarkerIcon(String emergencyType) {
     switch (emergencyType) {
@@ -327,7 +355,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                         ),
                       ],
                     ),
-                    height: 750.h,
+                    height: 700.h,
                     width: MediaQuery.of(context).size.width,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -373,7 +401,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
                         SizedBox(height: 20.h),
                         Expanded(
                           child: Container(
-                            height: 100.h,
                             child: ScrollConfiguration(
                               behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
                               child: SingleChildScrollView(
@@ -391,12 +418,21 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               ),
                                             );
                                           }
+
+                                          drawPolyline();
                                           final snap = snapshot.data!.docs;
                                           _civCoordinates = snap[_markerSelected]['Coordinates'];
                                           _civLatitude = double.parse(_civCoordinates.split('Latitude: ')[1].split(',')[0]);
                                           _civLongitude = double.parse(_civCoordinates.split('Longitude: ')[1]);
-                                          var collection = FirebaseFirestore.instance.collection('emergencies');
 
+                                          _averageLatitude = (_civLatitude + _userLatitude) / 2;
+                                          _averageLongitude = (_civLongitude + _userLongitude) / 2;
+
+                                          //Calculate the distance between resloc and selected civLoc
+                                          double distance = sqrt(pow(_userLatitude - _civLatitude, 2) + pow(_userLongitude - _civLongitude, 2));
+                                          print("ZOOM" + calculateZoomLevel(distance).toString());
+
+                                          var collection = FirebaseFirestore.instance.collection('emergencies');
                                           var docReference = collection.doc(snap[_markerSelected]['Email Address']);
 
                                           docReference.snapshots().listen((docSnapshot) {
@@ -410,8 +446,15 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                             position: LatLng(_civLatitude, _civLongitude),
                                           );
 
+                                          Marker userMarker = Marker(
+                                            markerId: MarkerId(_civCoordinates),
+                                            position: LatLng(_userLatitude, _userLongitude),
+                                            icon: userIcon,
+                                          );
+
                                           Set<Marker> markers = Set<Marker>.from([
-                                            civMarker
+                                            civMarker,
+                                            userMarker
                                           ]);
 
                                           // return Text("TESTR");
@@ -462,7 +505,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                           ),
                                                         ],
                                                       ),
-                                                      SizedBox(height: 10.h),
                                                       Row(
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
@@ -493,7 +535,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Text(
-                                                            'Your Location:\t\t\t',
+                                                            'Location:\t\t\t',
                                                             textAlign: TextAlign.left,
                                                             style: TextStyle(
                                                               fontSize: 18.sp,
@@ -610,20 +652,19 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                   ),
                                                 ),
                                                 SizedBox(height: 20.h),
-
                                                 // GO HERE BE
                                                 ClipRRect(
                                                   borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
                                                   child: Container(
-                                                    height: 250.h,
+                                                    height: 400.h,
                                                     child: GoogleMap(
                                                       mapType: MapType.normal,
                                                       mapToolbarEnabled: false,
                                                       zoomControlsEnabled: false,
                                                       onMapCreated: _onMapCreated,
                                                       initialCameraPosition: CameraPosition(
-                                                        target: LatLng(_civLatitude, _civLongitude),
-                                                        zoom: 13,
+                                                        target: LatLng(_averageLatitude, _averageLongitude),
+                                                        zoom: calculateZoomLevel(distance),
                                                       ),
                                                       markers: markers,
                                                     ),
@@ -641,51 +682,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
                             ),
                           ),
                         ),
-                        // ElevatedButton(
-                        //   style: ElevatedButton.styleFrom(
-                        //     backgroundColor: Color.fromRGBO(252, 58, 72, 32),
-                        //     shape: RoundedRectangleBorder(
-                        //       borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
-                        //     ),
-                        //     padding: EdgeInsets.all(12),
-                        //   ),
-                        //   onPressed: () async {
-                        //     resolveEmergency();
-                        //   },
-                        //   child: Container(
-                        //     width: double.infinity,
-                        //     height: 40.h,
-                        //     child: Stack(
-                        //       children: [
-                        //         Center(
-                        //           child: Row(
-                        //             mainAxisAlignment: MainAxisAlignment.center,
-                        //             children: [
-                        //               Text(
-                        //                 "Resolved",
-                        //                 style: TextStyle(
-                        //                   color: Colors.white,
-                        //                   fontSize: 17.sp,
-                        //                 ),
-                        //                 textAlign: TextAlign.center,
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //         Positioned(
-                        //           right: 20,
-                        //           top: 0,
-                        //           bottom: 0,
-                        //           child: Icon(
-                        //             Icons.next_plan,
-                        //             color: Colors.white,
-                        //             size: 30,
-                        //           ),
-                        //         )
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -1017,6 +1013,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
 
   @override
   Widget build(BuildContext context) {
+    createMarker(context);
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -1213,7 +1210,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               Marker userMarker = Marker(
                                                 markerId: MarkerId(_userCoordinate.toString()),
                                                 position: _userCoordinate,
-                                                icon: BitmapDescriptor.defaultMarker,
+                                                icon: userIcon,
                                               );
 
                                               Marker civMarker = Marker(
@@ -1509,8 +1506,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               _totalLatitude += coordinates.latitude;
                                               _totalLongitude += coordinates.longitude;
                                             }
-                                            _averageLatitude = _totalLatitude / coordinatesList.length;
-                                            _averageLongitude = _totalLongitude / coordinatesList.length;
 
                                             return Container(
                                               child: Stack(
