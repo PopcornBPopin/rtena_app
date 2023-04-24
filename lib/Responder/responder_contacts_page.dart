@@ -6,6 +6,7 @@ import 'package:custom_info_window/custom_info_window.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoding/geocoding.dart';
@@ -26,6 +27,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
   void initState() {
     getConnectivity();
     getUserData();
+    getCurrentLocation();
     userIcon = BitmapDescriptor.defaultMarker;
     super.initState();
     DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then((value) => {
@@ -34,9 +36,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    setState(() {
-      getCurrentLocation();
-    });
+    setState(() {});
   }
 
   //Get the user location
@@ -86,14 +86,15 @@ class _ResContactsPageState extends State<ResContactsPage> {
 
   bool _hasInternet = false;
 
-  bool _fireEmergencyFiltered = false;
-  bool _healthEmergencyFiltered = false;
-  bool _murderEmergencyFiltered = false;
-  bool _assaultEmergencyFiltered = false;
-  bool _floodEmergencyFiltered = false;
-  bool _earthquakeEmergencyFiltered = false;
-  bool _kidnappingEmergencyFiltered = false;
-  bool _robberyEmergencyFiltered = false;
+  bool _fireEmergencyFiltered = true;
+  bool _healthEmergencyFiltered = true;
+  bool _murderEmergencyFiltered = true;
+  bool _assaultEmergencyFiltered = true;
+  bool _floodEmergencyFiltered = true;
+  bool _earthquakeEmergencyFiltered = true;
+  bool _kidnappingEmergencyFiltered = true;
+  bool _robberyEmergencyFiltered = true;
+  bool _alertEmergencyFiltered = true;
 
   late StreamSubscription subscription;
   late String _emailAddress = "";
@@ -124,11 +125,15 @@ class _ResContactsPageState extends State<ResContactsPage> {
   late String _occupation = "";
   late String _employer = "";
 
+  //MAP STUFF
   late GoogleMapController mapController;
   late BitmapDescriptor userIcon;
+  static const String googleApiKey = "AIzaSyAy5qAZpPfEk8QFs8BGXUvq8Gd1MFHKo0o";
 
   double calculateZoomLevel(double distance) {
-    if (distance <= 0.1) {
+    if (distance <= 0.05) {
+      return 15;
+    } else if (distance <= 0.1) {
       return 12.5;
     } else if (distance <= 0.5) {
       return 9.5;
@@ -139,11 +144,60 @@ class _ResContactsPageState extends State<ResContactsPage> {
     }
   }
 
-  final String apiKey = "AIzaSyAy5qAZpPfEk8QFs8BGXUvq8Gd1MFHKo0o";
+  //Filter emergency types
+  List<String> filteredEmergencies = [
+    'Fire Emergency',
+    'Health Emergency',
+    'Murder Emergency',
+    'Assault Emergency',
+    'Flood Emergency',
+    'Earthquake Emergency',
+    'Kidnapping Emergency',
+    'Robbery Emergency'
+  ];
+  Set<Marker> _markers = {};
+  void onMarkerFiltered(Marker marker) {
+    if (filteredEmergencies.contains(marker.markerId.value.toString())) {
+      _markers.add(marker);
+      print("ADD IT BUI");
+    } else {
+      _markers.removeWhere((notFilteredMarker) => notFilteredMarker.markerId.value == marker.markerId.value);
+      print("REMOVE IT BUI");
+    }
+  }
 
-  // void drawPolyline() async {
-  //   var response = http.post(Uri.parse('https://maps/googleapis.com/maps/api/directions/json?key="${apiKey}"&units=metric&origin="${_userLatitude},${_userLongitude}"&destination="${_civLatitude},${_civLongitude}"&mode=driving'));
-  // }
+  void filterChecker(String type) {
+    if (filteredEmergencies.contains(type)) {
+      filteredEmergencies.remove(type);
+    } else {
+      filteredEmergencies.add(type);
+    }
+    setState(() {});
+  }
+
+  //Getting polyline from source and dest markers
+  List<LatLng> polylineCoordinates = [];
+  void getPolyPoints() async {
+    print("USER:" + _userLatitude.toString() + " " + _userLongitude.toString());
+    print("CIV:" + _civLatitude.toString() + " " + _civLongitude.toString());
+    print("POINTS: " + polylineCoordinates.toList().toString());
+    PolylinePoints polylinePoints = PolylinePoints();
+
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      googleApiKey,
+      PointLatLng(_userLatitude, _userLongitude),
+      PointLatLng(_civLatitude, _civLongitude),
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+      setState(() {});
+    } else {
+      print("Error getting route: ${result.errorMessage}");
+    }
+  }
 
   createMarker(context) {
     if (userIcon == BitmapDescriptor.defaultMarker) {
@@ -425,10 +479,10 @@ class _ResContactsPageState extends State<ResContactsPage> {
 
                                           _averageLatitude = (_civLatitude + _userLatitude) / 2;
                                           _averageLongitude = (_civLongitude + _userLongitude) / 2;
+                                          // getPolyPoints();
 
                                           //Calculate the distance between resloc and selected civLoc
                                           double distance = sqrt(pow(_userLatitude - _civLatitude, 2) + pow(_userLongitude - _civLongitude, 2));
-                                          print("ZOOM" + calculateZoomLevel(distance).toString());
 
                                           var collection = FirebaseFirestore.instance.collection('emergencies');
                                           var docReference = collection.doc(snap[_markerSelected]['Email Address']);
@@ -455,7 +509,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                             userMarker
                                           ]);
 
-                                          // return Text("TESTR");
                                           return Container(
                                             child: Column(
                                               children: [
@@ -503,6 +556,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                           ),
                                                         ],
                                                       ),
+                                                      SizedBox(height: 10.h),
                                                       Row(
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
@@ -659,6 +713,12 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                       mapType: MapType.normal,
                                                       mapToolbarEnabled: false,
                                                       zoomControlsEnabled: false,
+                                                      polylines: {
+                                                        Polyline(
+                                                          polylineId: PolylineId("route"),
+                                                          points: polylineCoordinates,
+                                                        ),
+                                                      },
                                                       onMapCreated: _onMapCreated,
                                                       initialCameraPosition: CameraPosition(
                                                         target: LatLng(_averageLatitude, _averageLongitude),
@@ -721,7 +781,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: Container(
-                  height: 350.h,
+                  height: 400.h,
                   width: 250.w,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -743,8 +803,10 @@ class _ResContactsPageState extends State<ResContactsPage> {
                         SizedBox(height: 10.h),
                         GestureDetector(
                           onTap: () {
+                            print(filteredEmergencies);
                             setState(() {
                               _fireEmergencyFiltered = !_fireEmergencyFiltered;
+                              filterChecker('Fire Emergency');
                             });
                           },
                           child: Container(
@@ -777,6 +839,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                           onTap: () {
                             setState(() {
                               _healthEmergencyFiltered = !_healthEmergencyFiltered;
+                              filterChecker('Health Emergency');
                             });
                           },
                           child: Container(
@@ -809,6 +872,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                           onTap: () {
                             setState(() {
                               _murderEmergencyFiltered = !_murderEmergencyFiltered;
+                              filterChecker('Murder Emergency');
                             });
                           },
                           child: Container(
@@ -841,6 +905,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                           onTap: () {
                             setState(() {
                               _assaultEmergencyFiltered = !_assaultEmergencyFiltered;
+                              filterChecker('Assault Emergency');
                             });
                           },
                           child: Container(
@@ -873,6 +938,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                           onTap: () {
                             setState(() {
                               _floodEmergencyFiltered = !_floodEmergencyFiltered;
+                              filterChecker('Flood Emergency');
                             });
                           },
                           child: Container(
@@ -905,6 +971,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                           onTap: () {
                             setState(() {
                               _earthquakeEmergencyFiltered = !_earthquakeEmergencyFiltered;
+                              filterChecker('Earthquake Emergency');
                             });
                           },
                           child: Container(
@@ -937,6 +1004,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                           onTap: () {
                             setState(() {
                               _kidnappingEmergencyFiltered = !_kidnappingEmergencyFiltered;
+                              filterChecker('Kidnapping Emergency');
                             });
                           },
                           child: Container(
@@ -969,6 +1037,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                           onTap: () {
                             setState(() {
                               _robberyEmergencyFiltered = !_robberyEmergencyFiltered;
+                              filterChecker('Robbery Emergency');
                             });
                           },
                           child: Container(
@@ -997,6 +1066,39 @@ class _ResContactsPageState extends State<ResContactsPage> {
                             ),
                           ),
                         ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _alertEmergencyFiltered = !_alertEmergencyFiltered;
+                              filterChecker('Alert Emergency');
+                            });
+                          },
+                          child: Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2),
+                              child: Row(
+                                children: [
+                                  _alertEmergencyFiltered
+                                      ? Icon(
+                                          Icons.check_circle,
+                                          color: Colors.yellow,
+                                        )
+                                      : Icon(
+                                          Icons.radio_button_checked,
+                                          color: Colors.yellow,
+                                        ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                  Text(
+                                    "Alert Emergency",
+                                    style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -1012,6 +1114,48 @@ class _ResContactsPageState extends State<ResContactsPage> {
   @override
   Widget build(BuildContext context) {
     createMarker(context);
+    FloatingActionButton legendFAB = FloatingActionButton.extended(
+      onPressed: () {
+        showLegend(context);
+      },
+      backgroundColor: Colors.white,
+      label: Text(
+        'Legend',
+        style: TextStyle(color: Colors.black),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(100),
+        side: BorderSide(
+          color: Color.fromRGBO(82, 82, 82, 1),
+          width: 1,
+        ),
+      ),
+      icon: Icon(
+        Icons.legend_toggle,
+        color: Colors.black,
+      ),
+    );
+    FloatingActionButton listFAB = FloatingActionButton(
+      onPressed: () {
+        showLegend(context);
+      },
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(100),
+        side: BorderSide(
+          color: Color.fromRGBO(82, 82, 82, 1),
+          width: 1,
+        ),
+      ),
+      child: Container(
+        width: 24,
+        height: 24,
+        child: Icon(
+          Icons.menu,
+          color: Colors.black,
+        ),
+      ),
+    );
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -1025,25 +1169,18 @@ class _ResContactsPageState extends State<ResContactsPage> {
       ),
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            showLegend(context);
-          },
-          backgroundColor: Colors.white,
-          label: Text(
-            'Legend',
-            style: TextStyle(color: Colors.black),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-            side: BorderSide(
-              color: Color.fromRGBO(82, 82, 82, 1),
-              width: 1,
-            ),
-          ),
-          icon: Icon(
-            Icons.menu,
-            color: Colors.black,
+        floatingActionButton: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  legendFAB,
+                  SizedBox(height: 10.h)
+                ],
+              ),
+            ],
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -1193,7 +1330,10 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                             }
 
                                             List<LatLng> coordinatesList = [];
-                                            Set<Marker> _markers = {};
+                                            List<String> filteredMarkers = [
+                                              'Fire Emergency',
+                                              'Health Emergency'
+                                            ];
 
                                             for (var i = 0; i < snap.length; i++) {
                                               _civEmergencyType = snap[i]['Type'];
@@ -1212,7 +1352,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               );
 
                                               Marker civMarker = Marker(
-                                                markerId: MarkerId(_civCoordinate.toString()),
+                                                markerId: MarkerId(_civEmergencyType.toString()),
                                                 position: _civCoordinate,
                                                 icon: _getMarkerIcon(
                                                   _civEmergencyType,
@@ -1424,6 +1564,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                           padding: EdgeInsets.all(12),
                                                                         ),
                                                                         onPressed: () async {
+                                                                          getPolyPoints();
                                                                           var emergencies = FirebaseFirestore.instance.collection('emergencies');
                                                                           var querySnapshots = await emergencies.get();
                                                                           for (var doc in querySnapshots.docs) {
@@ -1496,8 +1637,8 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                   );
                                                 },
                                               );
-                                              _markers.add(civMarker);
                                               _markers.add(userMarker);
+                                              onMarkerFiltered(civMarker);
                                             }
 
                                             for (LatLng coordinates in coordinatesList) {
