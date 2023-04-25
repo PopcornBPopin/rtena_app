@@ -28,6 +28,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
     getConnectivity();
     getUserData();
     getCurrentLocation();
+
     userIcon = BitmapDescriptor.defaultMarker;
     super.initState();
     DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then((value) => {
@@ -120,6 +121,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
   late String _responderOccupation = "";
   late String _responderContactNumber = "";
   late String _responderEmployer = "";
+  late String statusSet = "";
 
   late String _contactNumber = "";
   late String _occupation = "";
@@ -131,16 +133,18 @@ class _ResContactsPageState extends State<ResContactsPage> {
   static const String googleApiKey = "AIzaSyAy5qAZpPfEk8QFs8BGXUvq8Gd1MFHKo0o";
 
   double calculateZoomLevel(double distance) {
-    if (distance <= 0.05) {
+    if (distance <= 0.01) {
+      return 18;
+    } else if (distance <= 0.05) {
       return 15;
     } else if (distance <= 0.1) {
-      return 12.5;
+      return 13;
     } else if (distance <= 0.5) {
-      return 9.5;
+      return 10;
     } else if (distance <= 1.0) {
-      return 7.5;
+      return 8;
     } else {
-      return 5.5;
+      return 6;
     }
   }
 
@@ -155,16 +159,19 @@ class _ResContactsPageState extends State<ResContactsPage> {
     'Kidnapping Emergency',
     'Robbery Emergency'
   ];
-  Set<Marker> _markers = {};
-  void onMarkerFiltered(Marker marker) {
-    if (filteredEmergencies.contains(marker.markerId.value.toString())) {
-      _markers.add(marker);
-      print("ADD IT BUI");
-    } else {
-      _markers.removeWhere((notFilteredMarker) => notFilteredMarker.markerId.value == marker.markerId.value);
-      print("REMOVE IT BUI");
-    }
-  }
+
+  // void onMarkerFiltered(Marker marker) {
+  //   print("");
+  //   print(marker.markerId.value.toString());
+
+  //   if (filteredEmergencies.contains(marker.markerId.value.toString())) {
+  //     _markers.add(marker);
+  //     print("ADD IT BUI");
+  //   } else if (!filteredEmergencies.contains(marker.markerId.value.toString())) {
+  //     _markers.removeWhere((notFilteredMarker) => notFilteredMarker.markerId.value == marker.markerId.value);
+  //     print("REMOVE IT BUI");
+  //   }
+  // }
 
   void filterChecker(String type) {
     if (filteredEmergencies.contains(type)) {
@@ -820,7 +827,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                           color: Colors.red,
                                         )
                                       : Icon(
-                                          Icons.radio_button_checked,
+                                          Icons.radio_button_off,
                                           color: Colors.red,
                                         ),
                                   SizedBox(
@@ -853,7 +860,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                           color: Color.fromRGBO(0, 127, 255, 1),
                                         )
                                       : Icon(
-                                          Icons.radio_button_checked,
+                                          Icons.radio_button_off,
                                           color: Color.fromRGBO(0, 127, 255, 1),
                                         ),
                                   SizedBox(
@@ -886,7 +893,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                           color: Colors.cyan,
                                         )
                                       : Icon(
-                                          Icons.radio_button_checked,
+                                          Icons.radio_button_off,
                                           color: Colors.cyan,
                                         ),
                                   SizedBox(
@@ -919,7 +926,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                           color: Colors.green,
                                         )
                                       : Icon(
-                                          Icons.radio_button_checked,
+                                          Icons.radio_button_off,
                                           color: Colors.green,
                                         ),
                                   SizedBox(
@@ -952,7 +959,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                           color: Color.fromRGBO(255, 0, 255, 1),
                                         )
                                       : Icon(
-                                          Icons.radio_button_checked,
+                                          Icons.radio_button_off,
                                           color: Color.fromRGBO(255, 0, 255, 1),
                                         ),
                                   SizedBox(
@@ -985,7 +992,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                           color: Colors.orange,
                                         )
                                       : Icon(
-                                          Icons.radio_button_checked,
+                                          Icons.radio_button_off,
                                           color: Colors.orange,
                                         ),
                                   SizedBox(
@@ -1018,7 +1025,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                           color: Color.fromRGBO(255, 0, 85, 1),
                                         )
                                       : Icon(
-                                          Icons.radio_button_checked,
+                                          Icons.radio_button_off,
                                           color: Color.fromRGBO(255, 0, 85, 1),
                                         ),
                                   SizedBox(
@@ -1051,7 +1058,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                           color: Color.fromRGBO(138, 43, 226, 1),
                                         )
                                       : Icon(
-                                          Icons.radio_button_checked,
+                                          Icons.radio_button_off,
                                           color: Color.fromRGBO(138, 43, 226, 1),
                                         ),
                                   SizedBox(
@@ -1084,7 +1091,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                           color: Colors.yellow,
                                         )
                                       : Icon(
-                                          Icons.radio_button_checked,
+                                          Icons.radio_button_off,
                                           color: Colors.yellow,
                                         ),
                                   SizedBox(
@@ -1330,10 +1337,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                             }
 
                                             List<LatLng> coordinatesList = [];
-                                            List<String> filteredMarkers = [
-                                              'Fire Emergency',
-                                              'Health Emergency'
-                                            ];
+                                            Set<Marker> _markers = {};
 
                                             for (var i = 0; i < snap.length; i++) {
                                               _civEmergencyType = snap[i]['Type'];
@@ -1557,7 +1561,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                       ),
                                                                       ElevatedButton(
                                                                         style: ElevatedButton.styleFrom(
-                                                                          backgroundColor: Color.fromRGBO(70, 18, 32, 1),
+                                                                          backgroundColor: statusSet == "Confirmed" ? Colors.orange : Color.fromRGBO(70, 18, 32, 1),
                                                                           shape: RoundedRectangleBorder(
                                                                             borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
                                                                           ),
@@ -1601,7 +1605,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                                                   children: [
                                                                                     Text(
-                                                                                      "Respond",
+                                                                                      statusSet == "Confirmed" ? "Ongoing" : "Respond",
                                                                                       style: TextStyle(
                                                                                         color: Colors.white,
                                                                                         fontSize: 20.sp,
@@ -1637,8 +1641,8 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                   );
                                                 },
                                               );
+                                              _markers.add(civMarker);
                                               _markers.add(userMarker);
-                                              onMarkerFiltered(civMarker);
                                             }
 
                                             for (LatLng coordinates in coordinatesList) {
