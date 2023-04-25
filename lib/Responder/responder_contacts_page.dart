@@ -121,7 +121,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
   late String _responderOccupation = "";
   late String _responderContactNumber = "";
   late String _responderEmployer = "";
-  late String statusSet = "";
 
   late String _contactNumber = "";
   late String _occupation = "";
@@ -486,7 +485,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
 
                                           _averageLatitude = (_civLatitude + _userLatitude) / 2;
                                           _averageLongitude = (_civLongitude + _userLongitude) / 2;
-                                          // getPolyPoints();
 
                                           //Calculate the distance between resloc and selected civLoc
                                           double distance = sqrt(pow(_userLatitude - _civLatitude, 2) + pow(_userLongitude - _civLongitude, 2));
@@ -1355,7 +1353,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                 icon: userIcon,
                                               );
 
-                                              Marker civMarker = Marker(
+                                              Marker civMarkerAll = Marker(
                                                 markerId: MarkerId(_civEmergencyType.toString()),
                                                 position: _civCoordinate,
                                                 icon: _getMarkerIcon(
@@ -1545,6 +1543,35 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                                                     ),
                                                                                                   ],
                                                                                                 ),
+                                                                                                SizedBox(height: 10.h),
+                                                                                                // Visibility(
+                                                                                                //   visible: snap[_markerSelected]["Status"] == "Confirmed" && (snap[_markerSelected].data() as Map<String, dynamic>).containsKey("Responder"),
+                                                                                                //   child: Row(
+                                                                                                //     crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                //     children: [
+                                                                                                //       Text(
+                                                                                                //         'Responder:\t\t\t',
+                                                                                                //         textAlign: TextAlign.left,
+                                                                                                //         style: TextStyle(
+                                                                                                //           fontSize: 18.sp,
+                                                                                                //           fontWeight: FontWeight.bold,
+                                                                                                //           color: Colors.black,
+                                                                                                //         ),
+                                                                                                //       ),
+                                                                                                //       Expanded(
+                                                                                                //         child: Text(
+                                                                                                //           snap[_markerSelected]['Responder'],
+                                                                                                //           textAlign: TextAlign.left,
+                                                                                                //           style: TextStyle(
+                                                                                                //             fontSize: 18.sp,
+                                                                                                //             fontWeight: FontWeight.normal,
+                                                                                                //             color: Colors.black,
+                                                                                                //           ),
+                                                                                                //         ),
+                                                                                                //       ),
+                                                                                                //     ],
+                                                                                                //   ),
+                                                                                                // ),
                                                                                                 SizedBox(height: 20.h),
                                                                                               ],
                                                                                             ),
@@ -1561,40 +1588,40 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                       ),
                                                                       ElevatedButton(
                                                                         style: ElevatedButton.styleFrom(
-                                                                          backgroundColor: statusSet == "Confirmed" ? Colors.orange : Color.fromRGBO(70, 18, 32, 1),
+                                                                          disabledBackgroundColor: Colors.orange,
+                                                                          backgroundColor: Color.fromRGBO(70, 18, 32, 1),
                                                                           shape: RoundedRectangleBorder(
                                                                             borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
                                                                           ),
                                                                           padding: EdgeInsets.all(12),
                                                                         ),
-                                                                        onPressed: () async {
-                                                                          getPolyPoints();
-                                                                          var emergencies = FirebaseFirestore.instance.collection('emergencies');
-                                                                          var querySnapshots = await emergencies.get();
-                                                                          for (var doc in querySnapshots.docs) {
-                                                                            await doc.reference.update({
-                                                                              'Status': 'Confirmed',
-                                                                              'Responder': _fullName,
-                                                                              'Responder Contact Number': _contactNumber,
-                                                                              'Responder Occupation': _occupation,
-                                                                              'Responder Employer': _employer,
-                                                                            });
-                                                                          }
-                                                                          var collection = FirebaseFirestore.instance.collection('emergencies');
-                                                                          print(snap[_markerSelected]['Email Address']);
-                                                                          var docReference = collection.doc(snap[_markerSelected]['Email Address']);
+                                                                        onPressed: snap[_markerSelected]["Status"] == "Confirmed"
+                                                                            ? null
+                                                                            : () async {
+                                                                                print(snap[_markerSelected]["Status"]);
+                                                                                // getPolyPoints();
+                                                                                var emergencies = FirebaseFirestore.instance.collection('emergencies');
+                                                                                var docReference = emergencies.doc(snap[_markerSelected]['Email Address']);
 
-                                                                          docReference.snapshots().listen((docSnapshot) {
-                                                                            if (docSnapshot.exists) {
-                                                                              Map<String, dynamic>? data = docSnapshot.data();
-                                                                              var status = data?['Status'];
-                                                                              if (status == 'Confirmed') {
-                                                                                Navigator.of(context).pop();
-                                                                                showEmergencyDetails(context);
-                                                                              }
-                                                                            }
-                                                                          });
-                                                                        },
+                                                                                await docReference.update({
+                                                                                  'Status': 'Confirmed',
+                                                                                  'Responder': _fullName,
+                                                                                  'Responder Contact Number': _contactNumber,
+                                                                                  'Responder Occupation': _occupation,
+                                                                                  'Responder Employer': _employer,
+                                                                                });
+
+                                                                                docReference.snapshots().listen((docSnapshot) {
+                                                                                  if (docSnapshot.exists) {
+                                                                                    Map<String, dynamic>? data = docSnapshot.data();
+                                                                                    var status = data?['Status'];
+                                                                                    if (status == 'Confirmed') {
+                                                                                      Navigator.of(context).pop();
+                                                                                      showEmergencyDetails(context);
+                                                                                    }
+                                                                                  }
+                                                                                });
+                                                                              },
                                                                         child: Container(
                                                                           width: double.infinity,
                                                                           height: 40.h,
@@ -1605,7 +1632,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                                                   children: [
                                                                                     Text(
-                                                                                      statusSet == "Confirmed" ? "Ongoing" : "Respond",
+                                                                                      snap[_markerSelected]["Status"] == "Confirmed" ? "Ongoing" : "Respond",
                                                                                       style: TextStyle(
                                                                                         color: Colors.white,
                                                                                         fontSize: 20.sp,
@@ -1641,7 +1668,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                   );
                                                 },
                                               );
-                                              _markers.add(civMarker);
+                                              _markers.add(civMarkerAll);
                                               _markers.add(userMarker);
                                             }
 

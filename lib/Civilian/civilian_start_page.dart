@@ -116,7 +116,7 @@ class _CivStartPageState extends State<CivStartPage> {
                   ),
                   GButton(
                     icon: Icons.contact_emergency,
-                    text: "Map",
+                    text: "Contacts",
                   ),
                   GButton(
                     icon: Icons.person_pin_rounded,

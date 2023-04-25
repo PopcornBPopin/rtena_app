@@ -27,6 +27,7 @@ class _CivHomePageState extends State<CivHomePage> {
 
     var collection = FirebaseFirestore.instance.collection('emergencies');
     var docReference = collection.doc(_emailAddress);
+    print(_emailAddress);
 
     //Retains the status of reported emergency
     docReference.snapshots().listen((docSnapshot) {
