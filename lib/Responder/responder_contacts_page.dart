@@ -504,7 +504,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               await usersDocReference.update({
                                                 'Responded Civilian ID': FieldValue.delete()
                                               });
-                                              Navigator.of(context).pop();
                                             }
                                           });
 
