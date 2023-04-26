@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
@@ -28,7 +29,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
     getConnectivity();
     getUserData();
     getCurrentLocation();
-
+    checkCivID();
     userIcon = BitmapDescriptor.defaultMarker;
     super.initState();
     DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then((value) => {
@@ -73,6 +74,33 @@ class _ResContactsPageState extends State<ResContactsPage> {
     });
   }
 
+  void respondButtonPressed() {
+    setState(() {
+      _userResponded = true;
+    });
+  }
+
+  Future<String?> checkCivID() async {
+    var users = FirebaseFirestore.instance.collection('users');
+    var usersDocReference = users.doc(_emailAddress);
+    await usersDocReference.snapshots().listen((docSnapshot) {
+      if (docSnapshot.exists) {
+        Map<String, dynamic>? data = docSnapshot.data();
+        var resCivID = data?['Responded Civilian ID'];
+        if (resCivID != null) {
+          setState(() {
+            _civResponded = resCivID;
+            _userResponded = true;
+          });
+        } else if (!data!.containsKey('Responded Civilian ID')) {
+          setState(() {
+            _userResponded = false;
+          });
+        }
+      }
+    });
+  }
+
   //Disposes controllers when not in used
   @override
   void dispose() {
@@ -81,6 +109,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
     _emailController.dispose();
     _contactNumberController.dispose();
     _customInfoWindowController.dispose();
+
     subscription.cancel();
     super.dispose();
   }
@@ -97,6 +126,8 @@ class _ResContactsPageState extends State<ResContactsPage> {
   bool _robberyEmergencyFiltered = true;
   bool _alertEmergencyFiltered = true;
 
+  bool _userResponded = false;
+
   late StreamSubscription subscription;
   late String _emailAddress = "";
   late String _civCoordinates = "";
@@ -109,7 +140,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
   late double _totalLongitude = 0.0;
   late double _averageLatitude = 0.0;
   late double _averageLongitude = 0.0;
-  late int _markerSelected = 0;
 
   late String _fullName = "";
   late String _firstName = "";
@@ -125,6 +155,9 @@ class _ResContactsPageState extends State<ResContactsPage> {
   late String _contactNumber = "";
   late String _occupation = "";
   late String _employer = "";
+
+  late int _markerSelected = 0;
+  late int _civResponded = 0;
 
   //MAP STUFF
   late GoogleMapController mapController;
@@ -492,8 +525,14 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                           var collection = FirebaseFirestore.instance.collection('emergencies');
                                           var docReference = collection.doc(snap[_markerSelected]['Email Address']);
 
-                                          docReference.snapshots().listen((docSnapshot) {
+                                          var users = FirebaseFirestore.instance.collection('users');
+                                          var usersDocReference = users.doc(_emailAddress);
+
+                                          docReference.snapshots().listen((docSnapshot) async {
                                             if (!docSnapshot.exists) {
+                                              await usersDocReference.update({
+                                                'Responded Civilian ID': FieldValue.delete()
+                                              });
                                               Navigator.of(context).pop();
                                             }
                                           });
@@ -1334,8 +1373,8 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               );
                                             }
 
-                                            List<LatLng> coordinatesList = [];
                                             Set<Marker> _markers = {};
+                                            List<LatLng> coordinatesList = [];
 
                                             for (var i = 0; i < snap.length; i++) {
                                               _civEmergencyType = snap[i]['Type'];
@@ -1598,8 +1637,13 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                             : () async {
                                                                                 print(snap[_markerSelected]["Status"]);
                                                                                 // getPolyPoints();
+                                                                                _civResponded = _markerSelected;
+
                                                                                 var emergencies = FirebaseFirestore.instance.collection('emergencies');
                                                                                 var docReference = emergencies.doc(snap[_markerSelected]['Email Address']);
+
+                                                                                var users = FirebaseFirestore.instance.collection('users');
+                                                                                var usersDocReference = users.doc(_emailAddress);
 
                                                                                 await docReference.update({
                                                                                   'Status': 'Confirmed',
@@ -1607,6 +1651,10 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                                   'Responder Contact Number': _contactNumber,
                                                                                   'Responder Occupation': _occupation,
                                                                                   'Responder Employer': _employer,
+                                                                                });
+
+                                                                                await usersDocReference.update({
+                                                                                  'Responded Civilian ID': _civResponded
                                                                                 });
 
                                                                                 docReference.snapshots().listen((docSnapshot) {
@@ -1674,23 +1722,81 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               _totalLatitude += coordinates.latitude;
                                               _totalLongitude += coordinates.longitude;
                                             }
-
+                                            //WHOLE MAP HERE
                                             return Container(
                                               child: Stack(
                                                 children: [
                                                   ClipRRect(
                                                     borderRadius: BorderRadius.only(topLeft: Radius.circular(30)),
                                                     child: Container(
-                                                      child: GoogleMap(
-                                                        mapType: MapType.normal,
-                                                        mapToolbarEnabled: false,
-                                                        zoomControlsEnabled: false,
-                                                        onMapCreated: _onMapCreated,
-                                                        initialCameraPosition: CameraPosition(
-                                                          target: LatLng(_userLatitude, _userLongitude),
-                                                          zoom: 10,
-                                                        ),
-                                                        markers: _markers,
+                                                      child: Stack(
+                                                        children: [
+                                                          GoogleMap(
+                                                            mapType: MapType.normal,
+                                                            mapToolbarEnabled: false,
+                                                            zoomControlsEnabled: false,
+                                                            onMapCreated: _onMapCreated,
+                                                            initialCameraPosition: CameraPosition(
+                                                              target: LatLng(_userLatitude, _userLongitude),
+                                                              zoom: 10,
+                                                            ),
+                                                            markers: _markers,
+                                                          ),
+                                                          Visibility(
+                                                            visible: _userResponded,
+                                                            child: Align(
+                                                              alignment: Alignment.topCenter,
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                                                                child: GestureDetector(
+                                                                  onTap: () {
+                                                                    showEmergencyDetails(context);
+                                                                  },
+                                                                  child: Container(
+                                                                    width: MediaQuery.of(context).size.width,
+                                                                    height: 60.h,
+                                                                    decoration: BoxDecoration(
+                                                                      color: Colors.white,
+                                                                      borderRadius: BorderRadius.circular(100),
+                                                                      border: Border.all(
+                                                                        color: Color.fromRGBO(82, 82, 82, 1),
+                                                                        width: 1,
+                                                                      ),
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                          color: Colors.black.withOpacity(0.2),
+                                                                          offset: Offset(0, 2),
+                                                                          blurRadius: 4,
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      children: [
+                                                                        SizedBox(width: 10.w),
+                                                                        Text(
+                                                                          'Responding to:   ${snap[_civResponded]["Civilian"].toString()}',
+                                                                          style: TextStyle(
+                                                                            fontSize: 18.sp,
+                                                                            fontWeight: FontWeight.w400,
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(width: 20.w),
+                                                                        Icon(
+                                                                          Icons.more_horiz,
+                                                                          color: Colors.black,
+                                                                          size: 15,
+                                                                        ),
+                                                                        SizedBox(width: 10.w),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ),
