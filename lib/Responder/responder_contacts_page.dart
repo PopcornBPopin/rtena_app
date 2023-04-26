@@ -388,35 +388,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
     });
   }
 
-  void resolveEmergency() async {
-    QuickAlert.show(
-      backgroundColor: Colors.grey.shade200,
-      context: context,
-      type: QuickAlertType.confirm,
-      title: "Resolved?",
-      text: "Are you sure you want to mark this emergency as resolved?",
-      confirmBtnText: "Yes",
-      confirmBtnColor: Colors.white,
-      confirmBtnTextStyle: TextStyle(
-        fontSize: 18.sp,
-        fontWeight: FontWeight.bold,
-        color: Colors.black,
-      ),
-      cancelBtnTextStyle: TextStyle(
-        fontWeight: FontWeight.bold,
-        color: Colors.red,
-      ),
-      onConfirmBtnTap: () async {
-        Navigator.of(context).pop();
-        final emergency = FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress);
-        emergency.delete();
-      },
-      onCancelBtnTap: () {
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
   void showEmergencyDetails(BuildContext context) {
     showDialog(
       context: context,
