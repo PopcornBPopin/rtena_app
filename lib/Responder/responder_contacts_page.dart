@@ -504,7 +504,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                           );
 
                                           Marker userMarker = Marker(
-                                            markerId: MarkerId(_civCoordinates),
+                                            markerId: MarkerId(_userCoordinates),
                                             position: LatLng(_userLatitude, _userLongitude),
                                             icon: userIcon,
                                           );
@@ -1354,15 +1354,13 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               );
 
                                               Marker civMarkerAll = Marker(
-                                                markerId: MarkerId(_civEmergencyType.toString()),
+                                                markerId: MarkerId(_civEmergencyType.toString() + '' + i.toString()),
                                                 position: _civCoordinate,
                                                 icon: _getMarkerIcon(
                                                   _civEmergencyType,
                                                 ),
                                                 onTap: () {
-                                                  setState(() {
-                                                    _markerSelected = i;
-                                                  });
+                                                  _markerSelected = i;
                                                   print(_markerSelected);
                                                   showDialog(
                                                     context: context,
