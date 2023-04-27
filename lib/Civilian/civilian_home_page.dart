@@ -41,13 +41,13 @@ class _CivHomePageState extends State<CivHomePage> {
           });
           docReference.snapshots().listen((docSnapshot) {
             if (status == 'Confirmed') {
-              Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.of(context).pop();
               showEmergencyDetails(context);
             }
           });
         }
         if (status == 'Confirmed') {
-          Navigator.of(context).popUntil((route) => route.isFirst);
+          Navigator.of(context).pop();
           showEmergencyDetails(context);
         }
       }

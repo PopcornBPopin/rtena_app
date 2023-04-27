@@ -504,7 +504,9 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               await usersDocReference.update({
                                                 'Responded Civilian ID': FieldValue.delete()
                                               });
+                                              _civResponded = 0;
                                             }
+                                            Navigator.of(context).pop();
                                           });
 
                                           Marker civMarker = Marker(
@@ -1748,7 +1750,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                         Text(
                                                                           'Responding to:   ${snap[_civResponded]["Civilian"].toString()}',
                                                                           style: TextStyle(
-                                                                            fontSize: 18.sp,
+                                                                            fontSize: 16.sp,
                                                                             fontWeight: FontWeight.w400,
                                                                           ),
                                                                         ),
