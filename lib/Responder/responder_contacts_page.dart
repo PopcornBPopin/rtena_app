@@ -28,7 +28,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
     getConnectivity();
     getUserData();
     getCurrentLocation();
-    // checkCivID();
+    checkCivID();
     userIcon = BitmapDescriptor.defaultMarker;
     super.initState();
     DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then((value) => {
@@ -73,36 +73,28 @@ class _ResContactsPageState extends State<ResContactsPage> {
     });
   }
 
-  void respondButtonPressed() {
-    setState(() {
-      _userResponded = true;
-    });
-  }
-
   Future<String?> checkCivID() async {
     var users = FirebaseFirestore.instance.collection('users');
     var usersDocReference = users.doc(_emailAddress);
 
     await usersDocReference.snapshots().listen((docSnapshot) {
-      try {
-        if (docSnapshot.exists) {
-          Map<String, dynamic>? data = docSnapshot.data();
-          var resCivID = data?['Responded Civilian ID'];
+      if (docSnapshot.exists) {
+        Map<String, dynamic>? data = docSnapshot.data();
+        var resCivID = data?['Responded Civilian ID'];
 
-          print("TEST LANG TO GAGS" + resCivID.toString());
-          if (resCivID != null) {
-            setState(() {
-              _civResponded = resCivID;
-              _userResponded = true;
-            });
-          } else if (resCivID == null) {
-            setState(() {
-              _userResponded = false;
-            });
-          }
+        print("TEST LANG TO GAGS" + resCivID.toString());
+        if (resCivID != null) {
+          setState(() {
+            _civResponded = resCivID;
+            _userResponded = true;
+          });
+        } else if (resCivID == null) {
+          setState(() {
+            _userResponded = false;
+            _civResponded = 0;
+            _markerSelected = 0;
+          });
         }
-      } catch (e) {
-        print(e);
       }
     });
   }
