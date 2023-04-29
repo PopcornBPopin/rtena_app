@@ -11,7 +11,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
@@ -29,7 +28,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
     getConnectivity();
     getUserData();
     getCurrentLocation();
-    checkCivID();
+    // checkCivID();
     userIcon = BitmapDescriptor.defaultMarker;
     super.initState();
     DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then((value) => {
@@ -83,20 +82,27 @@ class _ResContactsPageState extends State<ResContactsPage> {
   Future<String?> checkCivID() async {
     var users = FirebaseFirestore.instance.collection('users');
     var usersDocReference = users.doc(_emailAddress);
+
     await usersDocReference.snapshots().listen((docSnapshot) {
-      if (docSnapshot.exists) {
-        Map<String, dynamic>? data = docSnapshot.data();
-        var resCivID = data?['Responded Civilian ID'];
-        if (resCivID != null) {
-          setState(() {
-            _civResponded = resCivID;
-            _userResponded = true;
-          });
-        } else if (!data!.containsKey('Responded Civilian ID')) {
-          setState(() {
-            _userResponded = false;
-          });
+      try {
+        if (docSnapshot.exists) {
+          Map<String, dynamic>? data = docSnapshot.data();
+          var resCivID = data?['Responded Civilian ID'];
+
+          print("TEST LANG TO GAGS" + resCivID.toString());
+          if (resCivID != null) {
+            setState(() {
+              _civResponded = resCivID;
+              _userResponded = true;
+            });
+          } else if (resCivID == null) {
+            setState(() {
+              _userResponded = false;
+            });
+          }
         }
+      } catch (e) {
+        print(e);
       }
     });
   }
@@ -501,12 +507,14 @@ class _ResContactsPageState extends State<ResContactsPage> {
 
                                           docReference.snapshots().listen((docSnapshot) async {
                                             if (!docSnapshot.exists) {
-                                              await usersDocReference.update({
-                                                'Responded Civilian ID': FieldValue.delete()
+                                              setState(() {
+                                                _markerSelected = 0;
+                                                _civResponded = 0;
+                                                snap.length--;
                                               });
-                                              _civResponded = 0;
+
+                                              Navigator.of(context).pop();
                                             }
-                                            Navigator.of(context).pop();
                                           });
 
                                           Marker civMarker = Marker(
@@ -1348,6 +1356,282 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                             Set<Marker> _markers = {};
                                             List<LatLng> coordinatesList = [];
 
+                                            // for (var i = 0; i < snap.length; i++) {
+                                            //   _civEmergencyType = snap[i]['Type'];
+                                            //   _civCoordinates = snap[i]['Coordinates'];
+                                            //   _civLatitude = double.parse(_civCoordinates.split('Latitude: ')[1].split(',')[0]);
+                                            //   _civLongitude = double.parse(_civCoordinates.split('Longitude: ')[1]);
+                                            //   LatLng _coordinate = LatLng(_civLatitude, _civLongitude);
+                                            //   LatLng _userCoordinate = LatLng(_userLatitude, _userLongitude);
+                                            //   coordinatesList.add(_coordinate);
+                                            //   coordinatesList.add(_userCoordinate);
+                                            //   Marker userMarker = Marker(
+                                            //     markerId: MarkerId(_userCoordinate.toString()),
+                                            //     position: _userCoordinate,
+                                            //     icon: userIcon,
+                                            //   );
+                                            //   Marker marker = Marker(
+                                            //     markerId: MarkerId(_coordinate.toString()),
+                                            //     position: _coordinate,
+                                            //     icon: _getMarkerIcon(_civEmergencyType),
+                                            //     onTap: () {
+                                            //       setState(() {
+                                            //         _markerSelected = i;
+                                            //       });
+                                            //       print(_markerSelected);
+                                            //       showDialog(
+                                            //         context: context,
+                                            //         builder: (context) => StatefulBuilder(
+                                            //           builder: (context, setState) {
+                                            //             return WillPopScope(
+                                            //               onWillPop: () {
+                                            //                 return Future.value(true);
+                                            //               },
+                                            //               child: Scaffold(
+                                            //                 backgroundColor: Colors.transparent,
+                                            //                 body: Center(
+                                            //                   child: Padding(
+                                            //                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                                            //                     child: Container(
+                                            //                       height: 420.h,
+                                            //                       decoration: BoxDecoration(
+                                            //                         color: Colors.grey.shade200,
+                                            //                         borderRadius: BorderRadius.only(
+                                            //                           topLeft: Radius.circular(30),
+                                            //                           bottomRight: Radius.circular(30),
+                                            //                         ),
+                                            //                         boxShadow: [
+                                            //                           BoxShadow(
+                                            //                             color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+                                            //                             spreadRadius: 7,
+                                            //                             blurRadius: 10,
+                                            //                             offset: Offset(0, 0),
+                                            //                           ),
+                                            //                         ],
+                                            //                       ),
+                                            //                       width: MediaQuery.of(context).size.width,
+                                            //                       child: Column(
+                                            //                         crossAxisAlignment: CrossAxisAlignment.start,
+                                            //                         children: [
+                                            //                           SizedBox(height: 20.h),
+                                            //                           Container(
+                                            //                             width: MediaQuery.of(context).size.width,
+                                            //                             child: Stack(
+                                            //                               children: [
+                                            //                                 Positioned(
+                                            //                                   right: 20,
+                                            //                                   child: IconButton(
+                                            //                                     onPressed: () {
+                                            //                                       Navigator.of(context).pop();
+                                            //                                     },
+                                            //                                     icon: Icon(Icons.close),
+                                            //                                   ),
+                                            //                                 ),
+                                            //                                 Padding(
+                                            //                                   padding: const EdgeInsets.symmetric(horizontal: 30),
+                                            //                                   child: Container(
+                                            //                                     child: Icon(
+                                            //                                       {
+                                            //                                             'Fire Emergency': FontAwesomeIcons.fire,
+                                            //                                             'Health Emergency': Icons.health_and_safety,
+                                            //                                             'Murder Emergency': FontAwesomeIcons.solidFaceDizzy,
+                                            //                                             'Assault Emergency': FontAwesomeIcons.handFist,
+                                            //                                             'Flood Emergency': FontAwesomeIcons.water,
+                                            //                                             'Earthquake Emergency': FontAwesomeIcons.houseChimneyCrack,
+                                            //                                             'Kidnap Emergency': FontAwesomeIcons.solidFaceSadCry,
+                                            //                                             'Robbery Emergency': FontAwesomeIcons.userNinja,
+                                            //                                             'Alert Emergency': Icons.notifications_active,
+                                            //                                           }[snap[_markerSelected]['Type']] ??
+                                            //                                           Icons.warning,
+                                            //                                       size: 50,
+                                            //                                       color: Colors.redAccent,
+                                            //                                     ),
+                                            //                                   ),
+                                            //                                 ),
+                                            //                               ],
+                                            //                             ),
+                                            //                           ),
+                                            //                           SizedBox(height: 10.h),
+                                            //                           Padding(
+                                            //                             padding: const EdgeInsets.symmetric(horizontal: 30),
+                                            //                             child: Container(
+                                            //                               child: const Text(
+                                            //                                 "Emergency Details",
+                                            //                                 textAlign: TextAlign.left,
+                                            //                                 style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
+                                            //                               ),
+                                            //                             ),
+                                            //                           ),
+                                            //                           SizedBox(height: 20.h),
+                                            //                           Expanded(
+                                            //                             child: Container(
+                                            //                               child: Expanded(
+                                            //                                 child: Column(
+                                            //                                   children: [
+                                            //                                     Expanded(
+                                            //                                       child: RawScrollbar(
+                                            //                                         thickness: 7.5,
+                                            //                                         thumbColor: Colors.redAccent,
+                                            //                                         thumbVisibility: true,
+                                            //                                         child: ScrollConfiguration(
+                                            //                                           behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
+                                            //                                           child: ListView.builder(
+                                            //                                             itemCount: 1,
+                                            //                                             itemBuilder: (context, index) {
+                                            //                                               return Padding(
+                                            //                                                 padding: const EdgeInsets.symmetric(horizontal: 20),
+                                            //                                                 child: Column(
+                                            //                                                   children: [
+                                            //                                                     SizedBox(height: 20.h),
+                                            //                                                     Row(
+                                            //                                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                            //                                                       children: [
+                                            //                                                         Text(
+                                            //                                                           'Civilian:\t\t\t',
+                                            //                                                           textAlign: TextAlign.left,
+                                            //                                                           style: TextStyle(
+                                            //                                                             fontSize: 20.sp,
+                                            //                                                             fontWeight: FontWeight.bold,
+                                            //                                                             color: Colors.black,
+                                            //                                                           ),
+                                            //                                                         ),
+                                            //                                                         Text(
+                                            //                                                           snap[_markerSelected]['Civilian'],
+                                            //                                                           textAlign: TextAlign.left,
+                                            //                                                           style: TextStyle(
+                                            //                                                             fontSize: 20.sp,
+                                            //                                                             fontWeight: FontWeight.normal,
+                                            //                                                             color: Colors.black,
+                                            //                                                           ),
+                                            //                                                         ),
+                                            //                                                       ],
+                                            //                                                     ),
+                                            //                                                     SizedBox(height: 10.h),
+                                            //                                                     Row(
+                                            //                                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                            //                                                       children: [
+                                            //                                                         Text(
+                                            //                                                           'Emergency Type:\t\t\t',
+                                            //                                                           textAlign: TextAlign.left,
+                                            //                                                           style: TextStyle(
+                                            //                                                             fontSize: 20.sp,
+                                            //                                                             fontWeight: FontWeight.bold,
+                                            //                                                             color: Colors.black,
+                                            //                                                           ),
+                                            //                                                         ),
+                                            //                                                         Expanded(
+                                            //                                                           child: Text(
+                                            //                                                             snap[_markerSelected]['Type'],
+                                            //                                                             textAlign: TextAlign.left,
+                                            //                                                             style: TextStyle(
+                                            //                                                               fontSize: 20.sp,
+                                            //                                                               fontWeight: FontWeight.normal,
+                                            //                                                               color: Colors.black,
+                                            //                                                             ),
+                                            //                                                           ),
+                                            //                                                         ),
+                                            //                                                       ],
+                                            //                                                     ),
+                                            //                                                     SizedBox(height: 10.h),
+                                            //                                                     Row(
+                                            //                                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                            //                                                       children: [
+                                            //                                                         Text(
+                                            //                                                           'Emergency Location:\t\t\t',
+                                            //                                                           textAlign: TextAlign.left,
+                                            //                                                           style: TextStyle(
+                                            //                                                             fontSize: 20.sp,
+                                            //                                                             fontWeight: FontWeight.bold,
+                                            //                                                             color: Colors.black,
+                                            //                                                           ),
+                                            //                                                         ),
+                                            //                                                         Expanded(
+                                            //                                                           child: Text(
+                                            //                                                             snap[_markerSelected]['Address'],
+                                            //                                                             textAlign: TextAlign.left,
+                                            //                                                             style: TextStyle(
+                                            //                                                               fontSize: 20.sp,
+                                            //                                                               fontWeight: FontWeight.normal,
+                                            //                                                               color: Colors.black,
+                                            //                                                             ),
+                                            //                                                           ),
+                                            //                                                         ),
+                                            //                                                       ],
+                                            //                                                     ),
+                                            //                                                     SizedBox(height: 20.h),
+                                            //                                                   ],
+                                            //                                                 ),
+                                            //                                               );
+                                            //                                             },
+                                            //                                           ),
+                                            //                                         ),
+                                            //                                       ),
+                                            //                                     ),
+                                            //                                   ],
+                                            //                                 ),
+                                            //                               ),
+                                            //                             ),
+                                            //                           ),
+                                            //                           ElevatedButton(
+                                            //                             style: ElevatedButton.styleFrom(
+                                            //                               backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                                            //                               shape: RoundedRectangleBorder(
+                                            //                                 borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                                            //                               ),
+                                            //                               padding: EdgeInsets.all(12),
+                                            //                             ),
+                                            //                             onPressed: () {
+                                            //                               Navigator.of(context).pop();
+                                            //                             },
+                                            //                             child: Container(
+                                            //                               width: double.infinity,
+                                            //                               height: 40.h,
+                                            //                               child: Stack(
+                                            //                                 children: [
+                                            //                                   Center(
+                                            //                                     child: Row(
+                                            //                                       mainAxisAlignment: MainAxisAlignment.center,
+                                            //                                       children: [
+                                            //                                         Text(
+                                            //                                           "Respond",
+                                            //                                           style: TextStyle(
+                                            //                                             color: Colors.white,
+                                            //                                             fontSize: 20.sp,
+                                            //                                           ),
+                                            //                                           textAlign: TextAlign.center,
+                                            //                                         ),
+                                            //                                       ],
+                                            //                                     ),
+                                            //                                   ),
+                                            //                                   Positioned(
+                                            //                                     right: 20,
+                                            //                                     top: 0,
+                                            //                                     bottom: 0,
+                                            //                                     child: Icon(
+                                            //                                       Icons.next_plan,
+                                            //                                       color: Colors.white,
+                                            //                                       size: 30,
+                                            //                                     ),
+                                            //                                   )
+                                            //                                 ],
+                                            //                               ),
+                                            //                             ),
+                                            //                           ),
+                                            //                         ],
+                                            //                       ),
+                                            //                     ),
+                                            //                   ),
+                                            //                 ),
+                                            //               ),
+                                            //             );
+                                            //           },
+                                            //         ),
+                                            //       );
+                                            //     },
+                                            //   );
+                                            //   _markers.add(marker);
+                                            //   _markers.add(userMarker);
+
                                             for (var i = 0; i < snap.length; i++) {
                                               _civEmergencyType = snap[i]['Type'];
                                               _civCoordinates = snap[i]['Coordinates'];
@@ -1355,8 +1639,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               _civLongitude = double.parse(_civCoordinates.split('Longitude: ')[1]);
                                               LatLng _civCoordinate = LatLng(_civLatitude, _civLongitude);
                                               LatLng _userCoordinate = LatLng(_userLatitude, _userLongitude);
-                                              coordinatesList.add(_civCoordinate);
-                                              coordinatesList.add(_userCoordinate);
 
                                               Marker userMarker = Marker(
                                                 markerId: MarkerId(_userCoordinate.toString()),
@@ -1364,15 +1646,17 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                 icon: userIcon,
                                               );
 
-                                              Marker civMarkerAll = Marker(
+                                              Marker civMarker = Marker(
                                                 markerId: MarkerId(_civEmergencyType.toString() + '' + i.toString()),
                                                 position: _civCoordinate,
                                                 icon: _getMarkerIcon(
                                                   _civEmergencyType,
                                                 ),
                                                 onTap: () {
-                                                  _markerSelected = i;
-                                                  print(_markerSelected);
+                                                  setState(() {
+                                                    _markerSelected = i;
+                                                  });
+
                                                   showDialog(
                                                     context: context,
                                                     builder: (context) => StatefulBuilder(
@@ -1552,35 +1836,6 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                                                     ),
                                                                                                   ],
                                                                                                 ),
-                                                                                                SizedBox(height: 10.h),
-                                                                                                // Visibility(
-                                                                                                //   visible: snap[_markerSelected]["Status"] == "Confirmed" && (snap[_markerSelected].data() as Map<String, dynamic>).containsKey("Responder"),
-                                                                                                //   child: Row(
-                                                                                                //     crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                //     children: [
-                                                                                                //       Text(
-                                                                                                //         'Responder:\t\t\t',
-                                                                                                //         textAlign: TextAlign.left,
-                                                                                                //         style: TextStyle(
-                                                                                                //           fontSize: 18.sp,
-                                                                                                //           fontWeight: FontWeight.bold,
-                                                                                                //           color: Colors.black,
-                                                                                                //         ),
-                                                                                                //       ),
-                                                                                                //       Expanded(
-                                                                                                //         child: Text(
-                                                                                                //           snap[_markerSelected]['Responder'],
-                                                                                                //           textAlign: TextAlign.left,
-                                                                                                //           style: TextStyle(
-                                                                                                //             fontSize: 18.sp,
-                                                                                                //             fontWeight: FontWeight.normal,
-                                                                                                //             color: Colors.black,
-                                                                                                //           ),
-                                                                                                //         ),
-                                                                                                //       ),
-                                                                                                //     ],
-                                                                                                //   ),
-                                                                                                // ),
                                                                                                 SizedBox(height: 20.h),
                                                                                               ],
                                                                                             ),
@@ -1607,12 +1862,12 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                                         onPressed: snap[_markerSelected]["Status"] == "Confirmed"
                                                                             ? null
                                                                             : () async {
-                                                                                print(snap[_markerSelected]["Status"]);
                                                                                 // getPolyPoints();
+
                                                                                 _civResponded = _markerSelected;
 
                                                                                 var emergencies = FirebaseFirestore.instance.collection('emergencies');
-                                                                                var docReference = emergencies.doc(snap[_markerSelected]['Email Address']);
+                                                                                var docReference = emergencies.doc(snap[_civResponded]['Email Address']);
 
                                                                                 var users = FirebaseFirestore.instance.collection('users');
                                                                                 var usersDocReference = users.doc(_emailAddress);
@@ -1686,7 +1941,9 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                                   );
                                                 },
                                               );
-                                              _markers.add(civMarkerAll);
+                                              coordinatesList.add(_civCoordinate);
+                                              coordinatesList.add(_userCoordinate);
+                                              _markers.add(civMarker);
                                               _markers.add(userMarker);
                                             }
 
@@ -1694,6 +1951,7 @@ class _ResContactsPageState extends State<ResContactsPage> {
                                               _totalLatitude += coordinates.latitude;
                                               _totalLongitude += coordinates.longitude;
                                             }
+
                                             //WHOLE MAP HERE
                                             return Container(
                                               child: Stack(

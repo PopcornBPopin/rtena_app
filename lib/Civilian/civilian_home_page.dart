@@ -226,19 +226,19 @@ class _CivHomePageState extends State<CivHomePage> {
     );
     print("Added emergency deets to firestone");
 
-    var collection = FirebaseFirestore.instance.collection('emergencies');
-    var docReference = collection.doc(_emailAddress);
+    // var collection = FirebaseFirestore.instance.collection('emergencies');
+    // var docReference = collection.doc(_emailAddress);
 
-    docReference.snapshots().listen((docSnapshot) {
-      if (docSnapshot.exists) {
-        Map<String, dynamic>? data = docSnapshot.data();
-        var status = data?['Status'];
-        if (status == 'Confirmed') {
-          Navigator.of(context).pop();
-          showEmergencyDetails(context);
-        }
-      }
-    });
+    // // docReference.snapshots().listen((docSnapshot) {
+    // //   if (docSnapshot.exists) {
+    // //     Map<String, dynamic>? data = docSnapshot.data();
+    // //     var status = data?['Status'];
+    // //     if (status == 'Confirmed') {
+    // //       Navigator.of(context).pop();
+    // //       showEmergencyDetails(context);
+    // //     }
+    // //   }
+    // // });
   }
 
   //Get the user location
@@ -294,7 +294,10 @@ class _CivHomePageState extends State<CivHomePage> {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
         final emergency = FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress);
-        emergency.delete();
+        // await emergency.update({
+        //   'Status': "Resolved",
+        // });
+        await emergency.delete();
       },
       onCancelBtnTap: () {
         Navigator.of(context).pop();
