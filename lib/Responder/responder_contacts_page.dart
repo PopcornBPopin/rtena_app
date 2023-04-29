@@ -507,13 +507,14 @@ class _ResContactsPageState extends State<ResContactsPage> {
 
                                           docReference.snapshots().listen((docSnapshot) async {
                                             if (!docSnapshot.exists) {
+                                              Navigator.of(context).pop();
                                               setState(() {
                                                 _markerSelected = 0;
                                                 _civResponded = 0;
-                                                snap.length--;
                                               });
-
-                                              Navigator.of(context).pop();
+                                              await usersDocReference.update({
+                                                'Responded Civilian ID': FieldValue.delete()
+                                              });
                                             }
                                           });
 
