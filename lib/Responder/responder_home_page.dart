@@ -190,18 +190,18 @@ class _ResHomePageState extends State<ResHomePage> {
     'Robbery Emergency'
   ];
 
-  void onMarkerFiltered(Marker marker) {
-    print("");
-    print(marker.markerId.value.toString());
+  // void onMarkerFiltered(Marker marker) {
+  //   print("");
+  //   print(marker.markerId.value.toString());
 
-    if (filteredEmergencies.contains(marker.markerId.value.toString())) {
-      _markers.add(marker);
-      print("ADD IT BUI");
-    } else if (!filteredEmergencies.contains(marker.markerId.value.toString())) {
-      _markers.removeWhere((notFilteredMarker) => notFilteredMarker.markerId.value == marker.markerId.value);
-      print("REMOVE IT BUI");
-    }
-  }
+  //   if (filteredEmergencies.contains(marker.markerId.value.toString())) {
+  //     _markers.add(marker);
+  //     print("ADD IT BUI");
+  //   } else if (!filteredEmergencies.contains(marker.markerId.value.toString())) {
+  //     _markers.removeWhere((notFilteredMarker) => notFilteredMarker.markerId.value == marker.markerId.value);
+  //     print("REMOVE IT BUI");
+  //   }
+  // }
 
   void filterChecker(String type) {
     if (filteredEmergencies.contains(type)) {
