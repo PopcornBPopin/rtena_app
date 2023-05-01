@@ -190,18 +190,19 @@ class _ResHomePageState extends State<ResHomePage> {
     'Robbery Emergency'
   ];
 
-  // void onMarkerFiltered(Marker marker) {
-  //   print("");
-  //   print(marker.markerId.value.toString());
+  Set<Marker> _markers = {};
+  void onMarkerFiltered(Marker marker) {
+    print(marker.markerId.value.toString());
 
-  //   if (filteredEmergencies.contains(marker.markerId.value.toString())) {
-  //     _markers.add(marker);
-  //     print("ADD IT BUI");
-  //   } else if (!filteredEmergencies.contains(marker.markerId.value.toString())) {
-  //     _markers.removeWhere((notFilteredMarker) => notFilteredMarker.markerId.value == marker.markerId.value);
-  //     print("REMOVE IT BUI");
-  //   }
-  // }
+    if (filteredEmergencies.contains(marker.markerId.value.replaceAll(RegExp(r'[0-9]+'), ''))) {
+      _markers.add(marker);
+      print("ADD IT BUI");
+    } else if (!filteredEmergencies.contains(marker.markerId.value.replaceAll(RegExp(r'[0-9]+'), ''))) {
+      _markers.removeWhere((notFilteredMarker) => notFilteredMarker.markerId.value == marker.markerId.value);
+      print("REMOVE IT BUI");
+    }
+    print("TEST ONLEH" + marker.markerId.value.replaceAll(RegExp(r'[0-9]+'), '').toString());
+  }
 
   void filterChecker(String type) {
     if (filteredEmergencies.contains(type)) {
@@ -1346,7 +1347,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                               );
                                             }
 
-                                            Set<Marker> _markers = {};
+                                            // Set<Marker> _markers = {};
                                             List<LatLng> coordinatesList = [];
 
                                             for (var i = 0; i < snap.length; i++) {
@@ -1660,8 +1661,9 @@ class _ResHomePageState extends State<ResHomePage> {
                                               );
                                               coordinatesList.add(_civCoordinate);
                                               coordinatesList.add(_userCoordinate);
-                                              _markers.add(civMarker);
+                                              // _markers.add(civMarker);
                                               _markers.add(userMarker);
+                                              onMarkerFiltered(civMarker);
                                             }
 
                                             for (LatLng coordinates in coordinatesList) {
