@@ -262,7 +262,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                   child: Icon(
                                     Icons.password,
                                     size: 60,
-                                    color: Colors.redAccent,
+                                    color: Color.fromRGBO(70, 18, 32, 1),
                                   ),
                                 ),
                               ),
@@ -285,7 +285,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                           child: Container(
                             child: RawScrollbar(
                               thickness: 7.5,
-                              thumbColor: Colors.redAccent,
+                              thumbColor: Color.fromRGBO(70, 18, 32, 1),
                               thumbVisibility: true,
                               child: SingleChildScrollView(
                                 child: Column(
@@ -316,7 +316,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                            backgroundColor: Color.fromRGBO(70, 18, 32, 1),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
                             ),
@@ -433,7 +433,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                   child: Icon(
                                     Icons.assignment,
                                     size: 60,
-                                    color: Colors.redAccent,
+                                    color: Color.fromRGBO(70, 18, 32, 1),
                                   ),
                                 ),
                               ),
@@ -458,7 +458,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                               behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
                               child: RawScrollbar(
                                 thickness: 7.5,
-                                thumbColor: Colors.redAccent,
+                                thumbColor: Color.fromRGBO(70, 18, 32, 1),
                                 thumbVisibility: true,
                                 child: SingleChildScrollView(
                                   controller: _scrollController,
@@ -475,7 +475,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                                   const Text(
                                                     "I. Introduction",
                                                     textAlign: TextAlign.justify,
-                                                    style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                    style: TextStyle(color: Color.fromRGBO(70, 18, 32, 1), fontSize: 20, fontWeight: FontWeight.bold),
                                                   ),
                                                   const Text(
                                                     "   This is a seniors' project of the developers and a partial compliance to their course's final requirement. The mobile application's, and its other components', intention is to create an accessible and convenient means of communicating with responders of your current situation. That being sais, the mobile application requires your permission with your mobile device's: \n\nFinal State (Location, Mobile Date, WiFi, Phone) \n\nInitiation State (Camera, Library or Files Manager)\n\n",
@@ -485,7 +485,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                                   const Text(
                                                     "II. Permissions Terms",
                                                     textAlign: TextAlign.justify,
-                                                    style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                    style: TextStyle(color: Color.fromRGBO(70, 18, 32, 1), fontSize: 20, fontWeight: FontWeight.bold),
                                                   ),
                                                   const Text(
                                                     "   Location - It is to determine your mobile device's accurate location, should an incident happen to you and you accessed our mobile app. WiFi/Mobile Data - It is to override your internet connection if you (a) are not connected to the internet, or (b) have a slow internet connection through WiFi. Your internet connection is needed to update our database with your current location, if it would be done online. Phone - It is to update our database with your current location, if it would be done offline. We are using GSM technologies to cater offline means of communicating. Camera - It is to take a picture of your valid ID.Library/Files Manager - It is if, instead, you want to find your valid ID in your files\n\n",
@@ -495,7 +495,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                                   const Text(
                                                     "III. Privacy Terms",
                                                     textAlign: TextAlign.justify,
-                                                    style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                    style: TextStyle(color: Color.fromRGBO(70, 18, 32, 1), fontSize: 20, fontWeight: FontWeight.bold),
                                                   ),
                                                   const Text(
                                                     "   We collect your personal information for the sole purpose of relaying that information to a responder, should you encounter an incident that requires it. Your personal information will only be read-and-write accessible (editable) by the servers and developers of the mobile application and its components. Your personal information is also to ensure liability and accountability of your actions.\n\n",
@@ -505,7 +505,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                                   const Text(
                                                     "IV. Agreement",
                                                     textAlign: TextAlign.justify,
-                                                    style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                    style: TextStyle(color: Color.fromRGBO(70, 18, 32, 1), fontSize: 20, fontWeight: FontWeight.bold),
                                                   ),
                                                   const Text(
                                                     "   By ticking the two boxes below, you agree with allowing access permissions on your mobile phone and collecting your data\n",
@@ -528,7 +528,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                            backgroundColor: Color.fromRGBO(70, 18, 32, 1),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
                             ),
@@ -639,7 +639,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                   child: Icon(
                                     Icons.question_mark,
                                     size: 60,
-                                    color: Colors.redAccent,
+                                    color: Color.fromRGBO(70, 18, 32, 1),
                                   ),
                                 ),
                               ),
@@ -668,7 +668,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                   children: [
                                     RawScrollbar(
                                       thickness: 7.5,
-                                      thumbColor: Colors.redAccent,
+                                      thumbColor: Color.fromRGBO(70, 18, 32, 1),
                                       thumbVisibility: true,
                                       child: SingleChildScrollView(
                                         child: Column(
@@ -682,7 +682,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                                     const Text(
                                                       "RTENA Real Time Emergency Notifier App\n",
                                                       textAlign: TextAlign.justify,
-                                                      style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                      style: TextStyle(color: Color.fromRGBO(70, 18, 32, 1), fontSize: 20, fontWeight: FontWeight.bold),
                                                     ),
                                                     const Text(
                                                       "The Emergency Notifier App is a software application that runs on mobile devices such as smartphones and tablets. Its primary purpose is to provide a quick and efficient way for users to send an emergency alert to designated responders in case of danger or any urgent assistance required. The app's user interface is designed with simplicity in mind to ensure that anyone can use it with ease, even in a stressful and high-pressure situation.",
@@ -706,7 +706,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                            backgroundColor: Color.fromRGBO(70, 18, 32, 1),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
                             ),
@@ -817,7 +817,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                   child: Icon(
                                     Icons.warning,
                                     size: 60,
-                                    color: Colors.redAccent,
+                                    color: Color.fromRGBO(70, 18, 32, 1),
                                   ),
                                 ),
                               ),
@@ -858,7 +858,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                                   const Text(
                                                     "Nothing to see here\n",
                                                     textAlign: TextAlign.justify,
-                                                    style: TextStyle(color: Colors.redAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                                                    style: TextStyle(color: Color.fromRGBO(70, 18, 32, 1), fontSize: 20, fontWeight: FontWeight.bold),
                                                   ),
                                                   const Text(
                                                     "You're on your own :>",
@@ -881,7 +881,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                            backgroundColor: Color.fromRGBO(70, 18, 32, 1),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
                             ),
@@ -992,7 +992,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                   child: Icon(
                                     Icons.speaker_notes,
                                     size: 60,
-                                    color: Colors.redAccent,
+                                    color: Color.fromRGBO(70, 18, 32, 1),
                                   ),
                                 ),
                               ),
@@ -1020,7 +1020,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                   children: [
                                     RawScrollbar(
                                       thickness: 7.5,
-                                      thumbColor: Colors.redAccent,
+                                      thumbColor: Color.fromRGBO(70, 18, 32, 1),
                                       thumbVisibility: true,
                                       child: SingleChildScrollView(
                                         child: Column(
@@ -1106,7 +1106,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                         SizedBox(height: 20.h),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                            backgroundColor: Color.fromRGBO(70, 18, 32, 1),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
                             ),
@@ -1308,7 +1308,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                               left: 20,
                                               child: Icon(
                                                 Icons.password,
-                                                color: Colors.red,
+                                                color: Color.fromRGBO(70, 18, 32, 1),
                                                 size: 22,
                                               ),
                                             ),
@@ -1384,7 +1384,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                               left: 20,
                                               child: Icon(
                                                 Icons.assignment,
-                                                color: Colors.red,
+                                                color: Color.fromRGBO(70, 18, 32, 1),
                                                 size: 22,
                                               ),
                                             ),
@@ -1447,7 +1447,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                               left: 20,
                                               child: Icon(
                                                 Icons.question_mark,
-                                                color: Colors.red,
+                                                color: Color.fromRGBO(70, 18, 32, 1),
                                                 size: 22,
                                               ),
                                             ),
@@ -1510,7 +1510,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                               left: 20,
                                               child: Icon(
                                                 Icons.warning,
-                                                color: Colors.red,
+                                                color: Color.fromRGBO(70, 18, 32, 1),
                                                 size: 22,
                                               ),
                                             ),
@@ -1573,7 +1573,7 @@ class _ResSettingsPageState extends State<ResSettingsPage> {
                                               left: 20,
                                               child: Icon(
                                                 Icons.speaker_notes,
-                                                color: Colors.red,
+                                                color: Color.fromRGBO(70, 18, 32, 1),
                                                 size: 22,
                                               ),
                                             ),

@@ -597,7 +597,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: const Icon(
                                                             Icons.phone_android_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           enabledBorder: OutlineInputBorder(
                                                             borderRadius: BorderRadius.all(
@@ -659,7 +659,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                                     ),
                                                                     prefixIcon: const Icon(
                                                                       Icons.cake_outlined,
-                                                                      color: Color.fromRGBO(252, 58, 72, 32),
+                                                                      color: Color.fromRGBO(70, 18, 32, 1),
                                                                     ),
                                                                     disabledBorder: OutlineInputBorder(
                                                                       borderRadius: BorderRadius.all(
@@ -749,11 +749,11 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           prefixIcon: _sexController.text == 'Male'
                                                               ? const Icon(
                                                                   Icons.male_outlined,
-                                                                  color: Color.fromRGBO(252, 58, 72, 32),
+                                                                  color: Color.fromRGBO(70, 18, 32, 1),
                                                                 )
                                                               : const Icon(
                                                                   Icons.female_outlined,
-                                                                  color: Color.fromRGBO(252, 58, 72, 32),
+                                                                  color: Color.fromRGBO(70, 18, 32, 1),
                                                                 ),
                                                           enabledBorder: OutlineInputBorder(
                                                             borderRadius: BorderRadius.all(
@@ -818,7 +818,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: const Icon(
                                                             Icons.bloodtype_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           enabledBorder: OutlineInputBorder(
                                                             borderRadius: BorderRadius.all(
@@ -889,7 +889,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: const Icon(
                                                             Icons.work_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           enabledBorder: OutlineInputBorder(
                                                             borderRadius: BorderRadius.all(
@@ -943,7 +943,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: const Icon(
                                                             Icons.work_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           enabledBorder: OutlineInputBorder(
                                                             borderRadius: BorderRadius.all(
@@ -997,7 +997,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: const Icon(
                                                             Icons.work_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           enabledBorder: OutlineInputBorder(
                                                             borderRadius: BorderRadius.all(
@@ -1051,7 +1051,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: const Icon(
                                                             Icons.location_on_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           enabledBorder: OutlineInputBorder(
                                                             borderRadius: BorderRadius.all(
@@ -1105,7 +1105,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: const Icon(
                                                             Icons.location_on_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           enabledBorder: OutlineInputBorder(
                                                             borderRadius: BorderRadius.all(
@@ -1145,7 +1145,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                           //Submit button
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromRGBO(252, 58, 72, 32),
+                              backgroundColor: Color.fromRGBO(70, 18, 32, 1),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
                               ),
@@ -1439,7 +1439,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: Icon(
                                                             Icons.person,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           suffixIcon: Icon(
                                                             Icons.close,
@@ -1474,7 +1474,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                         ),
                                                         prefixIcon: Icon(
                                                           Icons.email_outlined,
-                                                          color: Color.fromRGBO(252, 58, 72, 32),
+                                                          color: Color.fromRGBO(70, 18, 32, 1),
                                                         ),
                                                         disabledBorder: OutlineInputBorder(
                                                           borderRadius: BorderRadius.all(
@@ -1517,7 +1517,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: Icon(
                                                             Icons.phone_android_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           suffixIcon: Icon(
                                                             Icons.close,
@@ -1569,7 +1569,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                                 ),
                                                                 prefixIcon: Icon(
                                                                   Icons.cake,
-                                                                  color: Color.fromRGBO(252, 58, 72, 32),
+                                                                  color: Color.fromRGBO(70, 18, 32, 1),
                                                                 ),
                                                                 disabledBorder: OutlineInputBorder(
                                                                   borderRadius: BorderRadius.all(
@@ -1650,7 +1650,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                                 ),
                                                                 prefixIcon: Icon(
                                                                   Icons.male,
-                                                                  color: Color.fromRGBO(252, 58, 72, 32),
+                                                                  color: Color.fromRGBO(70, 18, 32, 1),
                                                                 ),
                                                                 suffixIcon: Icon(
                                                                   Icons.close,
@@ -1699,7 +1699,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                                 ),
                                                                 prefixIcon: Icon(
                                                                   Icons.bloodtype,
-                                                                  color: Color.fromRGBO(252, 58, 72, 32),
+                                                                  color: Color.fromRGBO(70, 18, 32, 1),
                                                                 ),
                                                                 suffixIcon: Icon(
                                                                   Icons.close,
@@ -1753,7 +1753,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: Icon(
                                                             Icons.work_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           suffixIcon: Icon(
                                                             Icons.close,
@@ -1804,7 +1804,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: Icon(
                                                             Icons.work_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           suffixIcon: Icon(
                                                             Icons.close,
@@ -1855,7 +1855,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: Icon(
                                                             Icons.work_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           suffixIcon: Icon(
                                                             Icons.close,
@@ -1906,7 +1906,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: Icon(
                                                             Icons.location_on_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           suffixIcon: Icon(
                                                             Icons.close,
@@ -1954,7 +1954,7 @@ class _ResProfilePageState extends State<ResProfilePage> {
                                                           ),
                                                           prefixIcon: Icon(
                                                             Icons.location_on_outlined,
-                                                            color: Color.fromRGBO(252, 58, 72, 32),
+                                                            color: Color.fromRGBO(70, 18, 32, 1),
                                                           ),
                                                           suffixIcon: Icon(
                                                             Icons.close,

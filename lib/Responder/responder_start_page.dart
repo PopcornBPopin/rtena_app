@@ -8,8 +8,8 @@ import 'package:rtena_app/Civilian/civilian_contacts_page.dart';
 import 'package:rtena_app/Civilian/civilian_home_page.dart';
 import 'package:rtena_app/Civilian/civilian_profile_page.dart';
 import 'package:rtena_app/Civilian/civilian_settings_page.dart';
-import 'package:rtena_app/Responder/responder_contacts_page.dart';
 import 'package:rtena_app/Responder/responder_home_page.dart';
+import 'package:rtena_app/Responder/responder_list_page.dart';
 import 'package:rtena_app/Responder/responder_profile_page.dart';
 import 'package:rtena_app/Responder/responder_settings_page.dart';
 
@@ -66,10 +66,10 @@ class _ResStartPageState extends State<ResStartPage> {
     );
   }
 
-  //All pages for Civilian Dashboard
+  //All pages for Responder Dashboard
   static final List<Widget> _NavScreens = <Widget>[
     ResHomePage(),
-    ResContactsPage(),
+    ResListPage(),
     ResProfilePage(),
     ResSettingsPage()
   ];
@@ -119,8 +119,8 @@ class _ResStartPageState extends State<ResStartPage> {
                     text: "Home",
                   ),
                   GButton(
-                    icon: Icons.contact_emergency,
-                    text: "Contacts",
+                    icon: Icons.more_horiz,
+                    text: "List",
                   ),
                   GButton(
                     icon: Icons.person_pin_rounded,
