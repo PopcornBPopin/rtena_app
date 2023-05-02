@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rtena_app/Civilian/civilian_start_page.dart';
 import 'package:rtena_app/Responder/responder_start_page.dart';
 import 'package:rtena_app/start_page.dart';
-import 'Civilian/civilian_home_page.dart';
 
 class CheckerPage extends StatefulWidget {
   const CheckerPage({Key? key}) : super(key: key);

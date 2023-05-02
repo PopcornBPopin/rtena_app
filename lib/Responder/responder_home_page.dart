@@ -37,7 +37,6 @@ class _ResHomePageState extends State<ResHomePage> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    setState(() {});
   }
 
   //Get the user location
@@ -75,7 +74,6 @@ class _ResHomePageState extends State<ResHomePage> {
 
   Future<void> checkCivID() async {
     Stream<DocumentSnapshot> stream = FirebaseFirestore.instance.collection('users').doc(_emailAddress).snapshots();
-
     stream.listen((documentSnapshot) async {
       if (documentSnapshot.exists) {
         Map<String, dynamic>? data = documentSnapshot.data() as Map<String, dynamic>?;
@@ -188,21 +186,18 @@ class _ResHomePageState extends State<ResHomePage> {
     'Earthquake Emergency',
     'Kidnapping Emergency',
     'Robbery Emergency'
+        'Alert Emergency'
   ];
 
-  Set<Marker> _markers = {};
-  void onMarkerFiltered(Marker marker) {
-    print(marker.markerId.value.toString());
-
-    if (filteredEmergencies.contains(marker.markerId.value.replaceAll(RegExp(r'[0-9]+'), ''))) {
-      _markers.add(marker);
-      print("ADD IT BUI");
-    } else if (!filteredEmergencies.contains(marker.markerId.value.replaceAll(RegExp(r'[0-9]+'), ''))) {
-      _markers.removeWhere((notFilteredMarker) => notFilteredMarker.markerId.value == marker.markerId.value);
-      print("REMOVE IT BUI");
-    }
-    print("TEST ONLEH" + marker.markerId.value.replaceAll(RegExp(r'[0-9]+'), '').toString());
-  }
+  // Set<Marker> _markers = {};
+  // void onMarkerFiltered(Marker marker) {
+  //   print(marker.markerId.value.toString());
+  //   _markers.add(marker);
+  //   if (!filteredEmergencies.contains(marker.markerId.value.replaceAll(RegExp(r'[0-9]+'), ''))) {
+  //     _markers.removeWhere((notFilteredMarker) => notFilteredMarker.markerId.value == marker.markerId.value);
+  //     print("REMOVE IT BUI");
+  //   }
+  // }
 
   void filterChecker(String type) {
     if (filteredEmergencies.contains(type)) {
@@ -266,6 +261,8 @@ class _ResHomePageState extends State<ResHomePage> {
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose);
       case 'Robbery Emergency':
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
+      case 'Alert Emergency':
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
       default:
         return BitmapDescriptor.defaultMarker;
     }
@@ -498,19 +495,6 @@ class _ResHomePageState extends State<ResHomePage> {
                                           var users = FirebaseFirestore.instance.collection('users');
                                           var usersDocReference = users.doc(_emailAddress);
 
-                                          docReference.snapshots().listen((docSnapshot) async {
-                                            if (!docSnapshot.exists) {
-                                              Navigator.of(context).pop();
-                                              setState(() {
-                                                _markerSelected = 0;
-                                                _civResponded = 0;
-                                              });
-                                              await usersDocReference.update({
-                                                'Responded Civilian ID': FieldValue.delete()
-                                              });
-                                            }
-                                          });
-
                                           Marker civMarker = Marker(
                                             markerId: MarkerId(_civCoordinates),
                                             position: LatLng(_civLatitude, _civLongitude),
@@ -526,6 +510,19 @@ class _ResHomePageState extends State<ResHomePage> {
                                             civMarker,
                                             userMarker
                                           ]);
+
+                                          docReference.snapshots().listen((docSnapshot) async {
+                                            if (!docSnapshot.exists) {
+                                              Navigator.of(context).pop();
+                                              setState(() {
+                                                _markerSelected = 0;
+                                                _civResponded = 0;
+                                              });
+                                              await usersDocReference.update({
+                                                'Responded Civilian ID': FieldValue.delete()
+                                              });
+                                            }
+                                          });
 
                                           return Container(
                                             child: Column(
@@ -1347,7 +1344,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                               );
                                             }
 
-                                            // Set<Marker> _markers = {};
+                                            Set<Marker> _markers = {};
                                             List<LatLng> coordinatesList = [];
 
                                             for (var i = 0; i < snap.length; i++) {
@@ -1662,10 +1659,15 @@ class _ResHomePageState extends State<ResHomePage> {
                                               coordinatesList.add(_civCoordinate);
                                               coordinatesList.add(_userCoordinate);
                                               // _markers.add(civMarker);
-                                              _markers.add(userMarker);
-                                              onMarkerFiltered(civMarker);
-                                            }
+                                              _markers.add(civMarker);
+                                              if (!filteredEmergencies.contains(civMarker.markerId.value.replaceAll(RegExp(r'[0-9]+'), ''))) {
+                                                _markers.removeWhere((notFilteredMarker) => notFilteredMarker.markerId.value == civMarker.markerId.value);
 
+                                                print("REMOVE IT BUI");
+                                              }
+
+                                              _markers.add(userMarker);
+                                            }
                                             for (LatLng coordinates in coordinatesList) {
                                               _totalLatitude += coordinates.latitude;
                                               _totalLongitude += coordinates.longitude;
