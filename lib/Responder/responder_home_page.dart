@@ -78,7 +78,6 @@ class _ResHomePageState extends State<ResHomePage> {
       if (documentSnapshot.exists) {
         Map<String, dynamic>? data = documentSnapshot.data() as Map<String, dynamic>?;
         var resCivID = data?['Responded Civilian ID'];
-
         if (resCivID != null) {
           print("THIS WORKS LA");
           setState(() {
@@ -185,19 +184,9 @@ class _ResHomePageState extends State<ResHomePage> {
     'Flood Emergency',
     'Earthquake Emergency',
     'Kidnapping Emergency',
-    'Robbery Emergency'
-        'Alert Emergency'
+    'Robbery Emergency',
+    'Alert Emergency'
   ];
-
-  // Set<Marker> _markers = {};
-  // void onMarkerFiltered(Marker marker) {
-  //   print(marker.markerId.value.toString());
-  //   _markers.add(marker);
-  //   if (!filteredEmergencies.contains(marker.markerId.value.replaceAll(RegExp(r'[0-9]+'), ''))) {
-  //     _markers.removeWhere((notFilteredMarker) => notFilteredMarker.markerId.value == marker.markerId.value);
-  //     print("REMOVE IT BUI");
-  //   }
-  // }
 
   void filterChecker(String type) {
     if (filteredEmergencies.contains(type)) {
@@ -1150,27 +1139,7 @@ class _ResHomePageState extends State<ResHomePage> {
         color: Colors.black,
       ),
     );
-    FloatingActionButton listFAB = FloatingActionButton(
-      onPressed: () {
-        showLegend(context);
-      },
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(100),
-        side: BorderSide(
-          color: Color.fromRGBO(82, 82, 82, 1),
-          width: 1,
-        ),
-      ),
-      child: Container(
-        width: 24,
-        height: 24,
-        child: Icon(
-          Icons.menu,
-          color: Colors.black,
-        ),
-      ),
-    );
+
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -1662,11 +1631,10 @@ class _ResHomePageState extends State<ResHomePage> {
                                               _markers.add(civMarker);
                                               if (!filteredEmergencies.contains(civMarker.markerId.value.replaceAll(RegExp(r'[0-9]+'), ''))) {
                                                 _markers.removeWhere((notFilteredMarker) => notFilteredMarker.markerId.value == civMarker.markerId.value);
-
                                                 print("REMOVE IT BUI");
                                               }
-
                                               _markers.add(userMarker);
+                                              print(_markers);
                                             }
                                             for (LatLng coordinates in coordinatesList) {
                                               _totalLatitude += coordinates.latitude;

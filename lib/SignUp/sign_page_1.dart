@@ -695,7 +695,6 @@ class _Sign1PageState extends State<Sign1Page> {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
       final selectedImage = File(image.path);
-
       setState(
         () {
           this._validID = selectedImage;
