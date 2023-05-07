@@ -36,12 +36,13 @@ class _CivHomePageState extends State<CivHomePage> {
         var status = data?['Status'];
         if (status == 'Ongoing') {
           Future.delayed(Duration(milliseconds: 1000)).then((_) {
-            // Navigator.of(context).popUntil((route) => route is MaterialPageRoute);
+            Navigator.popUntil(context, (Route<dynamic> route) {
+              return !(route is PopupRoute);
+            });
             quickAlert(QuickAlertType.loading, "Emergency Selected!", "Waiting for confirmation of the responders near you. Please hang tight", Colors.green);
           });
           docReference.snapshots().listen((docSnapshot) {
             if (status == 'Confirmed') {
-              // Navigator.of(context).popUntil((route) => route is MaterialPageRoute);
               Navigator.popUntil(context, (Route<dynamic> route) {
                 return !(route is PopupRoute);
               });
