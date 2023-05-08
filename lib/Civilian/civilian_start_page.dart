@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:rtena_app/Civilian/civilian_contacts_page.dart';
@@ -38,7 +39,64 @@ class _CivStartPageState extends State<CivStartPage> {
   late StreamSubscription subscription;
   int _selectedIndex = 0;
 
-  //Text Controllers
+  //Snackbar
+  final notConnectedSnackbar = SnackBar(
+    content: Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.wifi_off,
+            size: 25,
+            color: Colors.white,
+          ),
+          Expanded(
+            child: Center(
+              child: Text(
+                'No Internet Connection',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    backgroundColor: Colors.black,
+    duration: Duration(seconds: 2),
+    behavior: SnackBarBehavior.fixed,
+    elevation: 1,
+  );
+
+  final connectedSnackbar = SnackBar(
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.wifi_outlined,
+          size: 25,
+          color: Colors.green,
+        ),
+        Expanded(
+          child: Center(
+            child: Text(
+              'Connection Restored',
+              style: TextStyle(
+                fontSize: 18.sp,
+                color: Colors.green,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+    backgroundColor: Colors.black,
+    duration: Duration(seconds: 2),
+    behavior: SnackBarBehavior.fixed,
+    elevation: 1,
+  );
 
   // FUNCTIONS
   ConnectivityResult result = ConnectivityResult.none;
@@ -55,8 +113,14 @@ class _CivStartPageState extends State<CivStartPage> {
         _hasInternet = await InternetConnectionChecker().hasConnection;
         if (!_hasInternet) {
           print("No internet");
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(notConnectedSnackbar);
         } else {
           print("Connected");
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(connectedSnackbar);
         }
       },
     );

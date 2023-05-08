@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -175,6 +176,26 @@ class _CivHomePageState extends State<CivHomePage> {
           await getCurrentLocation();
           await convertCoordsToAddress(_coordinates!);
           SendEmergency(emergencyType, 'Ongoing', _coordinates.toString(), _address);
+          stopTimer();
+        }
+      });
+    });
+  }
+
+  void startTimerOffline(String emergencyType) {
+    setState(() {
+      timer = Timer.periodic(Duration(seconds: 1), (_) async {
+        if (seconds > 0) {
+          setState(() {
+            --seconds;
+            _timerRunning = true;
+          });
+        } else {
+          timer?.cancel();
+          FlutterPhoneDirectCaller.callNumber("09637779925");
+          // await getCurrentLocation();
+          // await convertCoordsToAddress(_coordinates!);
+          // SendEmergency(emergencyType, 'Ongoing', _coordinates.toString(), _address);
           stopTimer();
         }
       });
@@ -747,6 +768,7 @@ class _CivHomePageState extends State<CivHomePage> {
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context).copyWith(overscroll: false).copyWith(scrollbars: false),
                   child: SingleChildScrollView(
+                    physics: _hasInternet ? ScrollPhysics() : NeverScrollableScrollPhysics(),
                     child: Column(
                       children: [
                         Stack(
@@ -838,848 +860,978 @@ class _CivHomePageState extends State<CivHomePage> {
                                 padding: const EdgeInsets.symmetric(horizontal: 20),
                                 child: Column(
                                   children: [
-                                    SizedBox(height: 30.h),
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                                        child: Text(
-                                          "Tap the button that corresponds to the emergency you are currently involved in.",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 18.sp,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 15.h),
-                                    // Text("Timer: " + _timerRunning.toString()),
-                                    // Text("Switch: " + _emergencySelected.toString()),
-                                    // Text("Fire: " + _fireEmergencySelected.toString()),
-                                    // Text("Health: " + _healthEmergencySelected.toString()),
-                                    // Text("Murder: " + _murderEmergencySelected.toString()),
-                                    // Text("Assault: " + _assaultEmergencySelected.toString()),
-                                    // Text("Flood: " + _floodEmergencySelected.toString()),
-                                    // Text("Equake: " + _equakeEmergencySelected.toString()),
-                                    // Text("Kidd: " + _kidnapEmergencySelected.toString()),
-                                    // Text("Rob: " + _robberyEmergencySelected.toString()),
-                                    //Grid of buttons starts here
-                                    //Fire and Health
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Opacity(
-                                          opacity: _timerRunning && !_fireEmergencySelected ? 0.6 : 1,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: _fireEmergencySelected ? const Color.fromRGBO(102, 0, 0, 1) : Colors.white,
-                                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20),
-                                                side: BorderSide(
-                                                  color: _fireEmergencySelected ? const Color.fromRGBO(102, 0, 0, 1) : Color.fromRGBO(82, 82, 82, 1),
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              elevation: _timerRunning && !_fireEmergencySelected ? 1 : 3,
-                                            ),
-                                            onPressed: () {
-                                              if (!_timerRunning && !_emergencySelected) {
-                                                setState(() {
-                                                  _fireEmergencySelected = true;
-                                                  _emergencySelected = true;
-                                                });
-                                                startTimer("Fire Emergency");
-                                              }
-                                              if (_timerRunning && _fireEmergencySelected) {
-                                                setState(() {
-                                                  stopTimer();
-                                                });
-                                              }
-                                            },
-                                            child: SizedBox(
-                                              height: 100.h,
-                                              width: 165.w,
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Visibility(
-                                                      visible: _fireEmergencySelected,
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Text(
-                                                            '$seconds',
-                                                            style: TextStyle(
-                                                              fontSize: 30,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "Tap to cancel",
-                                                            style: TextStyle(
-                                                              fontWeight: FontWeight.normal,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Visibility(
-                                                      visible: !_fireEmergencySelected,
-                                                      child: Column(
-                                                        children: [
-                                                          Icon(
-                                                            FontAwesomeIcons.fire,
-                                                            color: const Color.fromRGBO(102, 0, 0, 1),
-                                                            size: 35,
-                                                          ),
-                                                          SizedBox(height: 2.h),
-                                                          Text(
-                                                            "Fire",
-                                                            style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 10.w),
-                                        Opacity(
-                                          opacity: _timerRunning && !_healthEmergencySelected ? 0.6 : 1,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: _healthEmergencySelected ? const Color.fromRGBO(153, 0, 51, 1) : Colors.white,
-                                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20),
-                                                side: BorderSide(
-                                                  color: _healthEmergencySelected ? const Color.fromRGBO(153, 0, 51, 1) : Color.fromRGBO(82, 82, 82, 1),
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              elevation: _timerRunning && !_healthEmergencySelected ? 1 : 3,
-                                            ),
-                                            onPressed: () {
-                                              if (!_timerRunning && !_emergencySelected) {
-                                                setState(() {
-                                                  _healthEmergencySelected = true;
-                                                  _emergencySelected = true;
-                                                });
-                                                startTimer("Health Emergency");
-                                              }
-                                              if (_timerRunning && _healthEmergencySelected) {
-                                                setState(() {
-                                                  stopTimer();
-                                                });
-                                              }
-                                            },
-                                            child: SizedBox(
-                                              height: 100.h,
-                                              width: 165.w,
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Visibility(
-                                                      visible: _healthEmergencySelected,
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Text(
-                                                            '$seconds',
-                                                            style: TextStyle(
-                                                              fontSize: 30,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "Tap to cancel",
-                                                            style: TextStyle(
-                                                              fontWeight: FontWeight.normal,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Visibility(
-                                                      visible: !_healthEmergencySelected,
-                                                      child: Column(
-                                                        children: [
-                                                          Icon(
-                                                            Icons.health_and_safety,
-                                                            color: const Color.fromRGBO(153, 0, 51, 1),
-                                                            size: 40,
-                                                          ),
-                                                          Text(
-                                                            "Health",
-                                                            style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-
-                                    SizedBox(height: 15.h),
-
-                                    //Murder and Assault
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Opacity(
-                                          opacity: _timerRunning && !_murderEmergencySelected ? 0.6 : 1,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: _murderEmergencySelected ? const Color.fromARGB(223, 177, 28, 38) : Colors.white,
-                                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20),
-                                                side: BorderSide(
-                                                  color: _murderEmergencySelected ? const Color.fromARGB(223, 177, 28, 38) : Color.fromRGBO(82, 82, 82, 1),
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              elevation: _timerRunning && !_murderEmergencySelected ? 1 : 3,
-                                            ),
-                                            onPressed: () {
-                                              if (!_timerRunning && !_murderEmergencySelected) {
-                                                setState(() {
-                                                  _murderEmergencySelected = true;
-                                                  _emergencySelected = true;
-                                                });
-                                                startTimer("Murder Emergency");
-                                              }
-                                              if (_timerRunning && _murderEmergencySelected) {
-                                                setState(() {
-                                                  stopTimer();
-                                                });
-                                              }
-                                            },
-                                            child: SizedBox(
-                                              height: 100.h,
-                                              width: 165.w,
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Visibility(
-                                                      visible: _murderEmergencySelected,
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Text(
-                                                            '$seconds',
-                                                            style: TextStyle(
-                                                              fontSize: 30,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "Tap to cancel",
-                                                            style: TextStyle(
-                                                              fontWeight: FontWeight.normal,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Visibility(
-                                                      visible: !_murderEmergencySelected,
-                                                      child: Column(
-                                                        children: [
-                                                          Icon(
-                                                            FontAwesomeIcons.solidFaceDizzy,
-                                                            color: const Color.fromARGB(223, 177, 28, 38),
-                                                            size: 35,
-                                                          ),
-                                                          SizedBox(height: 2.h),
-                                                          Text(
-                                                            "Murder",
-                                                            style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 10.w),
-                                        Opacity(
-                                          opacity: _timerRunning && !_assaultEmergencySelected ? 0.6 : 1,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: _assaultEmergencySelected ? const Color.fromARGB(255, 163, 49, 70) : Colors.white,
-                                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20),
-                                                side: BorderSide(
-                                                  color: _assaultEmergencySelected ? const Color.fromRGBO(184, 58, 67, 0.878) : Color.fromRGBO(82, 82, 82, 1),
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              elevation: _timerRunning && !_assaultEmergencySelected ? 1 : 3,
-                                            ),
-                                            onPressed: () {
-                                              if (!_timerRunning && !_assaultEmergencySelected) {
-                                                setState(() {
-                                                  _assaultEmergencySelected = true;
-                                                  _emergencySelected = true;
-                                                });
-                                                startTimer("Assault Emergency");
-                                              }
-                                              if (_timerRunning && _assaultEmergencySelected) {
-                                                setState(() {
-                                                  stopTimer();
-                                                });
-                                              }
-                                            },
-                                            child: SizedBox(
-                                              height: 100.h,
-                                              width: 165.w,
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Visibility(
-                                                      visible: _assaultEmergencySelected,
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Text(
-                                                            '$seconds',
-                                                            style: TextStyle(
-                                                              fontSize: 30,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "Tap to cancel",
-                                                            style: TextStyle(
-                                                              fontWeight: FontWeight.normal,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Visibility(
-                                                      visible: !_assaultEmergencySelected,
-                                                      child: Column(
-                                                        children: [
-                                                          Icon(
-                                                            FontAwesomeIcons.handFist,
-                                                            color: const Color.fromRGBO(184, 58, 67, 0.878),
-                                                            size: 35,
-                                                          ),
-                                                          SizedBox(height: 2.h),
-                                                          Text(
-                                                            "Assault",
-                                                            style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 15.h),
-
-                                    //Flood and Earthquake
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Opacity(
-                                          opacity: _timerRunning && !_floodEmergencySelected ? 0.6 : 1,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: _floodEmergencySelected ? const Color.fromRGBO(255, 144, 0, 1) : Colors.white,
-                                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20),
-                                                side: BorderSide(
-                                                  color: _floodEmergencySelected ? const Color.fromRGBO(255, 144, 0, 1) : Color.fromRGBO(82, 82, 82, 1),
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              elevation: _timerRunning && !_floodEmergencySelected ? 1 : 3,
-                                            ),
-                                            onPressed: () {
-                                              if (!_timerRunning && !_floodEmergencySelected) {
-                                                setState(() {
-                                                  _floodEmergencySelected = true;
-                                                  _emergencySelected = true;
-                                                });
-                                                startTimer("Flood Emergency");
-                                              }
-                                              if (_timerRunning && _floodEmergencySelected) {
-                                                setState(() {
-                                                  stopTimer();
-                                                });
-                                              }
-                                            },
-                                            child: SizedBox(
-                                              height: 100.h,
-                                              width: 165.w,
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Visibility(
-                                                      visible: _floodEmergencySelected,
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Text(
-                                                            '$seconds',
-                                                            style: TextStyle(
-                                                              fontSize: 30,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "Tap to cancel",
-                                                            style: TextStyle(
-                                                              fontWeight: FontWeight.normal,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Visibility(
-                                                      visible: !_floodEmergencySelected,
-                                                      child: Column(
-                                                        children: [
-                                                          Icon(
-                                                            FontAwesomeIcons.water,
-                                                            color: const Color.fromRGBO(255, 144, 0, 1),
-                                                            size: 35,
-                                                          ),
-                                                          SizedBox(height: 2.h),
-                                                          Text(
-                                                            "Flood",
-                                                            style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 10.w),
-                                        Opacity(
-                                          opacity: _timerRunning && !_equakeEmergencySelected ? 0.6 : 1,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: _equakeEmergencySelected ? Color.fromARGB(255, 255, 102, 0) : Colors.white,
-                                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20),
-                                                side: BorderSide(
-                                                  color: _equakeEmergencySelected ? Color.fromARGB(255, 255, 102, 0) : Color.fromRGBO(82, 82, 82, 1),
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              elevation: _timerRunning && !_equakeEmergencySelected ? 1 : 3,
-                                            ),
-                                            onPressed: () {
-                                              if (!_timerRunning && !_equakeEmergencySelected) {
-                                                setState(() {
-                                                  _equakeEmergencySelected = true;
-                                                  _emergencySelected = true;
-                                                });
-                                                startTimer("Earthquake Emergency");
-                                              }
-                                              if (_timerRunning && _equakeEmergencySelected) {
-                                                setState(() {
-                                                  stopTimer();
-                                                });
-                                              }
-                                            },
-                                            child: SizedBox(
-                                              height: 100.h,
-                                              width: 165.w,
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Visibility(
-                                                      visible: _equakeEmergencySelected,
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Text(
-                                                            '$seconds',
-                                                            style: TextStyle(
-                                                              fontSize: 30,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "Tap to cancel",
-                                                            style: TextStyle(
-                                                              fontWeight: FontWeight.normal,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Visibility(
-                                                      visible: !_equakeEmergencySelected,
-                                                      child: Column(
-                                                        children: [
-                                                          Icon(
-                                                            FontAwesomeIcons.houseChimneyCrack,
-                                                            color: Color.fromARGB(255, 255, 102, 0),
-                                                            size: 35,
-                                                          ),
-                                                          SizedBox(height: 2.h),
-                                                          Text(
-                                                            "Earthquake",
-                                                            style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 15.h),
-
-                                    //Kidnapping and Robbery
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Opacity(
-                                          opacity: _timerRunning && !_kidnapEmergencySelected ? 0.6 : 1,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: _kidnapEmergencySelected ? const Color.fromRGBO(157, 2, 8, 1) : Colors.white,
-                                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20),
-                                                side: BorderSide(
-                                                  color: _kidnapEmergencySelected ? const Color.fromRGBO(157, 2, 8, 1) : Color.fromRGBO(82, 82, 82, 1),
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              elevation: _timerRunning && !_kidnapEmergencySelected ? 1 : 3,
-                                            ),
-                                            onPressed: () {
-                                              if (!_timerRunning && !_kidnapEmergencySelected) {
-                                                setState(() {
-                                                  _kidnapEmergencySelected = true;
-                                                  _emergencySelected = true;
-                                                });
-                                                startTimer("Kidnapping Emergency");
-                                              }
-                                              if (_timerRunning && _kidnapEmergencySelected) {
-                                                setState(() {
-                                                  stopTimer();
-                                                });
-                                              }
-                                            },
-                                            child: SizedBox(
-                                              height: 100.h,
-                                              width: 165.w,
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Visibility(
-                                                      visible: _kidnapEmergencySelected,
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Text(
-                                                            '$seconds',
-                                                            style: TextStyle(
-                                                              fontSize: 30,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "Tap to cancel",
-                                                            style: TextStyle(
-                                                              fontWeight: FontWeight.normal,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Visibility(
-                                                      visible: !_kidnapEmergencySelected,
-                                                      child: Column(
-                                                        children: [
-                                                          Icon(
-                                                            FontAwesomeIcons.solidFaceSadCry,
-                                                            color: const Color.fromRGBO(157, 2, 8, 1),
-                                                            size: 35,
-                                                          ),
-                                                          SizedBox(height: 2.h),
-                                                          Text(
-                                                            "Kidnapping",
-                                                            style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 10.w),
-                                        Opacity(
-                                          opacity: _timerRunning && !_robberyEmergencySelected ? 0.6 : 1,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: _robberyEmergencySelected ? const Color.fromRGBO(220, 47, 2, 1) : Colors.white,
-                                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20),
-                                                side: BorderSide(
-                                                  color: _robberyEmergencySelected ? const Color.fromRGBO(220, 47, 2, 1) : Color.fromRGBO(82, 82, 82, 1),
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              elevation: _timerRunning && !_robberyEmergencySelected ? 1 : 3,
-                                            ),
-                                            onPressed: () {
-                                              if (!_timerRunning && !_robberyEmergencySelected) {
-                                                setState(() {
-                                                  _robberyEmergencySelected = true;
-                                                  _emergencySelected = true;
-                                                });
-                                                startTimer("Robbery Emergency");
-                                              }
-                                              if (_timerRunning && _robberyEmergencySelected) {
-                                                setState(() {
-                                                  stopTimer();
-                                                });
-                                              }
-                                            },
-                                            child: SizedBox(
-                                              height: 100.h,
-                                              width: 165.w,
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Visibility(
-                                                      visible: _robberyEmergencySelected,
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Text(
-                                                            '$seconds',
-                                                            style: TextStyle(
-                                                              fontSize: 30,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "Tap to cancel",
-                                                            style: TextStyle(
-                                                              fontWeight: FontWeight.normal,
-                                                              color: Colors.white,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Visibility(
-                                                      visible: !_robberyEmergencySelected,
-                                                      child: Column(
-                                                        children: [
-                                                          Icon(
-                                                            FontAwesomeIcons.userNinja,
-                                                            color: const Color.fromRGBO(220, 47, 2, 1),
-                                                            size: 35,
-                                                          ),
-                                                          SizedBox(height: 2.h),
-                                                          Text(
-                                                            "Robbery",
-                                                            style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 30.h),
-
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
+                                    Visibility(
+                                      visible: !_hasInternet,
+                                      child: Column(
                                         children: [
-                                          Icon(
-                                            Icons.keyboard_double_arrow_down,
-                                            color: Colors.black,
-                                            size: 30,
-                                          ),
-                                          Expanded(
-                                            child: Align(
-                                              alignment: Alignment.center,
-                                              child: Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 10),
-                                                child: Text(
-                                                  "Don't know the emergency? Just press the 'Alert' button below",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 18.sp,
+                                          SizedBox(height: 80.h),
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                                    child: Expanded(
+                                                      child: Align(
+                                                        alignment: Alignment.center,
+                                                        child: Column(
+                                                          children: [
+                                                            Text(
+                                                              "You are currently not connected to the internet. All emergency sent will be marked as an alert emergency",
+                                                              textAlign: TextAlign.justify,
+                                                              style: TextStyle(
+                                                                color: Colors.black,
+                                                                fontWeight: FontWeight.w400,
+                                                                fontSize: 18.sp,
+                                                              ),
+                                                            ),
+                                                            SizedBox(height: 20.h),
+                                                            Text(
+                                                              "An SMS will be sent to your device after a responder has confirmed your emergency.",
+                                                              textAlign: TextAlign.justify,
+                                                              style: TextStyle(
+                                                                color: Colors.black,
+                                                                fontWeight: FontWeight.w400,
+                                                                fontSize: 18.sp,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                  SizedBox(height: 80.h),
+                                                  Opacity(
+                                                    opacity: _timerRunning && !_alertEmergencySelected ? 0.6 : 1,
+                                                    child: ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                        backgroundColor: _alertEmergencySelected ? const Color.fromARGB(255, 202, 68, 27) : Colors.white,
+                                                        padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(20),
+                                                          side: BorderSide(
+                                                            color: _alertEmergencySelected ? const Color.fromARGB(255, 202, 68, 27) : Color.fromRGBO(82, 82, 82, 1),
+                                                            width: 1,
+                                                          ),
+                                                        ),
+                                                        elevation: _timerRunning && !_alertEmergencySelected ? 1 : 3,
+                                                      ),
+                                                      onPressed: () {
+                                                        if (!_timerRunning && !_alertEmergencySelected) {
+                                                          setState(() {
+                                                            _alertEmergencySelected = true;
+                                                            _emergencySelected = true;
+                                                          });
+                                                          startTimerOffline("Alert Emergency");
+                                                        }
+                                                        if (_timerRunning && _alertEmergencySelected) {
+                                                          setState(() {
+                                                            stopTimer();
+                                                          });
+                                                        }
+                                                      },
+                                                      child: SizedBox(
+                                                        height: 150.h,
+                                                        width: 200.w,
+                                                        child: Center(
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: [
+                                                              Visibility(
+                                                                visible: _alertEmergencySelected,
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  children: [
+                                                                    Text(
+                                                                      '$seconds',
+                                                                      style: TextStyle(
+                                                                        fontSize: 30,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.white,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      "Tap to cancel",
+                                                                      style: TextStyle(
+                                                                        fontWeight: FontWeight.normal,
+                                                                        color: Colors.white,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Visibility(
+                                                                visible: !_alertEmergencySelected,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Icon(
+                                                                      Icons.notifications_active,
+                                                                      color: const Color.fromARGB(255, 202, 68, 27),
+                                                                      size: 40,
+                                                                    ),
+                                                                    Text(
+                                                                      "Alert",
+                                                                      style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 500.h),
+                                                ],
                                               ),
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    SizedBox(height: 15.h),
-
-                                    Opacity(
-                                      opacity: _timerRunning && !_alertEmergencySelected ? 0.6 : 1,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: _alertEmergencySelected ? const Color.fromARGB(255, 202, 68, 27) : Colors.white,
-                                          padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(20),
-                                            side: BorderSide(
-                                              color: _alertEmergencySelected ? const Color.fromARGB(255, 202, 68, 27) : Color.fromRGBO(82, 82, 82, 1),
-                                              width: 1,
+                                    Visibility(
+                                      visible: _hasInternet,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(height: 30.h),
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                                              child: Text(
+                                                "Tap the button that corresponds to the emergency you are currently involved in.",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 18.sp,
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                          elevation: _timerRunning && !_alertEmergencySelected ? 1 : 3,
-                                        ),
-                                        onPressed: () {
-                                          if (!_timerRunning && !_alertEmergencySelected) {
-                                            setState(() {
-                                              _alertEmergencySelected = true;
-                                              _emergencySelected = true;
-                                            });
-                                            startTimer("Alert Emergency");
-                                          }
-                                          if (_timerRunning && _alertEmergencySelected) {
-                                            setState(() {
-                                              stopTimer();
-                                            });
-                                          }
-                                        },
-                                        child: SizedBox(
-                                          height: 100.h,
-                                          width: 165.w,
-                                          child: Center(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Visibility(
-                                                  visible: _alertEmergencySelected,
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Text(
-                                                        '$seconds',
-                                                        style: TextStyle(
-                                                          fontSize: 30,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: Colors.white,
-                                                        ),
+                                          SizedBox(height: 15.h),
+                                          //Grid of buttons starts here
+                                          //Fire and Health
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Opacity(
+                                                opacity: _timerRunning && !_fireEmergencySelected ? 0.6 : 1,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: _fireEmergencySelected ? const Color.fromRGBO(102, 0, 0, 1) : Colors.white,
+                                                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      side: BorderSide(
+                                                        color: _fireEmergencySelected ? const Color.fromRGBO(102, 0, 0, 1) : Color.fromRGBO(82, 82, 82, 1),
+                                                        width: 1,
                                                       ),
-                                                      Text(
-                                                        "Tap to cancel",
-                                                        style: TextStyle(
-                                                          fontWeight: FontWeight.normal,
-                                                          color: Colors.white,
-                                                        ),
+                                                    ),
+                                                    elevation: _timerRunning && !_fireEmergencySelected ? 1 : 3,
+                                                  ),
+                                                  onPressed: () {
+                                                    if (!_timerRunning && !_emergencySelected) {
+                                                      setState(() {
+                                                        _fireEmergencySelected = true;
+                                                        _emergencySelected = true;
+                                                      });
+                                                      startTimer("Fire Emergency");
+                                                    }
+                                                    if (_timerRunning && _fireEmergencySelected) {
+                                                      setState(() {
+                                                        stopTimer();
+                                                      });
+                                                    }
+                                                  },
+                                                  child: SizedBox(
+                                                    height: 100.h,
+                                                    width: 165.w,
+                                                    child: Center(
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Visibility(
+                                                            visible: _fireEmergencySelected,
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Text(
+                                                                  '$seconds',
+                                                                  style: TextStyle(
+                                                                    fontSize: 30,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  "Tap to cancel",
+                                                                  style: TextStyle(
+                                                                    fontWeight: FontWeight.normal,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Visibility(
+                                                            visible: !_fireEmergencySelected,
+                                                            child: Column(
+                                                              children: [
+                                                                Icon(
+                                                                  FontAwesomeIcons.fire,
+                                                                  color: const Color.fromRGBO(102, 0, 0, 1),
+                                                                  size: 35,
+                                                                ),
+                                                                SizedBox(height: 2.h),
+                                                                Text(
+                                                                  "Fire",
+                                                                  style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ],
                                                       ),
-                                                    ],
+                                                    ),
                                                   ),
                                                 ),
-                                                Visibility(
-                                                  visible: !_alertEmergencySelected,
-                                                  child: Column(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.notifications_active,
-                                                        color: const Color.fromARGB(255, 202, 68, 27),
-                                                        size: 40,
+                                              ),
+                                              SizedBox(width: 10.w),
+                                              Opacity(
+                                                opacity: _timerRunning && !_healthEmergencySelected ? 0.6 : 1,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: _healthEmergencySelected ? const Color.fromRGBO(153, 0, 51, 1) : Colors.white,
+                                                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      side: BorderSide(
+                                                        color: _healthEmergencySelected ? const Color.fromRGBO(153, 0, 51, 1) : Color.fromRGBO(82, 82, 82, 1),
+                                                        width: 1,
                                                       ),
-                                                      Text(
-                                                        "Alert",
-                                                        style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
-                                                      ),
-                                                    ],
+                                                    ),
+                                                    elevation: _timerRunning && !_healthEmergencySelected ? 1 : 3,
                                                   ),
-                                                )
+                                                  onPressed: () {
+                                                    if (!_timerRunning && !_emergencySelected) {
+                                                      setState(() {
+                                                        _healthEmergencySelected = true;
+                                                        _emergencySelected = true;
+                                                      });
+                                                      startTimer("Health Emergency");
+                                                    }
+                                                    if (_timerRunning && _healthEmergencySelected) {
+                                                      setState(() {
+                                                        stopTimer();
+                                                      });
+                                                    }
+                                                  },
+                                                  child: SizedBox(
+                                                    height: 100.h,
+                                                    width: 165.w,
+                                                    child: Center(
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Visibility(
+                                                            visible: _healthEmergencySelected,
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Text(
+                                                                  '$seconds',
+                                                                  style: TextStyle(
+                                                                    fontSize: 30,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  "Tap to cancel",
+                                                                  style: TextStyle(
+                                                                    fontWeight: FontWeight.normal,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Visibility(
+                                                            visible: !_healthEmergencySelected,
+                                                            child: Column(
+                                                              children: [
+                                                                Icon(
+                                                                  Icons.health_and_safety,
+                                                                  color: const Color.fromRGBO(153, 0, 51, 1),
+                                                                  size: 40,
+                                                                ),
+                                                                Text(
+                                                                  "Health",
+                                                                  style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          SizedBox(height: 15.h),
+
+                                          //Murder and Assault
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Opacity(
+                                                opacity: _timerRunning && !_murderEmergencySelected ? 0.6 : 1,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: _murderEmergencySelected ? const Color.fromARGB(223, 177, 28, 38) : Colors.white,
+                                                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      side: BorderSide(
+                                                        color: _murderEmergencySelected ? const Color.fromARGB(223, 177, 28, 38) : Color.fromRGBO(82, 82, 82, 1),
+                                                        width: 1,
+                                                      ),
+                                                    ),
+                                                    elevation: _timerRunning && !_murderEmergencySelected ? 1 : 3,
+                                                  ),
+                                                  onPressed: () {
+                                                    if (!_timerRunning && !_murderEmergencySelected) {
+                                                      setState(() {
+                                                        _murderEmergencySelected = true;
+                                                        _emergencySelected = true;
+                                                      });
+                                                      startTimer("Murder Emergency");
+                                                    }
+                                                    if (_timerRunning && _murderEmergencySelected) {
+                                                      setState(() {
+                                                        stopTimer();
+                                                      });
+                                                    }
+                                                  },
+                                                  child: SizedBox(
+                                                    height: 100.h,
+                                                    width: 165.w,
+                                                    child: Center(
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Visibility(
+                                                            visible: _murderEmergencySelected,
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Text(
+                                                                  '$seconds',
+                                                                  style: TextStyle(
+                                                                    fontSize: 30,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  "Tap to cancel",
+                                                                  style: TextStyle(
+                                                                    fontWeight: FontWeight.normal,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Visibility(
+                                                            visible: !_murderEmergencySelected,
+                                                            child: Column(
+                                                              children: [
+                                                                Icon(
+                                                                  FontAwesomeIcons.solidFaceDizzy,
+                                                                  color: const Color.fromARGB(223, 177, 28, 38),
+                                                                  size: 35,
+                                                                ),
+                                                                SizedBox(height: 2.h),
+                                                                Text(
+                                                                  "Murder",
+                                                                  style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 10.w),
+                                              Opacity(
+                                                opacity: _timerRunning && !_assaultEmergencySelected ? 0.6 : 1,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: _assaultEmergencySelected ? const Color.fromARGB(255, 163, 49, 70) : Colors.white,
+                                                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      side: BorderSide(
+                                                        color: _assaultEmergencySelected ? const Color.fromRGBO(184, 58, 67, 0.878) : Color.fromRGBO(82, 82, 82, 1),
+                                                        width: 1,
+                                                      ),
+                                                    ),
+                                                    elevation: _timerRunning && !_assaultEmergencySelected ? 1 : 3,
+                                                  ),
+                                                  onPressed: () {
+                                                    if (!_timerRunning && !_assaultEmergencySelected) {
+                                                      setState(() {
+                                                        _assaultEmergencySelected = true;
+                                                        _emergencySelected = true;
+                                                      });
+                                                      startTimer("Assault Emergency");
+                                                    }
+                                                    if (_timerRunning && _assaultEmergencySelected) {
+                                                      setState(() {
+                                                        stopTimer();
+                                                      });
+                                                    }
+                                                  },
+                                                  child: SizedBox(
+                                                    height: 100.h,
+                                                    width: 165.w,
+                                                    child: Center(
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Visibility(
+                                                            visible: _assaultEmergencySelected,
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Text(
+                                                                  '$seconds',
+                                                                  style: TextStyle(
+                                                                    fontSize: 30,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  "Tap to cancel",
+                                                                  style: TextStyle(
+                                                                    fontWeight: FontWeight.normal,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Visibility(
+                                                            visible: !_assaultEmergencySelected,
+                                                            child: Column(
+                                                              children: [
+                                                                Icon(
+                                                                  FontAwesomeIcons.handFist,
+                                                                  color: const Color.fromRGBO(184, 58, 67, 0.878),
+                                                                  size: 35,
+                                                                ),
+                                                                SizedBox(height: 2.h),
+                                                                Text(
+                                                                  "Assault",
+                                                                  style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 15.h),
+
+                                          //Flood and Earthquake
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Opacity(
+                                                opacity: _timerRunning && !_floodEmergencySelected ? 0.6 : 1,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: _floodEmergencySelected ? const Color.fromRGBO(255, 144, 0, 1) : Colors.white,
+                                                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      side: BorderSide(
+                                                        color: _floodEmergencySelected ? const Color.fromRGBO(255, 144, 0, 1) : Color.fromRGBO(82, 82, 82, 1),
+                                                        width: 1,
+                                                      ),
+                                                    ),
+                                                    elevation: _timerRunning && !_floodEmergencySelected ? 1 : 3,
+                                                  ),
+                                                  onPressed: () {
+                                                    if (!_timerRunning && !_floodEmergencySelected) {
+                                                      setState(() {
+                                                        _floodEmergencySelected = true;
+                                                        _emergencySelected = true;
+                                                      });
+                                                      startTimer("Flood Emergency");
+                                                    }
+                                                    if (_timerRunning && _floodEmergencySelected) {
+                                                      setState(() {
+                                                        stopTimer();
+                                                      });
+                                                    }
+                                                  },
+                                                  child: SizedBox(
+                                                    height: 100.h,
+                                                    width: 165.w,
+                                                    child: Center(
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Visibility(
+                                                            visible: _floodEmergencySelected,
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Text(
+                                                                  '$seconds',
+                                                                  style: TextStyle(
+                                                                    fontSize: 30,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  "Tap to cancel",
+                                                                  style: TextStyle(
+                                                                    fontWeight: FontWeight.normal,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Visibility(
+                                                            visible: !_floodEmergencySelected,
+                                                            child: Column(
+                                                              children: [
+                                                                Icon(
+                                                                  FontAwesomeIcons.water,
+                                                                  color: const Color.fromRGBO(255, 144, 0, 1),
+                                                                  size: 35,
+                                                                ),
+                                                                SizedBox(height: 2.h),
+                                                                Text(
+                                                                  "Flood",
+                                                                  style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 10.w),
+                                              Opacity(
+                                                opacity: _timerRunning && !_equakeEmergencySelected ? 0.6 : 1,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: _equakeEmergencySelected ? Color.fromARGB(255, 255, 102, 0) : Colors.white,
+                                                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      side: BorderSide(
+                                                        color: _equakeEmergencySelected ? Color.fromARGB(255, 255, 102, 0) : Color.fromRGBO(82, 82, 82, 1),
+                                                        width: 1,
+                                                      ),
+                                                    ),
+                                                    elevation: _timerRunning && !_equakeEmergencySelected ? 1 : 3,
+                                                  ),
+                                                  onPressed: () {
+                                                    if (!_timerRunning && !_equakeEmergencySelected) {
+                                                      setState(() {
+                                                        _equakeEmergencySelected = true;
+                                                        _emergencySelected = true;
+                                                      });
+                                                      startTimer("Earthquake Emergency");
+                                                    }
+                                                    if (_timerRunning && _equakeEmergencySelected) {
+                                                      setState(() {
+                                                        stopTimer();
+                                                      });
+                                                    }
+                                                  },
+                                                  child: SizedBox(
+                                                    height: 100.h,
+                                                    width: 165.w,
+                                                    child: Center(
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Visibility(
+                                                            visible: _equakeEmergencySelected,
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Text(
+                                                                  '$seconds',
+                                                                  style: TextStyle(
+                                                                    fontSize: 30,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  "Tap to cancel",
+                                                                  style: TextStyle(
+                                                                    fontWeight: FontWeight.normal,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Visibility(
+                                                            visible: !_equakeEmergencySelected,
+                                                            child: Column(
+                                                              children: [
+                                                                Icon(
+                                                                  FontAwesomeIcons.houseChimneyCrack,
+                                                                  color: Color.fromARGB(255, 255, 102, 0),
+                                                                  size: 35,
+                                                                ),
+                                                                SizedBox(height: 2.h),
+                                                                Text(
+                                                                  "Earthquake",
+                                                                  style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 15.h),
+
+                                          //Kidnapping and Robbery
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Opacity(
+                                                opacity: _timerRunning && !_kidnapEmergencySelected ? 0.6 : 1,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: _kidnapEmergencySelected ? const Color.fromRGBO(157, 2, 8, 1) : Colors.white,
+                                                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      side: BorderSide(
+                                                        color: _kidnapEmergencySelected ? const Color.fromRGBO(157, 2, 8, 1) : Color.fromRGBO(82, 82, 82, 1),
+                                                        width: 1,
+                                                      ),
+                                                    ),
+                                                    elevation: _timerRunning && !_kidnapEmergencySelected ? 1 : 3,
+                                                  ),
+                                                  onPressed: () {
+                                                    if (!_timerRunning && !_kidnapEmergencySelected) {
+                                                      setState(() {
+                                                        _kidnapEmergencySelected = true;
+                                                        _emergencySelected = true;
+                                                      });
+                                                      startTimer("Kidnapping Emergency");
+                                                    }
+                                                    if (_timerRunning && _kidnapEmergencySelected) {
+                                                      setState(() {
+                                                        stopTimer();
+                                                      });
+                                                    }
+                                                  },
+                                                  child: SizedBox(
+                                                    height: 100.h,
+                                                    width: 165.w,
+                                                    child: Center(
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Visibility(
+                                                            visible: _kidnapEmergencySelected,
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Text(
+                                                                  '$seconds',
+                                                                  style: TextStyle(
+                                                                    fontSize: 30,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  "Tap to cancel",
+                                                                  style: TextStyle(
+                                                                    fontWeight: FontWeight.normal,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Visibility(
+                                                            visible: !_kidnapEmergencySelected,
+                                                            child: Column(
+                                                              children: [
+                                                                Icon(
+                                                                  FontAwesomeIcons.solidFaceSadCry,
+                                                                  color: const Color.fromRGBO(157, 2, 8, 1),
+                                                                  size: 35,
+                                                                ),
+                                                                SizedBox(height: 2.h),
+                                                                Text(
+                                                                  "Kidnapping",
+                                                                  style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 10.w),
+                                              Opacity(
+                                                opacity: _timerRunning && !_robberyEmergencySelected ? 0.6 : 1,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: _robberyEmergencySelected ? const Color.fromRGBO(220, 47, 2, 1) : Colors.white,
+                                                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      side: BorderSide(
+                                                        color: _robberyEmergencySelected ? const Color.fromRGBO(220, 47, 2, 1) : Color.fromRGBO(82, 82, 82, 1),
+                                                        width: 1,
+                                                      ),
+                                                    ),
+                                                    elevation: _timerRunning && !_robberyEmergencySelected ? 1 : 3,
+                                                  ),
+                                                  onPressed: () {
+                                                    if (!_timerRunning && !_robberyEmergencySelected) {
+                                                      setState(() {
+                                                        _robberyEmergencySelected = true;
+                                                        _emergencySelected = true;
+                                                      });
+                                                      startTimer("Robbery Emergency");
+                                                    }
+                                                    if (_timerRunning && _robberyEmergencySelected) {
+                                                      setState(() {
+                                                        stopTimer();
+                                                      });
+                                                    }
+                                                  },
+                                                  child: SizedBox(
+                                                    height: 100.h,
+                                                    width: 165.w,
+                                                    child: Center(
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Visibility(
+                                                            visible: _robberyEmergencySelected,
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Text(
+                                                                  '$seconds',
+                                                                  style: TextStyle(
+                                                                    fontSize: 30,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  "Tap to cancel",
+                                                                  style: TextStyle(
+                                                                    fontWeight: FontWeight.normal,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Visibility(
+                                                            visible: !_robberyEmergencySelected,
+                                                            child: Column(
+                                                              children: [
+                                                                Icon(
+                                                                  FontAwesomeIcons.userNinja,
+                                                                  color: const Color.fromRGBO(220, 47, 2, 1),
+                                                                  size: 35,
+                                                                ),
+                                                                SizedBox(height: 2.h),
+                                                                Text(
+                                                                  "Robbery",
+                                                                  style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 30.h),
+
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.keyboard_double_arrow_down,
+                                                  color: Colors.black,
+                                                  size: 30,
+                                                ),
+                                                Expanded(
+                                                  child: Align(
+                                                    alignment: Alignment.center,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                                                      child: Text(
+                                                        "Don't know the emergency? Just press the 'Alert' button below",
+                                                        textAlign: TextAlign.center,
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 18.sp,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),
-                                        ),
+                                          SizedBox(height: 15.h),
+
+                                          Opacity(
+                                            opacity: _timerRunning && !_alertEmergencySelected ? 0.6 : 1,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: _alertEmergencySelected ? const Color.fromARGB(255, 202, 68, 27) : Colors.white,
+                                                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(20),
+                                                  side: BorderSide(
+                                                    color: _alertEmergencySelected ? const Color.fromARGB(255, 202, 68, 27) : Color.fromRGBO(82, 82, 82, 1),
+                                                    width: 1,
+                                                  ),
+                                                ),
+                                                elevation: _timerRunning && !_alertEmergencySelected ? 1 : 3,
+                                              ),
+                                              onPressed: () {
+                                                if (!_timerRunning && !_alertEmergencySelected) {
+                                                  setState(() {
+                                                    _alertEmergencySelected = true;
+                                                    _emergencySelected = true;
+                                                  });
+                                                  startTimer("Alert Emergency");
+                                                }
+                                                if (_timerRunning && _alertEmergencySelected) {
+                                                  setState(() {
+                                                    stopTimer();
+                                                  });
+                                                }
+                                              },
+                                              child: SizedBox(
+                                                height: 100.h,
+                                                width: 165.w,
+                                                child: Center(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Visibility(
+                                                        visible: _alertEmergencySelected,
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [
+                                                            Text(
+                                                              '$seconds',
+                                                              style: TextStyle(
+                                                                fontSize: 30,
+                                                                fontWeight: FontWeight.bold,
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              "Tap to cancel",
+                                                              style: TextStyle(
+                                                                fontWeight: FontWeight.normal,
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Visibility(
+                                                        visible: !_alertEmergencySelected,
+                                                        child: Column(
+                                                          children: [
+                                                            Icon(
+                                                              Icons.notifications_active,
+                                                              color: const Color.fromARGB(255, 202, 68, 27),
+                                                              size: 40,
+                                                            ),
+                                                            Text(
+                                                              "Alert",
+                                                              style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 50.h),
+                                        ],
                                       ),
                                     ),
-                                    SizedBox(height: 50.h),
                                   ],
                                 ),
                               ),
