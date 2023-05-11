@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -77,7 +79,7 @@ class _CivHomePageState extends State<CivHomePage> {
     timer?.cancel();
   }
 
-  bool _hasInternet = false;
+  bool _hasInternet = true;
   bool _timerRunning = false;
   bool _emergencySelected = false;
   bool _fireEmergencySelected = false;
@@ -182,6 +184,21 @@ class _CivHomePageState extends State<CivHomePage> {
     });
   }
 
+  void _sendSMS(String message, List<String> recipients) async {
+    if (await Permission.sms.request().isGranted) {
+      String _result = await sendSMS(message: message, recipients: recipients, sendDirect: true).catchError((onError) {
+        print(onError);
+      });
+      print(_result);
+    } else {
+      print("SMS permission not granted");
+    }
+  }
+
+  String generateMessage(String fullName, String coordinates) {
+    return 'Civilian: $fullName\nCoordinate: $coordinates';
+  }
+
   void startTimerOffline(String emergencyType) {
     setState(() {
       timer = Timer.periodic(Duration(seconds: 1), (_) async {
@@ -192,10 +209,17 @@ class _CivHomePageState extends State<CivHomePage> {
           });
         } else {
           timer?.cancel();
-          FlutterPhoneDirectCaller.callNumber("09637779925");
-          // await getCurrentLocation();
-          // await convertCoordsToAddress(_coordinates!);
-          // SendEmergency(emergencyType, 'Ongoing', _coordinates.toString(), _address);
+          quickAlert(QuickAlertType.loading, "Emergency Selected!", "Waiting for confirmation of the responders near you. Please hang tight", Colors.green);
+          await getCurrentLocation();
+          print("Civilian: " + _fullName.toString());
+          print("Coordinate: " + _coordinates.toString());
+          String message = generateMessage(_fullName.toString(), _coordinates.toString());
+          List<String> recipients = [
+            "+639455810941"
+          ];
+          _sendSMS(message, recipients);
+          Navigator.of(context).pop();
+          quickAlert(QuickAlertType.success, "Emergency Sent!", "You'll receive an emergency confirmation SMS on your device", Colors.green);
           stopTimer();
         }
       });
@@ -254,20 +278,6 @@ class _CivHomePageState extends State<CivHomePage> {
       address,
     );
     print("Added emergency deets to firestone");
-
-    // var collection = FirebaseFirestore.instance.collection('emergencies');
-    // var docReference = collection.doc(_emailAddress);
-
-    // // docReference.snapshots().listen((docSnapshot) {
-    // //   if (docSnapshot.exists) {
-    // //     Map<String, dynamic>? data = docSnapshot.data();
-    // //     var status = data?['Status'];
-    // //     if (status == 'Confirmed') {
-    // //       Navigator.of(context).pop();
-    // //       showEmergencyDetails(context);
-    // //     }
-    // //   }
-    // // });
   }
 
   //Get the user location

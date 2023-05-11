@@ -5,6 +5,16 @@
          SHA256: AD:A9:84:DC:30:56:40:45:65:F7:47:8A:38:1D:B2:D6:F8:AC:CD:BB:D1:69:88:9B:CA:D0:B8:6C:98:1D:B5:78 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <!-- PERMISSIONS NEED BY SMS -->
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="smsto"/>
+        </intent>
+    </queries>
+
    <application
         android:label="rtena_app"
         android:name="${applicationName}"
