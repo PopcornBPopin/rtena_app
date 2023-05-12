@@ -20,15 +20,12 @@ class CivProfilePage extends StatefulWidget {
 class _CivProfilePageState extends State<CivProfilePage> {
   @override
   void initState() {
-    getConnectivity();
+    initConnectivity();
     getUserData();
     super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitDown,
-    // ]);
   }
 
   //Disposes controllers when not in used
@@ -58,7 +55,6 @@ class _CivProfilePageState extends State<CivProfilePage> {
   bool _permanentAddressFieldSelected = false;
   bool _homeAddressFieldSelected = false;
 
-  late StreamSubscription subscription;
   late String _emailAddress = "";
   late String _firstName = "";
   late String _midInit = "";
@@ -155,30 +151,19 @@ class _CivProfilePageState extends State<CivProfilePage> {
   );
 
   // FUNCTIONS
-  ConnectivityResult result = ConnectivityResult.none;
-  void getConnectivity() async {
+  ConnectivityResult connectivityResult = ConnectivityResult.none;
+  late StreamSubscription<ConnectivityResult> subscription;
+  void initConnectivity() async {
+    connectivityResult = await Connectivity().checkConnectivity();
     _hasInternet = await InternetConnectionChecker().hasConnection;
-    if (result != ConnectivityResult.none) {
-      setState(() {
-        _hasInternet = true;
-      });
-    }
-    subscription = Connectivity().onConnectivityChanged.listen(
-      (ConnectivityResult result) async {
-        result = await Connectivity().checkConnectivity();
-        _hasInternet = await InternetConnectionChecker().hasConnection;
+    subscription = Connectivity().onConnectivityChanged.listen(updateConnectivity);
+    setState(() {});
+  }
 
-        if (!_hasInternet) {
-          setState(() {
-            _hasInternet = false;
-          });
-        } else {
-          setState(() {
-            _hasInternet = true;
-          });
-        }
-      },
-    );
+  void updateConnectivity(ConnectivityResult result) async {
+    connectivityResult = result;
+    _hasInternet = await InternetConnectionChecker().hasConnection;
+    setState(() {});
   }
 
   //Calendar Theme

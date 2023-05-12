@@ -20,16 +20,12 @@ class ResListPage extends StatefulWidget {
 class _ResListPageState extends State<ResListPage> {
   @override
   void initState() {
-    getConnectivity();
+    initConnectivity();
     getUserData();
     super.initState();
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitDown,
-    // ]);
   }
 
   @override
@@ -40,7 +36,6 @@ class _ResListPageState extends State<ResListPage> {
 
   bool _hasInternet = false;
 
-  late StreamSubscription subscription;
   late String _firstName = "";
   late String _fullName = "";
   late String _contactNumber = "";
@@ -53,30 +48,19 @@ class _ResListPageState extends State<ResListPage> {
   late String _userLocation = "";
 
   // FUNCTIONS
-  ConnectivityResult result = ConnectivityResult.none;
-  void getConnectivity() async {
+  ConnectivityResult connectivityResult = ConnectivityResult.none;
+  late StreamSubscription<ConnectivityResult> subscription;
+  void initConnectivity() async {
+    connectivityResult = await Connectivity().checkConnectivity();
     _hasInternet = await InternetConnectionChecker().hasConnection;
-    if (result != ConnectivityResult.none) {
-      setState(() {
-        _hasInternet = true;
-      });
-    }
-    subscription = Connectivity().onConnectivityChanged.listen(
-      (ConnectivityResult result) async {
-        result = await Connectivity().checkConnectivity();
-        _hasInternet = await InternetConnectionChecker().hasConnection;
+    subscription = Connectivity().onConnectivityChanged.listen(updateConnectivity);
+    setState(() {});
+  }
 
-        if (!_hasInternet) {
-          setState(() {
-            _hasInternet = false;
-          });
-        } else {
-          setState(() {
-            _hasInternet = true;
-          });
-        }
-      },
-    );
+  void updateConnectivity(ConnectivityResult result) async {
+    connectivityResult = result;
+    _hasInternet = await InternetConnectionChecker().hasConnection;
+    setState(() {});
   }
 
   //Grab user document from Firebase Firestone

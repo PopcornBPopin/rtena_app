@@ -20,14 +20,11 @@ class CivStartPage extends StatefulWidget {
 class _CivStartPageState extends State<CivStartPage> {
   @override
   void initState() {
-    getConnectivity();
+    initConnectivity();
     super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitDown,
-    // ]);
   }
 
   @override
@@ -36,7 +33,6 @@ class _CivStartPageState extends State<CivStartPage> {
   }
 
   bool _hasInternet = false;
-  late StreamSubscription subscription;
   int _selectedIndex = 0;
 
   //Snackbar
@@ -99,31 +95,30 @@ class _CivStartPageState extends State<CivStartPage> {
   );
 
   // FUNCTIONS
-  ConnectivityResult result = ConnectivityResult.none;
-  void getConnectivity() async {
+  ConnectivityResult connectivityResult = ConnectivityResult.none;
+  late StreamSubscription<ConnectivityResult> subscription;
+  void initConnectivity() async {
+    connectivityResult = await Connectivity().checkConnectivity();
     _hasInternet = await InternetConnectionChecker().hasConnection;
-    if (result != ConnectivityResult.none) {
-      setState(() {
-        _hasInternet = true;
-      });
+    subscription = Connectivity().onConnectivityChanged.listen(updateConnectivity);
+    setState(() {});
+  }
+
+  void updateConnectivity(ConnectivityResult result) async {
+    connectivityResult = result;
+    _hasInternet = await InternetConnectionChecker().hasConnection;
+    if (!_hasInternet) {
+      print("No internet");
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(notConnectedSnackbar);
+    } else {
+      print("Connected");
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(connectedSnackbar);
     }
-    subscription = Connectivity().onConnectivityChanged.listen(
-      (ConnectivityResult result) async {
-        result = await Connectivity().checkConnectivity();
-        _hasInternet = await InternetConnectionChecker().hasConnection;
-        if (!_hasInternet) {
-          print("No internet");
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(notConnectedSnackbar);
-        } else {
-          print("Connected");
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(connectedSnackbar);
-        }
-      },
-    );
+    setState(() {});
   }
 
   //All pages for Civilian Dashboard

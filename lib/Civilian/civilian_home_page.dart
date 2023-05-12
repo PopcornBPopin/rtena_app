@@ -24,7 +24,7 @@ class CivHomePage extends StatefulWidget {
 class _CivHomePageState extends State<CivHomePage> {
   @override
   void initState() {
-    getConnectivity();
+    initConnectivity();
     getUserData();
     super.initState();
 
@@ -67,9 +67,6 @@ class _CivHomePageState extends State<CivHomePage> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitDown,
-    // ]);
   }
 
   @override
@@ -92,7 +89,6 @@ class _CivHomePageState extends State<CivHomePage> {
   bool _robberyEmergencySelected = false;
   bool _alertEmergencySelected = false;
 
-  late StreamSubscription subscription;
   late String _fullName = "";
   late String _firstName = "";
   late String _emailAddress = "";
@@ -107,30 +103,19 @@ class _CivHomePageState extends State<CivHomePage> {
   late String _responderEmployer = "";
 
   // FUNCTIONS
-  ConnectivityResult result = ConnectivityResult.none;
-  void getConnectivity() async {
+  ConnectivityResult connectivityResult = ConnectivityResult.none;
+  late StreamSubscription<ConnectivityResult> subscription;
+  void initConnectivity() async {
+    connectivityResult = await Connectivity().checkConnectivity();
     _hasInternet = await InternetConnectionChecker().hasConnection;
-    if (result != ConnectivityResult.none) {
-      setState(() {
-        _hasInternet = true;
-      });
-    }
-    subscription = Connectivity().onConnectivityChanged.listen(
-      (ConnectivityResult result) async {
-        result = await Connectivity().checkConnectivity();
-        _hasInternet = await InternetConnectionChecker().hasConnection;
+    subscription = Connectivity().onConnectivityChanged.listen(updateConnectivity);
+    setState(() {});
+  }
 
-        if (!_hasInternet) {
-          setState(() {
-            _hasInternet = false;
-          });
-        } else {
-          setState(() {
-            _hasInternet = true;
-          });
-        }
-      },
-    );
+  void updateConnectivity(ConnectivityResult result) async {
+    connectivityResult = result;
+    _hasInternet = await InternetConnectionChecker().hasConnection;
+    setState(() {});
   }
 
   //Grab user document from Firebase Firestone
@@ -195,8 +180,8 @@ class _CivHomePageState extends State<CivHomePage> {
     }
   }
 
-  String generateMessage(String fullName, String coordinates) {
-    return 'Civilian: $fullName\nCoordinate: $coordinates';
+  String generateMessage(String fullName, String latitude, String longitude) {
+    return 'Civilian: $fullName\nLocation: https://www.google.com/maps/search/$latitude%2C$longitude';
   }
 
   void startTimerOffline(String emergencyType) {
@@ -213,10 +198,13 @@ class _CivHomePageState extends State<CivHomePage> {
           await getCurrentLocation();
           print("Civilian: " + _fullName.toString());
           print("Coordinate: " + _coordinates.toString());
-          String message = generateMessage(_fullName.toString(), _coordinates.toString());
+          String _userLatitude = _coordinates.toString().split('Latitude: ')[1].split(',')[0];
+          String _userLongitude = _coordinates.toString().split('Longitude: ')[1];
+          String message = generateMessage(_fullName, _userLatitude, _userLongitude);
           List<String> recipients = [
             "+639455810941"
           ];
+          print(message);
           _sendSMS(message, recipients);
           Navigator.of(context).pop();
           quickAlert(QuickAlertType.success, "Emergency Sent!", "You'll receive an emergency confirmation SMS on your device", Colors.green);
