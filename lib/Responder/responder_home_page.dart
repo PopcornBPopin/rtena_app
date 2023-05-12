@@ -25,6 +25,11 @@ class ResHomePage extends StatefulWidget {
 class _ResHomePageState extends State<ResHomePage> {
   @override
   void initState() {
+    Timer? liveDelay;
+    liveDelay = Timer.periodic(Duration(seconds: 2), (timer) async {
+      await updateUserLocation();
+      setState(() {});
+    });
     initConnectivity();
     getUserData();
     getCurrentLocation();
@@ -359,6 +364,10 @@ class _ResHomePageState extends State<ResHomePage> {
       'Contact Number': contactNumber,
       'Email Address': emailAddress,
     });
+  }
+
+  Future updateUserLocation() async {
+    await getCurrentLocation();
   }
 
   void showEmergencyDetails(BuildContext context) {

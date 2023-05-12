@@ -202,7 +202,8 @@ class _CivHomePageState extends State<CivHomePage> {
           String _userLongitude = _coordinates.toString().split('Longitude: ')[1];
           String message = generateMessage(_fullName, _userLatitude, _userLongitude);
           List<String> recipients = [
-            "+639455810941"
+            "+639496678884",
+            "+639152028287"
           ];
           print(message);
           _sendSMS(message, recipients);
@@ -428,7 +429,6 @@ class _CivHomePageState extends State<CivHomePage> {
                                             style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
                                           ),
                                         ),
-                                        
                                         Padding(
                                           padding: EdgeInsets.symmetric(horizontal: 40.h),
                                           child: ElevatedButton(
@@ -491,6 +491,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                             ),
                                           ),
                                         ),
+                                        SizedBox(height: 20.h),
                                         Container(
                                           height: 320.h,
                                           width: MediaQuery.of(context).size.width,
@@ -533,7 +534,6 @@ class _CivHomePageState extends State<CivHomePage> {
                                                             child: Column(
                                                               mainAxisAlignment: MainAxisAlignment.start,
                                                               children: [
-                                                                SizedBox(height: 20.h),
                                                                 Row(
                                                                   children: [
                                                                     Text(
@@ -743,6 +743,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                                     ),
                                                                   ],
                                                                 ),
+                                                                SizedBox(height: 60.h),
                                                               ],
                                                             ),
                                                           );
