@@ -4,7 +4,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 import 'package:geocoding/geocoding.dart';
@@ -78,6 +77,7 @@ class _CivHomePageState extends State<CivHomePage> {
 
   bool _hasInternet = true;
   bool _timerRunning = false;
+  bool _liveLocationUpdate = false;
   bool _emergencySelected = false;
   bool _fireEmergencySelected = false;
   bool _healthEmergencySelected = false;
@@ -258,6 +258,19 @@ class _CivHomePageState extends State<CivHomePage> {
     });
   }
 
+  Future updateCivilianLocation() async {
+    await getCurrentLocation();
+    print(_coordinates.toString());
+  }
+
+  Future updateCivilianLocationDetails(
+    String coordinates,
+  ) async {
+    await FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress.toLowerCase()).update({
+      'Coordinates': coordinates,
+    });
+  }
+
   Future SendEmergency(String type, String status, String coordinates, String address) async {
     sendEmergencyDetails(
       type,
@@ -415,6 +428,69 @@ class _CivHomePageState extends State<CivHomePage> {
                                             style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.normal),
                                           ),
                                         ),
+                                        
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 40.h),
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20),
+                                                side: BorderSide(
+                                                  color: Color.fromRGBO(82, 82, 82, 1),
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              elevation: 3,
+                                            ),
+                                            onPressed: () async {
+                                              setState(() {
+                                                _liveLocationUpdate = !_liveLocationUpdate;
+                                              });
+                                              Timer? liveDelay;
+                                              if (_liveLocationUpdate) {
+                                                liveDelay = Timer.periodic(Duration(seconds: 2), (timer) async {
+                                                  await updateCivilianLocation();
+                                                  await updateCivilianLocationDetails(_coordinates.toString());
+                                                  print("Updated Location");
+                                                  if (!_liveLocationUpdate) {
+                                                    print("Stop LIVE");
+                                                    liveDelay?.cancel();
+                                                  }
+                                                });
+                                              }
+                                            },
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: 50.h,
+                                              child: Stack(
+                                                children: [
+                                                  Center(
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Text(
+                                                          _liveLocationUpdate ? "Live Location On" : "Live Location Off",
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 17.sp,
+                                                          ),
+                                                          textAlign: TextAlign.center,
+                                                        ),
+                                                        SizedBox(width: 10.h),
+                                                        Icon(
+                                                          _liveLocationUpdate ? Icons.location_on : Icons.location_off,
+                                                          color: Colors.red,
+                                                          size: 25,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                         Container(
                                           height: 320.h,
                                           width: MediaQuery.of(context).size.width,
@@ -457,6 +533,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                             child: Column(
                                                               mainAxisAlignment: MainAxisAlignment.start,
                                                               children: [
+                                                                SizedBox(height: 20.h),
                                                                 Row(
                                                                   children: [
                                                                     Text(
