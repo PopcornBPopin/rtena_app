@@ -1694,7 +1694,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                                                         Text(
                                                                           'Responding to:   ${snap[_markerSelected]["Civilian"].toString()}',
                                                                           style: TextStyle(
-                                                                            fontSize: 16.sp,
+                                                                            fontSize: snap[_markerSelected]["Civilian"].toString().length >= 15 ? 12.sp : 16.sp,
                                                                             fontWeight: FontWeight.w400,
                                                                           ),
                                                                         ),
