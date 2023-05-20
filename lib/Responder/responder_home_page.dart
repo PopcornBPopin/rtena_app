@@ -55,6 +55,7 @@ class _ResHomePageState extends State<ResHomePage> {
     });
   }
 
+  //Determines the coordinates
   Future<Position> determinePosition() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -69,6 +70,7 @@ class _ResHomePageState extends State<ResHomePage> {
     return await Geolocator.getCurrentPosition();
   }
 
+  //Uses GECODING API
   Future<void> convertCoordsToAddress(Position position) async {
     List<Placemark> placemark = await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark place = placemark[0];
@@ -77,6 +79,7 @@ class _ResHomePageState extends State<ResHomePage> {
     });
   }
 
+  //Checks whether a responded is currently responding to someone
   Future<void> checkCivID() async {
     Stream<DocumentSnapshot> stream = FirebaseFirestore.instance.collection('users').doc(_emailAddress).snapshots();
     stream.listen((documentSnapshot) async {
@@ -101,6 +104,38 @@ class _ResHomePageState extends State<ResHomePage> {
     });
   }
 
+  void resolveEmergency() async {
+    QuickAlert.show(
+      backgroundColor: Colors.grey.shade200,
+      context: context,
+      type: QuickAlertType.confirm,
+      title: "Resolved?",
+      text: "Are you sure you want to mark this emergency as resolved?",
+      confirmBtnText: "Yes",
+      confirmBtnColor: Colors.white,
+      confirmBtnTextStyle: TextStyle(
+        fontSize: 18.sp,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+      cancelBtnTextStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.red,
+      ),
+      onConfirmBtnTap: () async {
+        Navigator.of(context).pop();
+        final emergency = FirebaseFirestore.instance.collection('emergencies').doc(_civEmailAddress);
+        // await emergency.update({
+        //   'Status': "Resolved",
+        // });
+        await emergency.delete();
+      },
+      onCancelBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   //Disposes controllers when not in used
   @override
   void dispose() {
@@ -112,6 +147,7 @@ class _ResHomePageState extends State<ResHomePage> {
 
     subscription.cancel();
     super.dispose();
+    
   }
 
   bool _hasInternet = false;
@@ -129,6 +165,7 @@ class _ResHomePageState extends State<ResHomePage> {
   bool _userResponded = false;
 
   late String _emailAddress = "";
+  late String _civEmailAddress = "";
   late String _civCoordinates = "";
   late String _civEmergencyType = "";
   late double _userLatitude = 0.0;
@@ -510,6 +547,8 @@ class _ResHomePageState extends State<ResHomePage> {
                                             }
                                           });
 
+                                          _civEmailAddress = snap[_markerSelected]['Email Address'];
+
                                           return Container(
                                             child: Column(
                                               children: [
@@ -598,7 +637,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                                           ),
                                                           Expanded(
                                                             child: Text(
-                                                              snap[_markerSelected]['Address'],
+                                                              "Somewhere near " + snap[_markerSelected]['Address'],
                                                               textAlign: TextAlign.left,
                                                               style: TextStyle(
                                                                 fontSize: 18.sp,
@@ -738,6 +777,51 @@ class _ResHomePageState extends State<ResHomePage> {
                                   ],
                                 ),
                               ),
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(70, 18, 32, 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
+                            ),
+                            padding: EdgeInsets.all(12),
+                          ),
+                          onPressed: () async {
+                            resolveEmergency();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: 40.h,
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Resolved",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20.sp,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 20,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Icon(
+                                    Icons.next_plan,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ),
@@ -1506,7 +1590,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                                                                                     ),
                                                                                                     Expanded(
                                                                                                       child: Text(
-                                                                                                        snap[_markerSelected]['Address'],
+                                                                                                        "Somewhere near " + snap[_markerSelected]['Address'],
                                                                                                         textAlign: TextAlign.left,
                                                                                                         style: TextStyle(
                                                                                                           fontSize: 18.sp,

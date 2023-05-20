@@ -124,6 +124,7 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CheckerPage()));
   }
 
+  //Forgot the user password
   Future forgotUseEmailPassword() async {
     quickAlert(QuickAlertType.loading, "Standby!", "Checking if your account exists", Colors.blue);
     try {
@@ -136,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
     quickForgotAlert(QuickAlertType.success, "Reset Successful!", "Password reset link sent, please check your email", Colors.green);
   }
 
+  //Checks the device connectivity
   ConnectivityResult result = ConnectivityResult.none;
   void getConnectivity() async {
     _hasInternet = await InternetConnectionChecker().hasConnection;
@@ -162,6 +164,7 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
+
 
   void forgotPassword(BuildContext context) {
     showDialog(

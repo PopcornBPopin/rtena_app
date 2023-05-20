@@ -60,6 +60,10 @@ class _CivHomePageState extends State<CivHomePage> {
 
           showEmergencyDetails(context);
         }
+      } else {
+        Navigator.popUntil(context, (Route<dynamic> route) {
+          return !(route is PopupRoute);
+        });
       }
     });
 
@@ -614,7 +618,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                                     ),
                                                                     Expanded(
                                                                       child: Text(
-                                                                        _userLocation,
+                                                                        "Somewhere near " + _userLocation,
                                                                         textAlign: TextAlign.left,
                                                                         style: TextStyle(
                                                                           fontSize: 17.sp,
