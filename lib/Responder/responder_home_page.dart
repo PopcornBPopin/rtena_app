@@ -26,7 +26,8 @@ class _ResHomePageState extends State<ResHomePage> {
   @override
   void initState() {
     Timer? liveDelay;
-    liveDelay = Timer.periodic(Duration(seconds: 2), (timer) async {
+    liveDelay = Timer.periodic(Duration(seconds: 8), (timer) async {
+      print("Update location");
       await updateUserLocation();
       setState(() {});
     });
@@ -147,7 +148,6 @@ class _ResHomePageState extends State<ResHomePage> {
 
     subscription.cancel();
     super.dispose();
-    
   }
 
   bool _hasInternet = false;
@@ -273,26 +273,72 @@ class _ResHomePageState extends State<ResHomePage> {
     }
   }
 
+  BitmapDescriptor fireIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor healthIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor murderIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor assaultIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor floodIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor earthquakeIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor kidnappingIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor robberyIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor alertIcon = BitmapDescriptor.defaultMarker;
+
   BitmapDescriptor _getMarkerIcon(String emergencyType) {
     switch (emergencyType) {
       case 'Fire Emergency':
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+        ImageConfiguration configuration = createLocalImageConfiguration(context);
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/fire_icon.png').then((Icon) => {
+              fireIcon = Icon
+            });
+        return fireIcon;
       case 'Health Emergency':
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
+        ImageConfiguration configuration = createLocalImageConfiguration(context);
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/health_icon.png').then((Icon) => {
+              healthIcon = Icon
+            });
+        return healthIcon;
       case 'Murder Emergency':
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
+        ImageConfiguration configuration = createLocalImageConfiguration(context);
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/murder_icon.png').then((Icon) => {
+              murderIcon = Icon
+            });
+        return murderIcon;
       case 'Assault Emergency':
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+        ImageConfiguration configuration = createLocalImageConfiguration(context);
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/assault_icon.png').then((Icon) => {
+              assaultIcon = Icon
+            });
+        return assaultIcon;
       case 'Flood Emergency':
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta);
+        ImageConfiguration configuration = createLocalImageConfiguration(context);
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/flood_icon.png').then((Icon) => {
+              floodIcon = Icon
+            });
+        return floodIcon;
       case 'Earthquake Emergency':
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
+        ImageConfiguration configuration = createLocalImageConfiguration(context);
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/earthquake_icon.png').then((Icon) => {
+              earthquakeIcon = Icon
+            });
+        return earthquakeIcon;
       case 'Kidnapping Emergency':
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose);
+        ImageConfiguration configuration = createLocalImageConfiguration(context);
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/kidnap_icon.png').then((Icon) => {
+              kidnappingIcon = Icon
+            });
+        return kidnappingIcon;
       case 'Robbery Emergency':
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
+        ImageConfiguration configuration = createLocalImageConfiguration(context);
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/robbery_icon.png').then((Icon) => {
+              robberyIcon = Icon
+            });
+        return robberyIcon;
       case 'Alert Emergency':
-        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
+        ImageConfiguration configuration = createLocalImageConfiguration(context);
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/alert_icon.png').then((Icon) => {
+              alertIcon = Icon
+            });
+        return alertIcon;
       default:
         return BitmapDescriptor.defaultMarker;
     }
@@ -521,6 +567,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                           Marker civMarker = Marker(
                                             markerId: MarkerId(_civCoordinates),
                                             position: LatLng(_civLatitude, _civLongitude),
+                                            icon: _getMarkerIcon(snap[_markerSelected]['Type']),
                                           );
 
                                           Marker userMarker = Marker(
@@ -1715,7 +1762,6 @@ class _ResHomePageState extends State<ResHomePage> {
                                                 print("REMOVE IT BUI");
                                               }
                                               _markers.add(userMarker);
-                                              print(_markers);
                                             }
                                             for (LatLng coordinates in coordinatesList) {
                                               _totalLatitude += coordinates.latitude;

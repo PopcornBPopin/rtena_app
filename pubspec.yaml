@@ -123,7 +123,6 @@ flutter:
     - assets/assault_icon.png
     - assets/robbery_icon.png
     - assets/murder_icon.png
-    - assets/emergency_selected.png
     - assets/dark_map.png
     - assets/alert_responder.png
     - assets/navigate_to.png
