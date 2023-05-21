@@ -117,12 +117,12 @@ flutter:
     - assets/camera_icon.png
     - assets/fire_icon.png
     - assets/flood_icon.png
-    - assets/kidnap_icon.png
+    - assets/vehicular_icon.png
     - assets/earthquake_icon.png
-    - assets/health_icon.png
-    - assets/assault_icon.png
-    - assets/robbery_icon.png
-    - assets/murder_icon.png
+    - assets/medical_icon.png
+    - assets/trauma_icon.png
+    - assets/shooting_icon.png
+    - assets/death_icon.png
     - assets/dark_map.png
     - assets/alert_responder.png
     - assets/navigate_to.png

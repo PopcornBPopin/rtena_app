@@ -153,13 +153,13 @@ class _ResHomePageState extends State<ResHomePage> {
   bool _hasInternet = false;
 
   bool _fireEmergencyFiltered = true;
-  bool _healthEmergencyFiltered = true;
-  bool _murderEmergencyFiltered = true;
-  bool _assaultEmergencyFiltered = true;
+  bool _medicalEmergencyFiltered = true;
+  bool _deathEmergencyFiltered = true;
+  bool _traumaEmergencyFiltered = true;
   bool _floodEmergencyFiltered = true;
   bool _earthquakeEmergencyFiltered = true;
-  bool _kidnappingEmergencyFiltered = true;
-  bool _robberyEmergencyFiltered = true;
+  bool _vehicularEmergencyFiltered = true;
+  bool _shootingEmergencyFiltered = true;
   bool _alertEmergencyFiltered = true;
 
   bool _userResponded = false;
@@ -219,13 +219,13 @@ class _ResHomePageState extends State<ResHomePage> {
   //Filter emergency types
   List<String> filteredEmergencies = [
     'Fire Emergency',
-    'Health Emergency',
-    'Murder Emergency',
-    'Assault Emergency',
+    'Medical Emergency',
+    'Death Emergency',
+    'Trauma Emergency',
     'Flood Emergency',
     'Earthquake Emergency',
-    'Kidnapping Emergency',
-    'Robbery Emergency',
+    'Vehicular Emergency',
+    'Shooting Emergency',
     'Alert Emergency'
   ];
 
@@ -274,13 +274,13 @@ class _ResHomePageState extends State<ResHomePage> {
   }
 
   BitmapDescriptor fireIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor healthIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor murderIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor assaultIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor medicalIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor deathIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor traumaIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor floodIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor earthquakeIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor kidnappingIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor robberyIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor vehicularIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor shootingIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor alertIcon = BitmapDescriptor.defaultMarker;
 
   BitmapDescriptor _getMarkerIcon(String emergencyType) {
@@ -291,24 +291,24 @@ class _ResHomePageState extends State<ResHomePage> {
               fireIcon = Icon
             });
         return fireIcon;
-      case 'Health Emergency':
+      case 'Medical Emergency':
         ImageConfiguration configuration = createLocalImageConfiguration(context);
-        BitmapDescriptor.fromAssetImage(configuration, 'assets/health_icon.png').then((Icon) => {
-              healthIcon = Icon
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/medical_icon.png').then((Icon) => {
+              medicalIcon = Icon
             });
-        return healthIcon;
-      case 'Murder Emergency':
+        return medicalIcon;
+      case 'Death Emergency':
         ImageConfiguration configuration = createLocalImageConfiguration(context);
-        BitmapDescriptor.fromAssetImage(configuration, 'assets/murder_icon.png').then((Icon) => {
-              murderIcon = Icon
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/death_icon.png').then((Icon) => {
+              deathIcon = Icon
             });
-        return murderIcon;
-      case 'Assault Emergency':
+        return deathIcon;
+      case 'Trauma Emergency':
         ImageConfiguration configuration = createLocalImageConfiguration(context);
-        BitmapDescriptor.fromAssetImage(configuration, 'assets/assault_icon.png').then((Icon) => {
-              assaultIcon = Icon
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/trauma_icon.png').then((Icon) => {
+              traumaIcon = Icon
             });
-        return assaultIcon;
+        return traumaIcon;
       case 'Flood Emergency':
         ImageConfiguration configuration = createLocalImageConfiguration(context);
         BitmapDescriptor.fromAssetImage(configuration, 'assets/flood_icon.png').then((Icon) => {
@@ -321,18 +321,18 @@ class _ResHomePageState extends State<ResHomePage> {
               earthquakeIcon = Icon
             });
         return earthquakeIcon;
-      case 'Kidnapping Emergency':
+      case 'Vehicular Emergency':
         ImageConfiguration configuration = createLocalImageConfiguration(context);
-        BitmapDescriptor.fromAssetImage(configuration, 'assets/kidnap_icon.png').then((Icon) => {
-              kidnappingIcon = Icon
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/vehicular_icon.png').then((Icon) => {
+              vehicularIcon = Icon
             });
-        return kidnappingIcon;
-      case 'Robbery Emergency':
+        return vehicularIcon;
+      case 'Shooting Emergency':
         ImageConfiguration configuration = createLocalImageConfiguration(context);
-        BitmapDescriptor.fromAssetImage(configuration, 'assets/robbery_icon.png').then((Icon) => {
-              robberyIcon = Icon
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/shooting_icon.png').then((Icon) => {
+              shootingIcon = Icon
             });
-        return robberyIcon;
+        return shootingIcon;
       case 'Alert Emergency':
         ImageConfiguration configuration = createLocalImageConfiguration(context);
         BitmapDescriptor.fromAssetImage(configuration, 'assets/alert_icon.png').then((Icon) => {
@@ -970,8 +970,8 @@ class _ResHomePageState extends State<ResHomePage> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              _healthEmergencyFiltered = !_healthEmergencyFiltered;
-                              filterChecker('Health Emergency');
+                              _medicalEmergencyFiltered = !_medicalEmergencyFiltered;
+                              filterChecker('Medical Emergency');
                             });
                           },
                           child: Container(
@@ -979,7 +979,7 @@ class _ResHomePageState extends State<ResHomePage> {
                               padding: EdgeInsets.symmetric(vertical: 2),
                               child: Row(
                                 children: [
-                                  _healthEmergencyFiltered
+                                  _medicalEmergencyFiltered
                                       ? Icon(
                                           Icons.check_circle,
                                           color: Color.fromRGBO(0, 127, 255, 1),
@@ -992,7 +992,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                     width: 10.w,
                                   ),
                                   Text(
-                                    "Health Emergency",
+                                    "Medical Emergency",
                                     style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
                                   ),
                                 ],
@@ -1003,8 +1003,8 @@ class _ResHomePageState extends State<ResHomePage> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              _murderEmergencyFiltered = !_murderEmergencyFiltered;
-                              filterChecker('Murder Emergency');
+                              _deathEmergencyFiltered = !_deathEmergencyFiltered;
+                              filterChecker('Death Emergency');
                             });
                           },
                           child: Container(
@@ -1012,7 +1012,7 @@ class _ResHomePageState extends State<ResHomePage> {
                               padding: EdgeInsets.symmetric(vertical: 2),
                               child: Row(
                                 children: [
-                                  _murderEmergencyFiltered
+                                  _deathEmergencyFiltered
                                       ? Icon(
                                           Icons.check_circle,
                                           color: Colors.cyan,
@@ -1025,7 +1025,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                     width: 10.w,
                                   ),
                                   Text(
-                                    "Murder Emergency",
+                                    "Death Emergency",
                                     style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
                                   ),
                                 ],
@@ -1036,8 +1036,8 @@ class _ResHomePageState extends State<ResHomePage> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              _assaultEmergencyFiltered = !_assaultEmergencyFiltered;
-                              filterChecker('Assault Emergency');
+                              _traumaEmergencyFiltered = !_traumaEmergencyFiltered;
+                              filterChecker('Trauma Emergency');
                             });
                           },
                           child: Container(
@@ -1045,7 +1045,7 @@ class _ResHomePageState extends State<ResHomePage> {
                               padding: EdgeInsets.symmetric(vertical: 2),
                               child: Row(
                                 children: [
-                                  _assaultEmergencyFiltered
+                                  _traumaEmergencyFiltered
                                       ? Icon(
                                           Icons.check_circle,
                                           color: Colors.green,
@@ -1058,7 +1058,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                     width: 10.w,
                                   ),
                                   Text(
-                                    "Assault Emergency",
+                                    "Trauma Emergency",
                                     style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
                                   ),
                                 ],
@@ -1135,8 +1135,8 @@ class _ResHomePageState extends State<ResHomePage> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              _kidnappingEmergencyFiltered = !_kidnappingEmergencyFiltered;
-                              filterChecker('Kidnapping Emergency');
+                              _vehicularEmergencyFiltered = !_vehicularEmergencyFiltered;
+                              filterChecker('Vehicular Emergency');
                             });
                           },
                           child: Container(
@@ -1144,7 +1144,7 @@ class _ResHomePageState extends State<ResHomePage> {
                               padding: EdgeInsets.symmetric(vertical: 2),
                               child: Row(
                                 children: [
-                                  _kidnappingEmergencyFiltered
+                                  _vehicularEmergencyFiltered
                                       ? Icon(
                                           Icons.check_circle,
                                           color: Color.fromRGBO(255, 0, 85, 1),
@@ -1157,7 +1157,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                     width: 10.w,
                                   ),
                                   Text(
-                                    "Kidnapping Emergency",
+                                    "Vehicular Emergency",
                                     style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
                                   ),
                                 ],
@@ -1168,8 +1168,8 @@ class _ResHomePageState extends State<ResHomePage> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              _robberyEmergencyFiltered = !_robberyEmergencyFiltered;
-                              filterChecker('Robbery Emergency');
+                              _shootingEmergencyFiltered = !_shootingEmergencyFiltered;
+                              filterChecker('Shooting Emergency');
                             });
                           },
                           child: Container(
@@ -1177,7 +1177,7 @@ class _ResHomePageState extends State<ResHomePage> {
                               padding: EdgeInsets.symmetric(vertical: 2),
                               child: Row(
                                 children: [
-                                  _robberyEmergencyFiltered
+                                  _shootingEmergencyFiltered
                                       ? Icon(
                                           Icons.check_circle,
                                           color: Color.fromRGBO(138, 43, 226, 1),
@@ -1190,7 +1190,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                     width: 10.w,
                                   ),
                                   Text(
-                                    "Robbery Emergency",
+                                    "Shooting Emergency",
                                     style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
                                   ),
                                 ],
@@ -1523,13 +1523,13 @@ class _ResHomePageState extends State<ResHomePage> {
                                                                                 child: Icon(
                                                                                   {
                                                                                         'Fire Emergency': FontAwesomeIcons.fire,
-                                                                                        'Health Emergency': Icons.health_and_safety,
-                                                                                        'Murder Emergency': FontAwesomeIcons.solidFaceDizzy,
-                                                                                        'Assault Emergency': FontAwesomeIcons.handFist,
+                                                                                        'Medical Emergency': Icons.health_and_safety,
+                                                                                        'Death Emergency': FontAwesomeIcons.solidFaceDizzy,
+                                                                                        'Trauma Emergency': FontAwesomeIcons.handFist,
                                                                                         'Flood Emergency': FontAwesomeIcons.water,
                                                                                         'Earthquake Emergency': FontAwesomeIcons.houseChimneyCrack,
-                                                                                        'Kidnap Emergency': FontAwesomeIcons.solidFaceSadCry,
-                                                                                        'Robbery Emergency': FontAwesomeIcons.userNinja,
+                                                                                        'Vehicular Emergency': FontAwesomeIcons.carBurst,
+                                                                                        'Shooting Emergency': FontAwesomeIcons.userNinja,
                                                                                         'Alert Emergency': Icons.notifications_active,
                                                                                       }[snap[_markerSelected]['Type']] ??
                                                                                       Icons.warning,
