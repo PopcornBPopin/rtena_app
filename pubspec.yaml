@@ -124,10 +124,10 @@ flutter:
     - assets/assault_icon.png
     - assets/shooting_icon.png
     - assets/death_icon.png
+    - assets/alert_icon.png
     - assets/dark_map.png
     - assets/alert_responder.png
     - assets/navigate_to.png
-
     - assets/maptheme/night_theme.json
 
   #   - images/a_dot_burr.jpeg
