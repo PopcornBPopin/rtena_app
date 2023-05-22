@@ -15,6 +15,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickalert/quickalert.dart';
 
+import '../notification_service.dart';
+
 class ResHomePage extends StatefulWidget {
   const ResHomePage({Key? key}) : super(key: key);
 
@@ -35,6 +37,9 @@ class _ResHomePageState extends State<ResHomePage> {
     getUserData();
     getCurrentLocation();
     checkCivID();
+
+    initNotifications();
+
     userIcon = BitmapDescriptor.defaultMarker;
     super.initState();
     DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then((value) => {
@@ -43,6 +48,27 @@ class _ResHomePageState extends State<ResHomePage> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+  }
+
+  //Notification systems
+  void initNotifications() async {
+    print("INIT NOTIF");
+    WidgetsFlutterBinding.ensureInitialized();
+    final NotificationService notificationService = NotificationService();
+    await notificationService.init();
+
+    final CollectionReference collectionReference = FirebaseFirestore.instance.collection('emergencies');
+
+    collectionReference.snapshots().listen((snapshot) {
+      snapshot.docChanges.forEach((change) {
+        if (change.type == DocumentChangeType.added) {
+          final String civName = change.doc.get('Civilian');
+          final String civAddress = change.doc.get('Address');
+          final String emergencyType = change.doc.get('Type');
+          notificationService.showNotification('$civName needs your help!', 'Type: $emergencyType\n$civName is somewhere near $civAddress');
+        }
+      });
+    });
   }
 
   //Get the user location
