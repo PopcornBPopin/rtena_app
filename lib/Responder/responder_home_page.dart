@@ -153,9 +153,9 @@ class _ResHomePageState extends State<ResHomePage> {
   bool _hasInternet = false;
 
   bool _fireEmergencyFiltered = true;
-  bool _medicalEmergencyFiltered = true;
+  bool _healthEmergencyFiltered = true;
   bool _deathEmergencyFiltered = true;
-  bool _traumaEmergencyFiltered = true;
+  bool _assaultEmergencyFiltered = true;
   bool _floodEmergencyFiltered = true;
   bool _earthquakeEmergencyFiltered = true;
   bool _vehicularEmergencyFiltered = true;
@@ -219,9 +219,9 @@ class _ResHomePageState extends State<ResHomePage> {
   //Filter emergency types
   List<String> filteredEmergencies = [
     'Fire Emergency',
-    'Medical Emergency',
+    'Health Emergency',
     'Death Emergency',
-    'Trauma Emergency',
+    'Assault Emergency',
     'Flood Emergency',
     'Earthquake Emergency',
     'Vehicular Emergency',
@@ -274,9 +274,9 @@ class _ResHomePageState extends State<ResHomePage> {
   }
 
   BitmapDescriptor fireIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor medicalIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor healthIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor deathIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor traumaIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor assaultIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor floodIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor earthquakeIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor vehicularIcon = BitmapDescriptor.defaultMarker;
@@ -291,24 +291,24 @@ class _ResHomePageState extends State<ResHomePage> {
               fireIcon = Icon
             });
         return fireIcon;
-      case 'Medical Emergency':
+      case 'Health Emergency':
         ImageConfiguration configuration = createLocalImageConfiguration(context);
-        BitmapDescriptor.fromAssetImage(configuration, 'assets/medical_icon.png').then((Icon) => {
-              medicalIcon = Icon
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/health_icon.png').then((Icon) => {
+              healthIcon = Icon
             });
-        return medicalIcon;
+        return healthIcon;
       case 'Death Emergency':
         ImageConfiguration configuration = createLocalImageConfiguration(context);
         BitmapDescriptor.fromAssetImage(configuration, 'assets/death_icon.png').then((Icon) => {
               deathIcon = Icon
             });
         return deathIcon;
-      case 'Trauma Emergency':
+      case 'Assault Emergency':
         ImageConfiguration configuration = createLocalImageConfiguration(context);
-        BitmapDescriptor.fromAssetImage(configuration, 'assets/trauma_icon.png').then((Icon) => {
-              traumaIcon = Icon
+        BitmapDescriptor.fromAssetImage(configuration, 'assets/assault_icon.png').then((Icon) => {
+              assaultIcon = Icon
             });
-        return traumaIcon;
+        return assaultIcon;
       case 'Flood Emergency':
         ImageConfiguration configuration = createLocalImageConfiguration(context);
         BitmapDescriptor.fromAssetImage(configuration, 'assets/flood_icon.png').then((Icon) => {
@@ -970,8 +970,8 @@ class _ResHomePageState extends State<ResHomePage> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              _medicalEmergencyFiltered = !_medicalEmergencyFiltered;
-                              filterChecker('Medical Emergency');
+                              _healthEmergencyFiltered = !_healthEmergencyFiltered;
+                              filterChecker('Health Emergency');
                             });
                           },
                           child: Container(
@@ -979,7 +979,7 @@ class _ResHomePageState extends State<ResHomePage> {
                               padding: EdgeInsets.symmetric(vertical: 2),
                               child: Row(
                                 children: [
-                                  _medicalEmergencyFiltered
+                                  _healthEmergencyFiltered
                                       ? Icon(
                                           Icons.check_circle,
                                           color: Color.fromRGBO(0, 127, 255, 1),
@@ -992,7 +992,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                     width: 10.w,
                                   ),
                                   Text(
-                                    "Medical Emergency",
+                                    "Health Emergency",
                                     style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
                                   ),
                                 ],
@@ -1036,8 +1036,8 @@ class _ResHomePageState extends State<ResHomePage> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              _traumaEmergencyFiltered = !_traumaEmergencyFiltered;
-                              filterChecker('Trauma Emergency');
+                              _assaultEmergencyFiltered = !_assaultEmergencyFiltered;
+                              filterChecker('Assault Emergency');
                             });
                           },
                           child: Container(
@@ -1045,7 +1045,7 @@ class _ResHomePageState extends State<ResHomePage> {
                               padding: EdgeInsets.symmetric(vertical: 2),
                               child: Row(
                                 children: [
-                                  _traumaEmergencyFiltered
+                                  _assaultEmergencyFiltered
                                       ? Icon(
                                           Icons.check_circle,
                                           color: Colors.green,
@@ -1058,7 +1058,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                     width: 10.w,
                                   ),
                                   Text(
-                                    "Trauma Emergency",
+                                    "Assault Emergency",
                                     style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.normal),
                                   ),
                                 ],
@@ -1523,9 +1523,9 @@ class _ResHomePageState extends State<ResHomePage> {
                                                                                 child: Icon(
                                                                                   {
                                                                                         'Fire Emergency': FontAwesomeIcons.fire,
-                                                                                        'Medical Emergency': Icons.health_and_safety,
+                                                                                        'Health Emergency': Icons.health_and_safety,
                                                                                         'Death Emergency': FontAwesomeIcons.solidFaceDizzy,
-                                                                                        'Trauma Emergency': FontAwesomeIcons.handFist,
+                                                                                        'Assault Emergency': FontAwesomeIcons.handFist,
                                                                                         'Flood Emergency': FontAwesomeIcons.water,
                                                                                         'Earthquake Emergency': FontAwesomeIcons.houseChimneyCrack,
                                                                                         'Vehicular Emergency': FontAwesomeIcons.carBurst,

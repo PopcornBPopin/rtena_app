@@ -84,9 +84,9 @@ class _CivHomePageState extends State<CivHomePage> {
   bool _liveLocationUpdate = false;
   bool _emergencySelected = false;
   bool _fireEmergencySelected = false;
-  bool _medicalEmergencySelected = false;
+  bool _healthEmergencySelected = false;
   bool _deathEmergencySelected = false;
-  bool _traumaEmergencySelected = false;
+  bool _assaultEmergencySelected = false;
   bool _floodEmergencySelected = false;
   bool _equakeEmergencySelected = false;
   bool _vehicularEmergencySelected = false;
@@ -225,9 +225,9 @@ class _CivHomePageState extends State<CivHomePage> {
       _timerRunning = false;
       _emergencySelected = false;
       _fireEmergencySelected = false;
-      _medicalEmergencySelected = false;
+      _healthEmergencySelected = false;
       _deathEmergencySelected = false;
-      _traumaEmergencySelected = false;
+      _assaultEmergencySelected = false;
       _floodEmergencySelected = false;
       _equakeEmergencySelected = false;
       _vehicularEmergencySelected = false;
@@ -1096,34 +1096,34 @@ class _CivHomePageState extends State<CivHomePage> {
                                           SizedBox(height: 15.h),
                                           //Grid of buttons starts here
 
-                                          //Medical and Vehicular
+                                          //Health and Vehicular
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Opacity(
-                                                opacity: _timerRunning && !_medicalEmergencySelected ? 0.6 : 1,
+                                                opacity: _timerRunning && !_healthEmergencySelected ? 0.6 : 1,
                                                 child: ElevatedButton(
                                                   style: ElevatedButton.styleFrom(
-                                                    backgroundColor: _medicalEmergencySelected ? const Color.fromRGBO(153, 0, 51, 1) : Colors.white,
+                                                    backgroundColor: _healthEmergencySelected ? const Color.fromRGBO(153, 0, 51, 1) : Colors.white,
                                                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                                                     shape: RoundedRectangleBorder(
                                                       borderRadius: BorderRadius.circular(20),
                                                       side: BorderSide(
-                                                        color: _medicalEmergencySelected ? const Color.fromRGBO(153, 0, 51, 1) : Color.fromRGBO(82, 82, 82, 1),
+                                                        color: _healthEmergencySelected ? const Color.fromRGBO(153, 0, 51, 1) : Color.fromRGBO(82, 82, 82, 1),
                                                         width: 1,
                                                       ),
                                                     ),
-                                                    elevation: _timerRunning && !_medicalEmergencySelected ? 1 : 3,
+                                                    elevation: _timerRunning && !_healthEmergencySelected ? 1 : 3,
                                                   ),
                                                   onPressed: () {
                                                     if (!_timerRunning && !_emergencySelected) {
                                                       setState(() {
-                                                        _medicalEmergencySelected = true;
+                                                        _healthEmergencySelected = true;
                                                         _emergencySelected = true;
                                                       });
-                                                      startTimer("Medical Emergency");
+                                                      startTimer("Health Emergency");
                                                     }
-                                                    if (_timerRunning && _medicalEmergencySelected) {
+                                                    if (_timerRunning && _healthEmergencySelected) {
                                                       setState(() {
                                                         stopTimer();
                                                       });
@@ -1138,7 +1138,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                         children: [
                                                           Visibility(
-                                                            visible: _medicalEmergencySelected,
+                                                            visible: _healthEmergencySelected,
                                                             child: Column(
                                                               mainAxisAlignment: MainAxisAlignment.center,
                                                               children: [
@@ -1161,7 +1161,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                             ),
                                                           ),
                                                           Visibility(
-                                                            visible: !_medicalEmergencySelected,
+                                                            visible: !_healthEmergencySelected,
                                                             child: Column(
                                                               children: [
                                                                 Icon(
@@ -1170,7 +1170,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                                   size: 40,
                                                                 ),
                                                                 Text(
-                                                                  "Medical",
+                                                                  "Health",
                                                                   style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
                                                                 ),
                                                               ],
@@ -1270,34 +1270,34 @@ class _CivHomePageState extends State<CivHomePage> {
                                           ),
                                           SizedBox(height: 15.h),
 
-                                          //Trauma and Fire
+                                          //Assault and Fire
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Opacity(
-                                                opacity: _timerRunning && !_traumaEmergencySelected ? 0.6 : 1,
+                                                opacity: _timerRunning && !_assaultEmergencySelected ? 0.6 : 1,
                                                 child: ElevatedButton(
                                                   style: ElevatedButton.styleFrom(
-                                                    backgroundColor: _traumaEmergencySelected ? const Color.fromARGB(255, 163, 49, 70) : Colors.white,
+                                                    backgroundColor: _assaultEmergencySelected ? const Color.fromARGB(255, 163, 49, 70) : Colors.white,
                                                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                                                     shape: RoundedRectangleBorder(
                                                       borderRadius: BorderRadius.circular(20),
                                                       side: BorderSide(
-                                                        color: _traumaEmergencySelected ? const Color.fromRGBO(184, 58, 67, 0.878) : Color.fromRGBO(82, 82, 82, 1),
+                                                        color: _assaultEmergencySelected ? const Color.fromRGBO(184, 58, 67, 0.878) : Color.fromRGBO(82, 82, 82, 1),
                                                         width: 1,
                                                       ),
                                                     ),
-                                                    elevation: _timerRunning && !_traumaEmergencySelected ? 1 : 3,
+                                                    elevation: _timerRunning && !_assaultEmergencySelected ? 1 : 3,
                                                   ),
                                                   onPressed: () {
-                                                    if (!_timerRunning && !_traumaEmergencySelected) {
+                                                    if (!_timerRunning && !_assaultEmergencySelected) {
                                                       setState(() {
-                                                        _traumaEmergencySelected = true;
+                                                        _assaultEmergencySelected = true;
                                                         _emergencySelected = true;
                                                       });
-                                                      startTimer("Trauma Emergency");
+                                                      startTimer("Assault Emergency");
                                                     }
-                                                    if (_timerRunning && _traumaEmergencySelected) {
+                                                    if (_timerRunning && _assaultEmergencySelected) {
                                                       setState(() {
                                                         stopTimer();
                                                       });
@@ -1312,7 +1312,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                         children: [
                                                           Visibility(
-                                                            visible: _traumaEmergencySelected,
+                                                            visible: _assaultEmergencySelected,
                                                             child: Column(
                                                               mainAxisAlignment: MainAxisAlignment.center,
                                                               children: [
@@ -1335,7 +1335,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                             ),
                                                           ),
                                                           Visibility(
-                                                            visible: !_traumaEmergencySelected,
+                                                            visible: !_assaultEmergencySelected,
                                                             child: Column(
                                                               children: [
                                                                 Icon(
@@ -1345,7 +1345,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                                                 ),
                                                                 SizedBox(height: 2.h),
                                                                 Text(
-                                                                  "Trauma",
+                                                                  "Assault",
                                                                   style: TextStyle(color: Colors.black, fontSize: 17.sp, fontWeight: FontWeight.normal),
                                                                 ),
                                                               ],
