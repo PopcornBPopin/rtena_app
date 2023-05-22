@@ -13,6 +13,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../notification_service.dart';
+
 class CivHomePage extends StatefulWidget {
   const CivHomePage({Key? key}) : super(key: key);
 
@@ -24,6 +26,7 @@ class _CivHomePageState extends State<CivHomePage> {
   @override
   void initState() {
     initConnectivity();
+    initNotifications();
     getUserData();
     super.initState();
 
@@ -107,6 +110,27 @@ class _CivHomePageState extends State<CivHomePage> {
   late String _responderEmployer = "";
 
   // FUNCTIONS
+
+  //Show notification
+  void initNotifications() async {
+    print("INIT NOTIF");
+    WidgetsFlutterBinding.ensureInitialized();
+    final NotificationService notificationService = NotificationService();
+    await notificationService.init();
+
+    final DocumentReference docReference = FirebaseFirestore.instance.collection('emergencies').doc(_emailAddress);
+
+    docReference.snapshots().listen((snapshot) {
+      if (snapshot.exists) {
+        final String responderName = snapshot.get('Responder');
+        final String contactNumber = snapshot.get('Responder Contact Number');
+        final String occupation = snapshot.get('Responder Occupation');
+        final String employer = snapshot.get('Responder Employer');
+        notificationService.showNotification('$responderName has confirmed your report!', 'The responders are on thier way to address the issue and ensure your safety!\nContact Number: $contactNumber\nOccupation: $occupation\nEmployer: $employer');
+      }
+    });
+  }
+
   ConnectivityResult connectivityResult = ConnectivityResult.none;
   late StreamSubscription<ConnectivityResult> subscription;
   void initConnectivity() async {
