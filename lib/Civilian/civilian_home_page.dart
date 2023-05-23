@@ -101,6 +101,7 @@ class _CivHomePageState extends State<CivHomePage> {
   late String _emailAddress = "";
   late String _address = "";
   late String _type = "";
+  late String _role = "";
   late String _userCoordinates = "";
   late String _userContactNumber = "";
   late String _userLocation = "";
@@ -126,7 +127,9 @@ class _CivHomePageState extends State<CivHomePage> {
         final String contactNumber = snapshot.get('Responder Contact Number');
         final String occupation = snapshot.get('Responder Occupation');
         final String employer = snapshot.get('Responder Employer');
-        notificationService.showNotification('$responderName has confirmed your report!', 'The responders are on thier way to address the issue and ensure your safety!\nContact Number: $contactNumber\nOccupation: $occupation\nEmployer: $employer');
+        if (_role == "Civilian") {
+          notificationService.showNotification('$responderName has confirmed your report!', 'The responders are on thier way to address the issue and ensure your safety!\nContact Number: $contactNumber\nOccupation: $occupation\nEmployer: $employer');
+        }
       }
     });
   }
@@ -914,6 +917,7 @@ class _CivHomePageState extends State<CivHomePage> {
                                         final userData = snapshot.data!.data() as Map<String, dynamic>;
                                         _firstName = userData['First Name'];
                                         _fullName = '${userData['First Name']} ${userData['M.I']}. ${userData['Surname']}';
+                                        _role = userData['Role'];
                                         _userContactNumber = userData['Contact Number'];
                                         return Text(
                                           'Hello! $_firstName',

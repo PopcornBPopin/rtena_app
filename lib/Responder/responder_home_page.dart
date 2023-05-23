@@ -65,7 +65,9 @@ class _ResHomePageState extends State<ResHomePage> {
           final String civName = change.doc.get('Civilian');
           final String civAddress = change.doc.get('Address');
           final String emergencyType = change.doc.get('Type');
-          notificationService.showNotification('$civName needs your help!', 'Type: $emergencyType\n$civName is somewhere near $civAddress');
+          if (_role == "Responder") {
+            notificationService.showNotification('$civName needs your help!', 'Type: $emergencyType\n$civName is somewhere near $civAddress');
+          }
         }
       });
     });
@@ -217,6 +219,7 @@ class _ResHomePageState extends State<ResHomePage> {
   late String _contactNumber = "";
   late String _occupation = "";
   late String _employer = "";
+  late String _role = "";
 
   late int _markerSelected = 0;
   late int _civResponded = 0;
@@ -1369,6 +1372,7 @@ class _ResHomePageState extends State<ResHomePage> {
                                     _contactNumber = userData['Contact Number'];
                                     _occupation = userData['Occupation'];
                                     _employer = userData['Employer'];
+                                    _role = userData['Role'];
                                     _fullName = '${userData['First Name']} ${userData['M.I']}. ${userData['Surname']}';
                                     return Text(
                                       'Hello! $_firstName',
